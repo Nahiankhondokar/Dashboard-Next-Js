@@ -25,6 +25,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
+import { SidebarTrigger } from "./ui/sidebar";
 
 const Navabar = () => {
   const { setTheme } = useTheme();
@@ -33,9 +34,7 @@ const Navabar = () => {
     <nav className="flex items-center justify-between px-4 py-2 border-b bg-background">
       {/* Left Side */}
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm">
-          ☰
-        </Button>
+        <SidebarTrigger />
         <Link href="/" className="text-lg font-semibold flex items-center gap-1">
           <LayoutDashboard className="h-5 w-5" /> Dashboard
         </Link>
