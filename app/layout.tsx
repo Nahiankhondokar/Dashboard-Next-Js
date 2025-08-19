@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import SideBar from "@/components/SideBar";
 import Navabar from "@/components/Navabar";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -29,7 +29,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
           >
-          <div className="bg-red-400 text-white">
+          <div>
             <SidebarProvider defaultOpen={defaultOpen}>
               <SideBar />
               <main className="w-full">
