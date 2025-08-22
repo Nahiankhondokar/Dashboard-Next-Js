@@ -10,15 +10,18 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { HomeIcon } from "lucide-react"
 
 const BreadcrumbComponent = ({ pathname }: { pathname: string }) => {
   const segments = pathname.split("/").filter(Boolean)
 
   return (
-    <Breadcrumb>
+    <div className="py-6">
+      <Breadcrumb>
       <BreadcrumbList>
         {/* First: Home link */}
         <BreadcrumbItem>
+          <HomeIcon className="text-md" />
           <BreadcrumbLink asChild>
             <Link href="/">Home</Link>
           </BreadcrumbLink>
@@ -47,6 +50,7 @@ const BreadcrumbComponent = ({ pathname }: { pathname: string }) => {
         })}
       </BreadcrumbList>
     </Breadcrumb>
+    </div>
   )
 }
 
