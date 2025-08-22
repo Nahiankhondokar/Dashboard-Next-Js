@@ -31,7 +31,7 @@ const Navabar = () => {
   const { setTheme } = useTheme();
 
   return (
-    <nav className="flex items-center justify-between px-4 py-2 border-b bg-background">
+    <nav className="flex items-center justify-between px-4 py-2 border-b bg-background sticky top-0 z-10">
       {/* Left Side */}
       <div className="flex items-center gap-2">
         <SidebarTrigger />
