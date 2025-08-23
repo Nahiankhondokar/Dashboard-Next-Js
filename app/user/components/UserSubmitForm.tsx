@@ -16,21 +16,22 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-// ✅ Zod schema for validation
+
 const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Enter a valid email"),
-  username: z.string().min(2, "Username is required"),
-  phone: z.string().min(5, "Phone is required"),
-  role: z.string().min(1, "Role is required"),
-  image: z
-    .instanceof(File)
-    .optional(), // ✅ File upload is optional
-  status: z.boolean().default(false),
+  name: z.string(),
+  email: z.string().email(),
+  username: z.string(),
+  phone: z.string(),
+  role: z.string(),
+  status: z.number().default(0),
+  image: z.instanceof(File).nullable().optional(),
 })
 
-export default function AddUserForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
+type FormSchemaType = z.infer<typeof formSchema>
+
+const  AddUserForm = () => {
+
+   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -38,28 +39,48 @@ export default function AddUserForm() {
       username: "",
       phone: "",
       role: "",
-      image: undefined,
-      status: false,
+      status: 0, // default number
+      image: null,
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Form Values:", values)
 
-    // 👇 If you want to send file to backend
-    const formData = new FormData()
-    formData.append("name", values.name)
-    formData.append("email", values.email)
-    formData.append("username", values.username)
-    formData.append("phone", values.phone)
-    formData.append("role", values.role)
-    formData.append("status", String(values.status))
-    if (values.image) {
-      formData.append("image", values.image)
+const onSubmit = async (values: FormSchemaType) => {
+  console.log("Form Values:", values)
+
+  const formData = new FormData()
+  formData.append("name", values.name)
+  formData.append("email", values.email)
+  formData.append("username", values.username)
+  formData.append("phone", values.phone)
+  formData.append("role", values.role)
+  formData.append("status", values.status.toString())
+
+  if (values.image) {
+    formData.append("image", values.image) // 👈 only if provided
+  }
+
+try {
+    const res = await fetch("/api/users", {
+      method: "POST",
+      body: formData,
+    })
+
+    if (!res.ok) {
+      throw new Error(`Error: ${res.status}`)
     }
 
-    // fetch("/api/users", { method: "POST", body: formData })
+    const data = await res.json()
+    console.log("User created:", data)
+
+    // ✅ Optional: show success toast or reset form
+    form.reset()
+  } catch (error) {
+    console.error("Failed to create user:", error)
   }
+}
+
+
 
   return (
     <Form {...form}>
@@ -153,7 +174,7 @@ export default function AddUserForm() {
         />
 
         {/* Image Upload (Optional) */}
-        <FormField
+       <FormField
           control={form.control}
           name="image"
           render={({ field }) => (
@@ -163,13 +184,13 @@ export default function AddUserForm() {
                 <Input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
+                  onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-        />
+      />
 
         {/* Status */}
         <FormField
@@ -180,8 +201,8 @@ export default function AddUserForm() {
               <FormLabel>Status</FormLabel>
               <FormControl>
                 <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+                  checked={field.value === 1} // ✅ checked if status = 1
+                  onCheckedChange={(checked) => field.onChange(checked ? 1 : 0)} // ✅ map boolean → number
                 />
               </FormControl>
             </FormItem>
@@ -196,3 +217,6 @@ export default function AddUserForm() {
     </Form>
   )
 }
+
+
+export default AddUserForm;
