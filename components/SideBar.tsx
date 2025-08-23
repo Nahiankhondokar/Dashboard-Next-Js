@@ -28,6 +28,7 @@ import {
   Search,
   Settings,
   User2,
+  User2Icon,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -46,7 +47,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collap
 // Menu items.
 const items = [
   { title: "Home", url: "#", icon: Home },
-  { title: "Inbox", url: "#", icon: Inbox },
+  { title: "User", url: "/user", icon: User2Icon },
   { title: "Calendar", url: "#", icon: Calendar },
   { title: "Search", url: "#", icon: Search },
   { title: "Settings", url: "#", icon: Settings },
