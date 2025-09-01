@@ -18,6 +18,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import {
+  BluetoothSearching,
   Calendar,
   ChevronDown,
   ChevronUp,
@@ -46,9 +47,9 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collap
 
 // Menu items.
 const items = [
-  { title: "Home", url: "#", icon: Home },
+  { title: "Home", url: "/", icon: Home },
   { title: "User", url: "/user", icon: User2Icon },
-  { title: "Calendar", url: "#", icon: Calendar },
+  { title: "Blog", url: "/blog", icon: Calendar },
   { title: "Search", url: "#", icon: Search },
   { title: "Settings", url: "#", icon: Settings },
 ]
@@ -89,7 +90,6 @@ const SideBar = () => {
                   <SidebarMenuBadge>50</SidebarMenuBadge>
                 )}
               </SidebarMenuItem>
-
             ))}
           </SidebarMenu>
         </SidebarGroupContent>

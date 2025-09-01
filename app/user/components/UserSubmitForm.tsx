@@ -54,7 +54,7 @@ const onSubmit = async (values: FormSchemaType) => {
   formData.append("username", values.username)
   formData.append("phone", values.phone)
   formData.append("role", values.role)
-  formData.append("status", values.status.toString())
+  formData.append("status", String(values.status)) // Use String() to safely convert number to string
 
   if (values.image) {
     formData.append("image", values.image) // 👈 only if provided
@@ -201,8 +201,8 @@ try {
               <FormLabel>Status</FormLabel>
               <FormControl>
                 <Switch
-                  checked={field.value === 1} // ✅ checked if status = 1
-                  onCheckedChange={(checked) => field.onChange(checked ? 1 : 0)} // ✅ map boolean → number
+                  checked={field.value === 1} // Convert number to boolean for UI
+                  onCheckedChange={(checked) => field.onChange(checked ? 1 : 0)} // Convert boolean back to number
                 />
               </FormControl>
             </FormItem>
