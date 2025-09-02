@@ -28,6 +28,7 @@ import {
   Projector,
   Search,
   Settings,
+  TvMinimalPlay,
   User2,
   User2Icon,
 } from "lucide-react";
@@ -54,7 +55,7 @@ const items = [
   { title: "Home", url: "/", icon: Home },
   { title: "User", url: "/user", icon: User2Icon },
   { title: "Blog", url: "/blog", icon: NewspaperIcon },
-  // { title: "Search", url: "#", icon: Search },
+  { title: "Social Media", url: "/social-meida", icon: TvMinimalPlay },
   // { title: "Settings", url: "#", icon: Settings },
 ];
 
