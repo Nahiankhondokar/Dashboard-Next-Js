@@ -94,7 +94,9 @@ export function DataTable<TData, TValue>({
       </Table>
 
       {/* Paginatio */}
-      <DataTablePagination table={table} />
+      <div className="my-4">
+        <DataTablePagination table={table} />
+      </div>
     </div>
   )
 }

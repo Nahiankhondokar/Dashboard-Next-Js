@@ -1,12 +1,223 @@
+"use client";
 import AppChartArea from "@/components/AppChartArea";
 import AppChartBar from "@/components/AppChartBar";
+import BreadcrumbComponent from "@/components/Breadcrumb";
+import { usePathname } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Columns } from "./components/Columns";
+import { DataTable } from "@/components/DataTable";
+import AddNewBlog from "./components/AddNewBlog";
+
+const allData = [
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    {
+      id: "728ed52f",
+      name: "Namian",
+      email: "test@gmail.com",
+      username: "nahi",
+      phone: "01308663002",
+      role : "Admin",
+      image : "image.png",
+      status: true,
+    },
+    
+  ];
 
 const BlogPage = () => {
+  const pathname = usePathname();
+
   return (
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 2xl:grid-cols-2 gap-4">
-          <h1>This is blog page</h1>
+    <div>
+      <BreadcrumbComponent pathname={pathname} />
+      <div>
+        <div className="flex items-center justify-between w-full">
+          <h1 className="text-2xl font-bold">Blog List</h1>
+          <div>
+            <Dialog>
+              <DialogTrigger>Add Blog</DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Blog</DialogTitle>
+                  <DialogDescription>
+                    Create your dream blog to express your self
+                    <AddNewBlog />
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+        {/* User List Show */}
+        <DataTable columns={Columns} data={allData} />
       </div>
-    );
-}
+    </div>
+  );
+};
 
 export default BlogPage;
