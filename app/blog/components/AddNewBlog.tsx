@@ -14,12 +14,14 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   image: z.instanceof(File).nullable().optional(),
-  status: z.number().default(0),
+  status: z.boolean().default(true),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
@@ -31,7 +33,7 @@ const AddNewBlog = () => {
       title: "",
       description: "",
       image: null,
-      status: 0,
+      status: true,
     },
   });
 
@@ -71,7 +73,7 @@ const AddNewBlog = () => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <textarea placeholder="description" {...field} />
+                  <Textarea placeholder="description" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -109,10 +111,10 @@ const AddNewBlog = () => {
                 <FormLabel>Status</FormLabel>
                 <FormControl>
                   <Switch
-                    checked={field.value === 1} // Convert number to boolean for UI
+                    checked={field.value === true} // Convert number to boolean for UI
                     onCheckedChange={(checked) =>
-                      field.onChange(checked ? 1 : 0)
-                    } // Convert boolean back to number
+                      field.onChange(checked ? true : false)
+                    }
                   />
                 </FormControl>
               </FormItem>

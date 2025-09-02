@@ -14,180 +14,43 @@ import {
 import { Columns } from "./components/Columns";
 import { DataTable } from "@/components/DataTable";
 import AddNewBlog from "./components/AddNewBlog";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@radix-ui/react-separator";
 
 const allData = [
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    {
-      id: "728ed52f",
-      name: "Namian",
-      email: "test@gmail.com",
-      username: "nahi",
-      phone: "01308663002",
-      role : "Admin",
-      image : "image.png",
-      status: true,
-    },
-    
-  ];
+  {
+    id: "728ed52f",
+    title: "Namian",
+    description:
+      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
+    image: "image.png",
+    status: true,
+  },
+  {
+    id: "728ed52f",
+    title: "Namian",
+    description:
+      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
+    image: "image.png",
+    status: true,
+  },
+  {
+    id: "728ed52f",
+    title: "Namian",
+    description:
+      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
+    image: "image.png",
+    status: true,
+  },
+  {
+    id: "728ed52f",
+    title: "Namian",
+    description:
+      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
+    image: "image.png",
+    status: true,
+  },
+];
 
 const BlogPage = () => {
   const pathname = usePathname();
@@ -200,12 +63,17 @@ const BlogPage = () => {
           <h1 className="text-2xl font-bold">Blog List</h1>
           <div>
             <Dialog>
-              <DialogTrigger>Add Blog</DialogTrigger>
+              <DialogTrigger>
+                <Button type="submit" variant="outline" className="w-full">
+                  Add New Blog
+                </Button>
+              </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Add New Blog</DialogTitle>
                   <DialogDescription>
                     Create your dream blog to express your self
+                    <Separator />
                     <AddNewBlog />
                   </DialogDescription>
                 </DialogHeader>
