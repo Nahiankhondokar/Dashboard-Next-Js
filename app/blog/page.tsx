@@ -1,6 +1,5 @@
 "use client";
-import AppChartArea from "@/components/AppChartArea";
-import AppChartBar from "@/components/AppChartBar";
+
 import BreadcrumbComponent from "@/components/Breadcrumb";
 import { usePathname } from "next/navigation";
 import {

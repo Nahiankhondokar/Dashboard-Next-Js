@@ -20,19 +20,23 @@ import {
 } from "@/components/ui/table"
 import { DataTablePagination } from "./DataTablePagination"
 import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data: TData[],
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  data
 }: DataTableProps<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
+  const pathname = usePathname();
+  // alert(pathname)
 
   const table = useReactTable({
     data,
@@ -78,7 +82,9 @@ export function DataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <Link href={`${pathname}/${row.original.id}`}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Link>
                   </TableCell>
                 ))}
               </TableRow>
