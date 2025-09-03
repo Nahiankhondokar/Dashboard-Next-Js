@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  Edit,
+  MoreHorizontal,
+  NotebookTabs,
+  Trash,
+} from "lucide-react";
+import AddNewBlog from "./AddNewBlog";
 
 export type User = {
   id: string;
@@ -81,15 +89,34 @@ export const Columns: ColumnDef<User>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
+              className="font-medium"
             >
-              Copy payment ID
+              <NotebookTabs />
+              Details
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            {/* <DropdownMenuSeparator /> */}
+            <DropdownMenuItem
+              className="font-medium"
+            >
+              <Dialog>
+                <DialogTrigger>
+                    <Edit />
+                    Edit
+                </DialogTrigger>
+                <DialogContent>
+                  <AddNewBlog />
+                </DialogContent>
+              </Dialog>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="font-medium"
+              onClick={() => navigator.clipboard.writeText(payment.id)}
+            >
+              <Trash />
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
