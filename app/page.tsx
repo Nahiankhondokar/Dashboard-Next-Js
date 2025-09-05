@@ -1,5 +1,5 @@
-import AppChartArea from "@/components/AppChartArea";
-import AppChartBar from "@/components/AppChartBar";
+import AppChartArea from "@/components/common/AppChartArea";
+import AppChartBar from "@/components/common/AppChartBar";
 
 const HomePage = () => {
   return (

@@ -20,8 +20,8 @@ import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-  image: z.instanceof(File).nullable().optional(),
-  status: z.boolean().default(true),
+  // image: z.instanceof(File).nullable().optional(),
+  // status: z.boolean().default(true),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
@@ -32,8 +32,8 @@ const EditBlog = () => {
     defaultValues: {
       title: "",
       description: "",
-      image: null,
-      status: true,
+      // image: null,
+      // status: true,
     },
   });
 
@@ -82,7 +82,7 @@ const EditBlog = () => {
 
 
           {/* Image Upload (Optional) */}
-          <FormField
+          {/* <FormField
             control={form.control}
             name="image"
             render={({ field }) => (
@@ -100,10 +100,10 @@ const EditBlog = () => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           {/* Status */}
-          <FormField
+          {/* <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
@@ -119,7 +119,7 @@ const EditBlog = () => {
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
 
           {/* Submit */}
           <Button type="submit" variant="outline" className="w-full">

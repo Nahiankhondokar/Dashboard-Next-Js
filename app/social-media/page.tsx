@@ -1,7 +1,7 @@
 "use client";
-import AppChartArea from "@/components/AppChartArea";
-import AppChartBar from "@/components/AppChartBar";
-import BreadcrumbComponent from "@/components/Breadcrumb";
+import AppChartArea from "@/components/common/AppChartArea";
+import AppChartBar from "@/components/common/AppChartBar";
+import BreadcrumbComponent from "@/components/common/Breadcrumb";
 import { usePathname } from "next/navigation";
 import {
   Dialog,
@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Columns } from "./components/Columns";
-import { DataTable } from "@/components/DataTable";
+import { DataTable } from "@/components/common/DataTable";
 import AddNewBlog from "./components/AddNewBlog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";

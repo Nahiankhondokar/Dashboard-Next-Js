@@ -1,7 +1,7 @@
 "use client"
 
-import BreadcrumbComponent from '@/components/Breadcrumb'
-import { DataTable } from '@/components/DataTable'
+import BreadcrumbComponent from '@/components/common/Breadcrumb'
+import { DataTable } from '@/components/common/DataTable'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import { Columns } from './components/columns'

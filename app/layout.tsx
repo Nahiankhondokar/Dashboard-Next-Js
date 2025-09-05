@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import SideBar from "@/components/SideBar";
-import Navabar from "@/components/Navabar";
+import SideBar from "@/components/common/SideBar";
+import Navabar from "@/components/common/Navabar";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";

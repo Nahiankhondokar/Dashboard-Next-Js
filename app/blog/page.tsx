@@ -1,6 +1,6 @@
 "use client";
 
-import BreadcrumbComponent from "@/components/Breadcrumb";
+import BreadcrumbComponent from "@/components/common/Breadcrumb";
 import { usePathname } from "next/navigation";
 import {
   Dialog,
@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Columns } from "./components/Columns";
-import { DataTable } from "@/components/DataTable";
+import { DataTable } from "@/components/common/DataTable";
 import AddNewBlog from "./components/AddNewBlog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
@@ -22,32 +22,32 @@ const allData = [
     title: "Namian",
     description:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: "image.png",
-    status: true,
+    // image: "image.png",
+    // status: true,
   },
   {
     id: "728ed52f",
     title: "Namian",
     description:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: "image.png",
-    status: true,
+    // image: "image.png",
+    // status: true,
   },
   {
     id: "728ed52f",
     title: "Namian",
     description:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: "image.png",
-    status: true,
+    // image: "image.png",
+    // status: true,
   },
   {
     id: "728ed52f",
     title: "Namian",
     description:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: "image.png",
-    status: true,
+    // image: "image.png",
+    // status: true,
   },
 ];
 

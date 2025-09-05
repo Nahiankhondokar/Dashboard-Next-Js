@@ -2,13 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
@@ -20,16 +18,14 @@ import {
   Trash,
 } from "lucide-react";
 import AddNewBlog from "./AddNewBlog";
+import EditBlog from "./EditBlog";
 
 export type User = {
   id: string;
-  name: string;
-  email: string;
-  username: string;
-  phone: string;
-  role: string;
-  image: string;
-  status: boolean;
+  title: string;
+  description: string;
+  // image: string;
+  // status: boolean;
 };
 
 export const Columns: ColumnDef<User>[] = [
@@ -67,14 +63,14 @@ export const Columns: ColumnDef<User>[] = [
     accessorKey: "description",
     header: "Description",
   },
-  {
-    accessorKey: "image",
-    header: "Image",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
+  // {
+  //   accessorKey: "image",
+  //   header: "Image",
+  // },
+  // {
+  //   accessorKey: "status",
+  //   header: "Status",
+  // },
   {
     id: "actions",
     cell: ({ row }) => {
@@ -100,15 +96,7 @@ export const Columns: ColumnDef<User>[] = [
             <DropdownMenuItem
               className="font-medium"
             >
-              <Dialog>
-                <DialogTrigger>
-                    <Edit />
-                    Edit
-                </DialogTrigger>
-                <DialogContent>
-                  <AddNewBlog />
-                </DialogContent>
-              </Dialog>
+               <Edit /> Edit
             </DropdownMenuItem>
             <DropdownMenuItem
               className="font-medium"
