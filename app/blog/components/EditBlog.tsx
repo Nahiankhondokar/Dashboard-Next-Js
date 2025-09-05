@@ -13,9 +13,16 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useBlogModal } from "@/stores/useBlogModal";
 
 const formSchema = z.object({
   title: z.string(),
@@ -41,48 +48,54 @@ const EditBlog = () => {
     console.log("Blog submitted:", values);
   };
 
+  const { open, selectedBlog, closeModal } = useBlogModal();
+
   return (
-    <div>
-      <Form {...form}>
-        <form
-          id="user-form"
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+    <Dialog open={open} onOpenChange={closeModal}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit Blog</DialogTitle>
+        </DialogHeader>
+        {selectedBlog ? (
+          <div>
+            <Form {...form}>
+              <form
+                id="user-form"
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                {/* Title */}
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="title" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          {/* Title */}
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input placeholder="title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                {/* Description */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="description" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          {/* Description */}
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="description" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-
-          {/* Image Upload (Optional) */}
-          {/* <FormField
+                {/* Image Upload (Optional) */}
+                {/* <FormField
             control={form.control}
             name="image"
             render={({ field }) => (
@@ -102,8 +115,8 @@ const EditBlog = () => {
             )}
           /> */}
 
-          {/* Status */}
-          {/* <FormField
+                {/* Status */}
+                {/* <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
@@ -121,13 +134,18 @@ const EditBlog = () => {
             )}
           /> */}
 
-          {/* Submit */}
-          <Button type="submit" variant="outline" className="w-full">
-            Submit
-          </Button>
-        </form>
-      </Form>
-    </div>
+                {/* Submit */}
+                <Button type="submit" variant="outline" className="w-full">
+                  Submit
+                </Button>
+              </form>
+            </Form>
+          </div>
+        ) : (
+          <p>No blog selected</p>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 

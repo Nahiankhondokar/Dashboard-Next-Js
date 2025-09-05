@@ -82,6 +82,8 @@ const BlogPage = () => {
         </div>
         {/* User List Show */}
         <DataTable columns={Columns} data={allData} />
+
+        
       </div>
     </div>
   );
