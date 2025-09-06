@@ -21,7 +21,7 @@ const formSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   image: z.instanceof(File).nullable().optional(),
-  status: z.boolean().default(true),
+  // status: z.boolean().default(true),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
@@ -33,7 +33,7 @@ const AddNewBlog = () => {
       title: "",
       description: "",
       image: null,
-      status: true,
+      // status: true,
     },
   });
 
@@ -103,7 +103,7 @@ const AddNewBlog = () => {
           />
 
           {/* Status */}
-          <FormField
+          {/* <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
@@ -119,7 +119,7 @@ const AddNewBlog = () => {
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
 
           {/* Submit */}
           <Button type="submit" variant="outline" className="w-full">

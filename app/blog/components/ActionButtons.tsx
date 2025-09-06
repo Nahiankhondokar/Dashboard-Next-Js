@@ -22,11 +22,12 @@ const ActionButtons = ({ blog }: { blog: Blog }) => {
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end">
-        {/* Details */}
+        {/* Details → navigation (so keep asChild with Link) */}
         <DropdownMenuItem asChild>
-          <Link href={`/blog/${blog.id}`}
-          //  onClick={() => navigator.clipboard.writeText(blog.id)}
+          <Link
+            href={`/blog/${blog.id}`}
             className="flex items-center w-full font-medium"
           >
             <NotebookTabs className="mr-2 h-4 w-4" />
@@ -34,26 +35,26 @@ const ActionButtons = ({ blog }: { blog: Blog }) => {
           </Link>
         </DropdownMenuItem>
 
-        {/* Edit */}
-        <DropdownMenuItem asChild>
-          <button
-            onClick={() => openModal(blog)}
-            className="flex items-center w-full font-medium"
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            Edit
-          </button>
+        {/* Edit → just open modal (no navigation) */}
+        <DropdownMenuItem
+          onClick={(e) => {
+            e.preventDefault(); // stop navigation
+            e.stopPropagation(); // stop event bubbling to parent row
+            openModal(blog); // open your modal
+          }}
+          className="flex items-center w-full font-medium"
+        >
+          <Edit className="mr-2 h-4 w-4" />
+          Edit
         </DropdownMenuItem>
 
-        {/* Delete */}
-        <DropdownMenuItem asChild>
-          <button
-            onClick={() => navigator.clipboard.writeText(blog.id)}
-            className="flex items-center w-full font-medium"
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Delete
-          </button>
+        {/* Delete → can later show confirmation modal */}
+        <DropdownMenuItem
+          onClick={() => console.log("Delete blog", blog.id)}
+          className="flex items-center w-full font-medium text-red-600"
+        >
+          <Trash className="mr-2 h-4 w-4" />
+          Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -45,27 +45,27 @@ const BlogPage = () => {
       <div>
         <div className="flex items-center justify-between w-full">
           <h1 className="text-2xl font-bold">Blog List</h1>
-          <div>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button type="submit" variant="outline" className="w-full">
-                  Add New Blog
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Blog</DialogTitle>
-                  <DialogDescription>
-                    Create your dream blog to express your self
-                    <Separator />
-                    <AddNewBlog />
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
-          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Add New Blog</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Blog</DialogTitle>
+                <DialogDescription>
+                  Fill out the details below to create a new blog.
+                </DialogDescription>
+              </DialogHeader>
+
+              <Separator className="my-2" />
+
+              {/* Your blog form component */}
+              <AddNewBlog />
+            </DialogContent>
+          </Dialog>
         </div>
-        {/* User List Show */}
+
+        {/* Blog Data Table */}
         <BlogDataTable columns={Columns} data={allData} />
 
         {/* Edit modal */}
