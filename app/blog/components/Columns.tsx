@@ -5,16 +5,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import ActionButtons from "./ActionButtons";
 import Image from "next/image";
 import fallbackImage from "./../../../public/assets/img/fallbackimage.png";
+import { Blog } from "../interface/Blog";
 
-export type User = {
-  id: string;
-  title: string;
-  description: string;
-  image: string | null;
-  // status: boolean;
-};
-
-export const Columns: ColumnDef<User>[] = [
+export const Columns: ColumnDef<Blog>[] = [
   {
     id: "select",
     header: ({ table }) => (
