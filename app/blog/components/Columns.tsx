@@ -1,26 +1,17 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  Edit,
-  MoreHorizontal,
-  NotebookTabs,
-  Trash,
-} from "lucide-react";
-import AddNewBlog from "./AddNewBlog";
-import EditBlog from "./EditBlog";
-import { useBlogModal } from "@/stores/useBlogModal";
 import ActionButtons from "./ActionButtons";
+import Image from "next/image";
+import { ImageOff } from "lucide-react";
+import fallbackImage from "./../../../public/assets/img/avatar.png";
 
 export type User = {
   id: string;
   title: string;
   description: string;
-  // image: string;
+  image: string | null;
   // status: boolean;
 };
 
@@ -58,11 +49,31 @@ export const Columns: ColumnDef<User>[] = [
   {
     accessorKey: "description",
     header: "Description",
+    cell: ({ row }) => (
+      <div className="line-clamp-2">{row.getValue("description")}</div>
+    ),
   },
-  // {
-  //   accessorKey: "image",
-  //   header: "Image",
-  // },
+  {
+    accessorKey: "image",
+    header: "Image",
+    cell: ({ row }) => {
+      const image = row.getValue("image") as string | null;
+
+      return image != null ? (
+        <Image
+          src={image}
+          alt="blog"
+          width={50}
+          height={50}
+          className="rounded-md object-cover"
+        />
+      ) : (
+        <div className="flex items-center justify-center w-[50px] h-[50px] bg-gray-100 rounded-md">
+          <Image src={fallbackImage} alt="" className="text-gray-400 w-5 h-5" />
+        </div>
+      );
+    },
+  },
   // {
   //   accessorKey: "status",
   //   header: "Status",

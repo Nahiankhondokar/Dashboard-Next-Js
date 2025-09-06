@@ -18,17 +18,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { DataTablePagination } from "./DataTablePagination"
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { DataTablePagination } from "@/components/common/DataTablePagination"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
 }
 
-export function DataTable<TData, TValue>({
+export function BlogDataTable<TData, TValue>({
   columns,
   data
 }: DataTableProps<TData, TValue>) {
@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      <Link href={`${pathname}/${row.original.id}`} key={row.original.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Link>
                   </TableCell>
                 ))}
               </TableRow>

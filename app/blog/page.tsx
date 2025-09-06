@@ -11,42 +11,27 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Columns } from "./components/Columns";
-import { DataTable } from "@/components/common/DataTable";
 import AddNewBlog from "./components/AddNewBlog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
+import EditBlogModal from "./components/EditBlog";
+import { BlogDataTable } from "./components/BlogDataTable";
 
 const allData = [
   {
-    id: "728ed52f",
+    id: "234sasf",
     title: "Namian",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    // image: "image.png",
+      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
+    image: null,
     // status: true,
   },
   {
-    id: "728ed52f",
+    id: "234sdfer",
     title: "Namian",
     description:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    // image: "image.png",
-    // status: true,
-  },
-  {
-    id: "728ed52f",
-    title: "Namian",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    // image: "image.png",
-    // status: true,
-  },
-  {
-    id: "728ed52f",
-    title: "Namian",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    // image: "image.png",
+    image: null,
     // status: true,
   },
 ];
@@ -62,7 +47,7 @@ const BlogPage = () => {
           <h1 className="text-2xl font-bold">Blog List</h1>
           <div>
             <Dialog>
-              <DialogTrigger>
+              <DialogTrigger asChild>
                 <Button type="submit" variant="outline" className="w-full">
                   Add New Blog
                 </Button>
@@ -81,9 +66,10 @@ const BlogPage = () => {
           </div>
         </div>
         {/* User List Show */}
-        <DataTable columns={Columns} data={allData} />
+        <BlogDataTable columns={Columns} data={allData} />
 
-        
+        {/* Edit modal */}
+        <EditBlogModal />
       </div>
     </div>
   );
