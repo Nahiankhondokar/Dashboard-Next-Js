@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
-import { CalendarDays, Clock, ImageIcon, ImageOff, User } from "lucide-react";
+import { CalendarDays, Clock, User } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import { Blog } from "../interface/Blog";
-import fallbackImage from "./../../../public/assets/img/avatar.png";
+import fallbackImage from "./../../../public/assets/img/fallbackimage.png";
 
  
 
@@ -30,15 +30,15 @@ export default function BlogDetailPage({ params }: { params: { id: string } }) {
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <Card className="overflow-hidden">
         {/* Blog Image */}
-        <div className="relative aspect-image">
+        <div className="relative aspect-image border bg-muted">
           {blog && <Image
             src={blog.image || fallbackImage}
             alt="blog"
-            width={800}
-            height={400}
+            width={400}
+            height={200}
             className="object-cover w-full h-full"
           />}
-           <Image src={fallbackImage} alt="blog" width={500} height={500} />
+           <Image src={fallbackImage} alt="blog" width={300} height={150} className="m-auto"/>
         </div>
         
         <CardContent className="p-6 md:p-8">

@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import ActionButtons from "./ActionButtons";
 import Image from "next/image";
-import fallbackImage from "./../../../public/assets/img/avatar.png";
+import fallbackImage from "./../../../public/assets/img/fallbackimage.png";
 
 export type User = {
   id: string;
