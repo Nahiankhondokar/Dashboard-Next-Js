@@ -1,3 +1,4 @@
+// stores/useBlogStore.ts
 import { Blog } from "@/app/blog/interface/Blog";
 import { create } from "zustand";
 
@@ -5,7 +6,7 @@ type UpdatePayload = {
   title?: string;
   description?: string;
   image?: File | null;
-};
+} | FormData; // Add FormData as a possible type
 
 interface BlogModalState {
   open: boolean;
@@ -14,7 +15,7 @@ interface BlogModalState {
   closeModal: () => void;
   blogs: Blog[];
   setBlogs: (items: Blog[]) => void;
-  updateBlog: (id: number, payload: UpdatePayload) => void;
+  updateBlog: (id: number, payload: UpdatePayload) => Promise<Blog>; // Update parameter type
   loading: boolean;
   error?: string | null;
 }
@@ -33,33 +34,29 @@ export const useBlogStore = create<BlogModalState>((set) => ({
     try {
       let body: BodyInit;
       const headers: HeadersInit = {};
-
+      
+      // Check if payload is FormData
       if (payload instanceof FormData) {
         body = payload;
-        // ⚠️ Don’t set Content-Type manually – browser will add multipart boundary
       } else {
         body = JSON.stringify(payload);
         headers["Content-Type"] = "application/json";
       }
-
+      
       const res = await fetch(`/api/blogs/${id}`, {
         method: "PUT",
         headers,
         body,
       });
-
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || `HTTP ${res.status}`);
       }
-
       const updated: Blog = await res.json();
-
       set((state) => ({
         blogs: state.blogs.map((b) => (b.id === id ? updated : b)),
         loading: false,
       }));
-
       return updated;
     } catch (err: unknown) {
       if (err instanceof Error) {

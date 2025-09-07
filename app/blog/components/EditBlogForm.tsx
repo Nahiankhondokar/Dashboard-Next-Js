@@ -12,7 +12,6 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Blog } from "../interface/Blog";
 import { useBlogStore } from "@/stores/useBlogStore";
@@ -20,8 +19,7 @@ import { useBlogStore } from "@/stores/useBlogStore";
 const formSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-   image: z.instanceof(File).nullable().optional(),
-  // status: z.boolean().default(true),
+  image: z.instanceof(File).nullable().optional(),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
@@ -33,44 +31,44 @@ const EditBlogForm = ({
   blog: Blog;
   closeModal: () => void;
 }) => {
-
-  const { updateBlog, loading } = useBlogStore((state) => ({
-    updateBlog: state.updateBlog,
-    loading: state.loading,
-  }));
+  // Fix: Select individual properties instead of an object
+  const updateBlog = useBlogStore((state) => state.updateBlog);
+  const loading = useBlogStore((state) => state.loading);
 
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
-   defaultValues: {
-  title: blog.title,
-  description: blog.description ?? "",
-  image: null,
-}
+    defaultValues: {
+      title: blog.title,
+      description: blog.description ?? "",
+      image: null,
+    },
   });
 
- const onSubmit = async (values: formSchemaType) => {
-  try {
-    const formData = new FormData();
-    formData.append("title", values.title);
-    formData.append("description", values.description ?? "");
-    if (values.image) {
-      formData.append("image", values.image); // ✅ File is valid
+  const onSubmit = async (values: formSchemaType) => {
+    try {
+      const formData = new FormData();
+      formData.append("title", values.title);
+      formData.append("description", values.description ?? "");
+      if (values.image) {
+        formData.append("image", values.image);
+      }
+      await updateBlog(blog.id, formData);
+      closeModal();
+    } catch (err) {
+      console.error("Update failed", err);
     }
+  };
 
-    await updateBlog(blog.id, formData);
-    closeModal();
-  } catch (err) {
-    console.error("Update failed", err);
-  }
-};
-
+  // Fix: Memoize the reset values to prevent unnecessary resets
   useEffect(() => {
-  form.reset({
-    title: blog.title,
-    description: blog.description ?? "",
-    image: null,
-  });
-}, [blog, form]);
+    const resetValues = {
+      title: blog.title,
+      description: blog.description ?? "",
+      image: null,
+    };
+    
+    form.reset(resetValues);
+  }, [blog, form]);
 
   return (
     <div>
@@ -94,7 +92,7 @@ const EditBlogForm = ({
               </FormItem>
             )}
           />
-
+          
           {/* Description */}
           <FormField
             control={form.control}
@@ -109,14 +107,14 @@ const EditBlogForm = ({
               </FormItem>
             )}
           />
-
-          {/* Image Upload (Optional) */}
+          
+          {/* Image Upload */}
           <FormField
             control={form.control}
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Profile Image</FormLabel>
+                <FormLabel>Blog Image</FormLabel>
                 <FormControl>
                   <Input
                     type="file"
@@ -130,28 +128,9 @@ const EditBlogForm = ({
               </FormItem>
             )}
           />
-
-          {/* Status */}
-          {/* <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={field.value === true} // Convert number to boolean for UI
-                    onCheckedChange={(checked) =>
-                      field.onChange(checked ? true : false)
-                    }
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          /> */}
-
+          
           {/* Submit */}
-          <Button type="submit" variant="outline" className="w-full">
+          <Button type="submit" variant="outline" className="w-full" disabled={loading}>
             {loading ? "Saving..." : "Save changes"}
           </Button>
         </form>
