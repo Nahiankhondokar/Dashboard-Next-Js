@@ -22,12 +22,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useBlogModal } from "@/stores/useBlogModal";
+import { useBlogStore } from "@/stores/useBlogStore";
 import EditBlogForm from "./EditBlogForm";
 
 
 const EditBlog = () => {
-  const { open, selectedBlog, closeModal } = useBlogModal();
+  const { open, selectedBlog, closeModal } = useBlogStore();
 
   console.log(open);
 
@@ -38,7 +38,7 @@ const EditBlog = () => {
           <DialogTitle>Edit Blog</DialogTitle>
         </DialogHeader>
         {selectedBlog ? (
-          <EditBlogForm blog={selectedBlog} />
+          <EditBlogForm blog={selectedBlog} closeModal={closeModal} />
         ) : (
           <p>No blog selected</p>
         )}

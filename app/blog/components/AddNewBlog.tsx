@@ -20,7 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-  image: z.instanceof(File).nullable().optional(),
+  image: z.any().nullable().optional(),
   // status: z.boolean().default(true),
 });
 

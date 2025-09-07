@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -15,33 +15,62 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Blog } from "../interface/Blog";
+import { useBlogStore } from "@/stores/useBlogStore";
 
 const formSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-  // image: z.instanceof(File).nullable().optional(),
+   image: z.instanceof(File).nullable().optional(),
   // status: z.boolean().default(true),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
 
-const EditBlogForm = ({ blog }: { blog: Blog }) => {
-      const form = useForm<formSchemaType>({
+const EditBlogForm = ({
+  blog,
+  closeModal,
+}: {
+  blog: Blog;
+  closeModal: () => void;
+}) => {
+
+  const { updateBlog, loading } = useBlogStore((state) => ({
+    updateBlog: state.updateBlog,
+    loading: state.loading,
+  }));
+
+  const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      // image: null,
-      // status: true,
-    },
+   defaultValues: {
+  title: blog.title,
+  description: blog.description ?? "",
+  image: null,
+}
   });
 
-  console.log(blog);
+ const onSubmit = async (values: formSchemaType) => {
+  try {
+    const formData = new FormData();
+    formData.append("title", values.title);
+    formData.append("description", values.description ?? "");
+    if (values.image) {
+      formData.append("image", values.image); // ✅ File is valid
+    }
 
-  const onSubmit = async (values: formSchemaType) => {
-    console.log("Blog submitted:", values);
-  };
+    await updateBlog(blog.id, formData);
+    closeModal();
+  } catch (err) {
+    console.error("Update failed", err);
+  }
+};
 
+  useEffect(() => {
+  form.reset({
+    title: blog.title,
+    description: blog.description ?? "",
+    image: null,
+  });
+}, [blog, form]);
 
   return (
     <div>
@@ -82,7 +111,7 @@ const EditBlogForm = ({ blog }: { blog: Blog }) => {
           />
 
           {/* Image Upload (Optional) */}
-          {/* <FormField
+          <FormField
             control={form.control}
             name="image"
             render={({ field }) => (
@@ -100,7 +129,7 @@ const EditBlogForm = ({ blog }: { blog: Blog }) => {
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
 
           {/* Status */}
           {/* <FormField
@@ -123,7 +152,7 @@ const EditBlogForm = ({ blog }: { blog: Blog }) => {
 
           {/* Submit */}
           <Button type="submit" variant="outline" className="w-full">
-            Submit
+            {loading ? "Saving..." : "Save changes"}
           </Button>
         </form>
       </Form>

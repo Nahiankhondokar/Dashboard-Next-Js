@@ -8,11 +8,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { NotebookTabs, Edit, Trash, MoreHorizontal } from "lucide-react";
 import { Blog } from "../interface/Blog";
-import { useBlogModal } from "@/stores/useBlogModal";
+import { useBlogStore } from "@/stores/useBlogStore";
 import Link from "next/link";
 
 const ActionButtons = ({ blog }: { blog: Blog }) => {
-  const { openModal } = useBlogModal();
+  const { openModal } = useBlogStore();
 
   return (
     <DropdownMenu>
