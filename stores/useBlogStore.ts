@@ -10,7 +10,7 @@ type UpdatePayload =
     }
   | FormData; // Add FormData as a possible type
 
-interface BlogModalState {
+interface BlogState {
   open: boolean;
   selectedBlog: Blog | null;
   openModal: (blog: Blog) => void;
@@ -23,7 +23,7 @@ interface BlogModalState {
   error?: string | null;
 }
 
-export const useBlogStore = create<BlogModalState>((set) => ({
+export const useBlogStore = create<BlogState>((set) => ({
   open: false,
   selectedBlog: null,
   openModal: (blog) => set({ open: true, selectedBlog: blog }),
