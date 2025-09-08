@@ -75,9 +75,7 @@ const ActionButtons = ({ blog }: { blog: Blog }) => {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault(),e.stopPropagation();
-              } } // stop dropdown auto-close
+              onSelect={(e) => e.preventDefault()} // stop dropdown auto-close
               className="flex items-center w-full font-medium text-red-600"
             >
               <Trash className="mr-2 h-4 w-4" />
