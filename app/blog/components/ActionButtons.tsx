@@ -21,20 +21,19 @@ import { NotebookTabs, Edit, Trash, MoreHorizontal } from "lucide-react";
 import { Blog } from "../interface/Blog";
 import { useBlogStore } from "@/stores/useBlogStore";
 import Link from "next/link";
+import DeleteAlert from "./DeleteAlert";
 
 const ActionButtons = ({ blog }: { blog: Blog }) => {
   const { openModal } = useBlogStore();
   const { deleteBlog } = useBlogStore();
 
-
-    const handleDelete = async ({ blogId }: { blogId: number }) => {
-      try {
-        await deleteBlog(blogId);
-        // you can add a toast here if needed
-      } catch (err) {
-        console.error("Delete failed:", err);
-      }
-  
+  const handleDelete = async ({ blogId }: { blogId: number }) => {
+    try {
+      await deleteBlog(blogId);
+      // you can add a toast here if needed
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
   };
 
   return (
@@ -71,37 +70,10 @@ const ActionButtons = ({ blog }: { blog: Blog }) => {
           Edit
         </DropdownMenuItem>
 
-        {/* Delete → can later show confirmation modal */}
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <DropdownMenuItem
-              onSelect={(e) => e.preventDefault()} // stop dropdown auto-close
-              className="flex items-center w-full font-medium text-red-600"
-            >
-              <Trash className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. It will permanently delete this
-                blog.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => handleDelete(blog.id)}
-                className="bg-red-600 hover:bg-red-700"
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {/* Delete → confirmation modal */}
+        <DeleteAlert
+          onConfirm={() => handleDelete({ blogId: blog.id })}
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );
