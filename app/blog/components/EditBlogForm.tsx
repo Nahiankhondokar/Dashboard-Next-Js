@@ -31,7 +31,7 @@ const EditBlogForm = ({
   blog: Blog;
   closeModal: () => void;
 }) => {
-  // Fix: Select individual properties instead of an object
+  // Fix: Select individual properties instead of an objects
   const updateBlog = useBlogStore((state) => state.updateBlog);
   const loading = useBlogStore((state) => state.loading);
 

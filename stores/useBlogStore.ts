@@ -2,11 +2,13 @@
 import { Blog } from "@/app/blog/interface/Blog";
 import { create } from "zustand";
 
-type UpdatePayload = {
-  title?: string;
-  description?: string;
-  image?: File | null;
-} | FormData; // Add FormData as a possible type
+type UpdatePayload =
+  | {
+      title?: string;
+      description?: string;
+      image?: File | null;
+    }
+  | FormData; // Add FormData as a possible type
 
 interface BlogModalState {
   open: boolean;
@@ -16,6 +18,7 @@ interface BlogModalState {
   blogs: Blog[];
   setBlogs: (items: Blog[]) => void;
   updateBlog: (id: number, payload: UpdatePayload) => Promise<Blog>; // Update parameter type
+  deleteBlog: (id: number) => Promise<void>
   loading: boolean;
   error?: string | null;
 }
@@ -34,7 +37,7 @@ export const useBlogStore = create<BlogModalState>((set) => ({
     try {
       let body: BodyInit;
       const headers: HeadersInit = {};
-      
+
       // Check if payload is FormData
       if (payload instanceof FormData) {
         body = payload;
@@ -42,7 +45,7 @@ export const useBlogStore = create<BlogModalState>((set) => ({
         body = JSON.stringify(payload);
         headers["Content-Type"] = "application/json";
       }
-      
+
       const res = await fetch(`/api/blogs/${id}`, {
         method: "PUT",
         headers,
@@ -64,6 +67,27 @@ export const useBlogStore = create<BlogModalState>((set) => ({
       } else {
         set({ loading: false, error: "An unknown error occurred" });
       }
+      throw err;
+    }
+  },
+  deleteBlog: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await fetch(`/api/blogs/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed with status ${res.status}`);
+      }
+
+      set((state) => ({
+        blogs: state.blogs.filter((b) => b.id !== id),
+        loading: false,
+      }));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      set({ loading: false, error: message });
       throw err;
     }
   },
