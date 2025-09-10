@@ -4,10 +4,10 @@ import BreadcrumbComponent from '@/components/common/Breadcrumb'
 import { DataTable } from '@/components/common/DataTable'
 import { usePathname } from 'next/navigation'
 import React from 'react'
-import { Columns } from './components/columns'
 import { Sheet, SheetTrigger } from '@/components/ui/sheet'
 import EditUser from './components/EditUser'
 import { Button } from '@/components/ui/button'
+import { Columns } from './components/Columns'
 
 const allData = [
     {

@@ -18,6 +18,7 @@ import {
   NotebookTabs,
   Trash,
 } from "lucide-react";
+import Link from "next/link";
 
 export type User = {
   id: string;
@@ -94,7 +95,7 @@ export const Columns: ColumnDef<User>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const user = row.original;
 
       return (
         <DropdownMenu>
@@ -105,12 +106,18 @@ export const Columns: ColumnDef<User>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-        <DropdownMenuItem>
-           <NotebookTabs className="mr-2 h-4 w-4" />
-              Details
+        <DropdownMenuItem asChild onClick={() => navigator.clipboard.writeText(user)}>
+          <Link
+
+            href={`/user/${user.id}`}
+            className="flex items-center w-full font-medium"
+          >
+            <NotebookTabs className="mr-2 h-4 w-4" />
+            Details
+            </Link>
         </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(user.id)}
             >
               <Edit className="mr-2 h-4 w-4" />
               Edit
