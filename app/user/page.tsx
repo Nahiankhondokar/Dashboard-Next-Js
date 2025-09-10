@@ -7,7 +7,7 @@ import React from 'react'
 import { Sheet, SheetTrigger } from '@/components/ui/sheet'
 import EditUser from './components/EditUser'
 import { Button } from '@/components/ui/button'
-import { Columns } from './components/Columns'
+import { Columns } from './components/columns'
 
 const allData = [
     {
