@@ -1,6 +1,3 @@
-
-
-// components/user/UserProfileDetails.tsx
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -33,7 +30,7 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
       <CardHeader className="text-center pb-2">
         <div className="flex flex-col items-center space-y-4">
           {/* Avatar */}
-          {/* <Avatar className="w-24 h-24 border-4 border-background shadow-lg">
+          <Avatar className="w-24 h-24 border-4 border-background shadow-lg">
             <AvatarImage src={user.image} alt={user.name} />
             <AvatarFallback className="text-2xl font-bold">
               {user.name
@@ -42,7 +39,7 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
                 .join("")
                 .toUpperCase()}
             </AvatarFallback>
-          </Avatar> */}
+          </Avatar>
           
           {/* Name and Status */}
           <div>
