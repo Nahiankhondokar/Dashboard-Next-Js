@@ -15,15 +15,23 @@ import {
   Facebook, 
   Github, 
   Linkedin,
-  Globe
+  Globe,
+  FacebookIcon,
+  GithubIcon
 } from "lucide-react";
 import { User as UserType } from "../type/user";
+import { useParams } from "next/navigation";
+import { useUserStore } from "@/stores/useUserStore";
 
 interface UserProfileDetailsProps {
   user: UserType;
 }
 
 export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
+  const params = useParams();
+  const {detailsUser} = useUserStore();
+  detailsUser(Number(params.id));
+
   return (
    <div>
      <Card className="w-full max-w-md mx-auto">
@@ -31,23 +39,23 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
         <div className="flex flex-col items-center space-y-4">
           {/* Avatar */}
           <Avatar className="w-24 h-24 border-4 border-background shadow-lg">
-            <AvatarImage src={user.image} alt={user.name} />
-            <AvatarFallback className="text-2xl font-bold">
+            {/* <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} /> */}
+            {/* <AvatarFallback className="text-2xl font-bold">
               {user.name
                 .split(" ")
                 .map((n) => n[0])
                 .join("")
                 .toUpperCase()}
-            </AvatarFallback>
+            </AvatarFallback> */}
           </Avatar>
           
           {/* Name and Status */}
           <div>
-            <CardTitle className="text-2xl font-bold">{user.name}</CardTitle>
+            <CardTitle className="text-2xl font-bold">{ "Abdullah Al"}</CardTitle>
             <div className="flex items-center justify-center mt-1">
-              <Badge variant={user.status === "active" ? "default" : "secondary"} className="text-xs">
+              <Badge variant={user.status === true ? "default" : "secondary"} className="text-xs">
                 <UserCheck className="w-3 h-3 mr-1" />
-                {user.status}
+                {user.status ?? false}
               </Badge>
             </div>
           </div>
@@ -58,7 +66,7 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
         {/* Role */}
         <div className="text-center">
           <p className="text-sm text-muted-foreground">Role</p>
-          <p className="font-medium">{user.role}</p>
+          <p className="font-medium">{user.role ?? "Administrator"}</p>
         </div>
         
         <Separator />
@@ -72,7 +80,7 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Email</p>
-              <p className="text-sm font-medium truncate">{user.email}</p>
+              <p className="text-sm font-medium truncate">{user.email ?? "n7aMk@example.com"}</p>
             </div>
           </div>
           
@@ -83,7 +91,7 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Phone</p>
-              <p className="text-sm font-medium">{user.phone}</p>
+              <p className="text-sm font-medium">{user.phone ?? "123-456-7890"}</p>
             </div>
           </div>
           
@@ -94,7 +102,7 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Username</p>
-              <p className="text-sm font-medium">@{user.username}</p>
+              <p className="text-sm font-medium">@{user.username ?? "Nahian"}</p>
             </div>
           </div>
         </div>
@@ -107,23 +115,23 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
           <div className="flex justify-center space-x-4">
             {user.social?.facebook && (
               <Button variant="ghost" size="sm" asChild>
-                <a href={user.social.facebook} target="_blank" rel="noopener noreferrer">
-                  <Facebook className="h-5 w-5 text-blue-600" />
+                <a href={user.social.facebook ?? "#"} target="_blank" rel="noopener noreferrer">
+                  <FacebookIcon className="h-5 w-5 text-blue-600" />
                 </a>
               </Button>
             )}
             
             {user.social?.github && (
               <Button variant="ghost" size="sm" asChild>
-                <a href={user.social.github} target="_blank" rel="noopener noreferrer">
-                  <Github className="h-5 w-5" />
+                <a href={user.social.github ?? "#"} target="_blank" rel="noopener noreferrer">
+                  <GithubIcon className="h-5 w-5" />
                 </a>
               </Button>
             )}
             
             {user.social?.linkedin && (
               <Button variant="ghost" size="sm" asChild>
-                <a href={user.social.linkedin} target="_blank" rel="noopener noreferrer">
+                <a href={user.social.linkedin ?? "#"} target="_blank" rel="noopener noreferrer">
                   <Linkedin className="h-5 w-5 text-blue-700" />
                 </a>
               </Button>
@@ -131,7 +139,7 @@ export default function UserProfileDetails({ user }: UserProfileDetailsProps) {
             
             {user.social?.website && (
               <Button variant="ghost" size="sm" asChild>
-                <a href={user.social.website} target="_blank" rel="noopener noreferrer">
+                <a href={user.social.website ?? "#"} target="_blank" rel="noopener noreferrer">
                   <Globe className="h-5 w-5 text-green-600" />
                 </a>
               </Button>

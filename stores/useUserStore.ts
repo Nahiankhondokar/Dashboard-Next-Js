@@ -20,6 +20,7 @@ interface UserState {
   createUser: (user: Omit<User, "id">) => Promise<void>;
   updateUser: (user: User) => Promise<void>;
   deleteUser: (id: number) => Promise<void>;
+  detailsUser: (id: number) => Promise<User | undefined>;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -94,4 +95,17 @@ export const useUserStore = create<UserState>((set) => ({
       console.error("Delete failed", err);
     }
   },
+
+  // Get user details
+  detailsUser: async (id): Promise<User | undefined> => {
+    try {
+      const res = await fetch(`/api/users/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch user details");
+
+      const user: User = await res.json();
+      return user;
+    } catch (err) {
+      console.error("Fetch user details failed", err);
+    }
+  }
 }));
