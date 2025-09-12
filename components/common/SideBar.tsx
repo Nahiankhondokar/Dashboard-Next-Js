@@ -4,7 +4,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -12,25 +11,16 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
   AppWindowIcon,
-  Calendar,
-  ChevronDown,
   ChevronUp,
   Home,
-  Inbox,
+  LayersIcon,
+  LibraryBig,
   MonitorCogIcon,
   NewspaperIcon,
-  Plus,
-  Projector,
-  Search,
-  Settings,
-  TvMinimalPlay,
   User2,
   User2Icon,
 } from "lucide-react";
@@ -46,11 +36,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../ui/collapsible";
 
 // Menu items.
 const items = [
@@ -59,6 +44,8 @@ const items = [
   { title: "Blog", url: "/blog", icon: NewspaperIcon },
   { title: "Services", url: "/services", icon: MonitorCogIcon },
   { title: "Projects", url: "/projects", icon: AppWindowIcon },
+  { title: "Experience", url: "/experience", icon: LayersIcon },
+  { title: "Skills", url: "/skills", icon: LibraryBig },
   // { title: "Settings", url: "#", icon: Settings },
 ];
 
