@@ -14,6 +14,6 @@ export type User = {
   phone: string;
   role: string;
   image?: string;
-  status: "active" | "inactive";
+  status: boolean;
   social?: SocialLinks;
 };

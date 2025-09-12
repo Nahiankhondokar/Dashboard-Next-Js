@@ -15,7 +15,7 @@ export type User = {
 };
 
 interface UserState {
-  allData: User[];
+  Users: User[];
   fetchUsers: () => Promise<void>;
   createUser: (user: Omit<User, "id">) => Promise<void>;
   updateUser: (user: User) => Promise<void>;
@@ -23,7 +23,7 @@ interface UserState {
 }
 
 export const useUserStore = create<UserState>((set) => ({
-  allData: [],
+  Users: [],
 
   // Fetch all users
   fetchUsers: async () => {
@@ -33,7 +33,7 @@ export const useUserStore = create<UserState>((set) => ({
       // const data: User[] = await res.json();
       // set({ allData: data });
 
-      return set({ allData: mockUsers });
+      return set({ Users: mockUsers });
       
     } catch (err) {
       console.error("Fetch users failed", err);
@@ -72,7 +72,7 @@ export const useUserStore = create<UserState>((set) => ({
       if (!res.ok) throw new Error("Failed to update user");
 
       set((state) => ({
-        allData: state.allData.map((u) =>
+        Users: state.Users.map((u) =>
           u.id === updatedUser.id ? updatedUser : u
         ),
       }));
@@ -88,7 +88,7 @@ export const useUserStore = create<UserState>((set) => ({
       if (!res.ok) throw new Error("Failed to delete user");
 
       set((state) => ({
-        allData: state.allData.filter((u) => u.id !== id),
+        Users: state.Users.filter((u) => u.id !== id),
       }));
     } catch (err) {
       console.error("Delete failed", err);

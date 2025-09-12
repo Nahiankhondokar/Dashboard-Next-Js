@@ -9,7 +9,6 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table"
-
 import {
   Table,
   TableBody,
@@ -20,7 +19,6 @@ import {
 } from "@/components/ui/table"
 import { DataTablePagination } from "./DataTablePagination"
 import { useState } from "react"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 interface DataTableProps<TData, TValue> {
