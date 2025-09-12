@@ -1,9 +1,9 @@
 // types/user.ts
 export type SocialLinks = {
-  facebook?: string;
-  github?: string;
-  linkedin?: string;
-  website?: string;
+  facebook?: string | null;
+  github?: string | null;
+  linkedin?: string | null;
+  website?: string | null;
 };
 
 export type User = {

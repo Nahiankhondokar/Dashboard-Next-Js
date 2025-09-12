@@ -2,17 +2,8 @@
 
 import { create } from "zustand";
 import {mockUsers} from "../app/user/mockUsers/mockUsers";
+import { User } from "../app/user/type/user";
 
-export type User = {
-  id: number;
-  name: string;
-  email: string;
-  username: string;
-  phone: string;
-  role: string;
-  image: string;
-  status: boolean;
-};
 
 interface UserState {
   Users: User[];
