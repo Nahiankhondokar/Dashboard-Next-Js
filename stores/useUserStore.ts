@@ -99,11 +99,13 @@ export const useUserStore = create<UserState>((set) => ({
   // Get user details
   detailsUser: async (id): Promise<User | undefined> => {
     try {
-      const res = await fetch(`/api/users/${id}`);
-      if (!res.ok) throw new Error("Failed to fetch user details");
+      // const res = await fetch(`/api/users/${id}`);
+      // if (!res.ok) throw new Error("Failed to fetch user details");
 
-      const user: User = await res.json();
-      return user;
+      // const user: User = await res.json();
+      // return user;
+
+      return mockUsers.find((user) => user.id === id);
     } catch (err) {
       console.error("Fetch user details failed", err);
     }

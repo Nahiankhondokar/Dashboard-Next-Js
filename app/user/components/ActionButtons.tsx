@@ -16,7 +16,7 @@ import { User } from "../type/user";
 
 const ActionButtons = ({ user }: { user: User }) => {
   const { deleteUser } = useUserStore();
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
