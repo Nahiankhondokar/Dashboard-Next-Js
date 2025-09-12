@@ -1,6 +1,7 @@
 "use client";
 
 import { create } from "zustand";
+import {mockUsers} from "../app/user/mockUsers/mockUsers";
 
 export type User = {
   id: number;
@@ -27,10 +28,13 @@ export const useUserStore = create<UserState>((set) => ({
   // Fetch all users
   fetchUsers: async () => {
     try {
-      const res = await fetch("/api/users");
-      if (!res.ok) throw new Error("Failed to fetch users");
-      const data: User[] = await res.json();
-      set({ allData: data });
+      // const res = await fetch("/api/users");
+      // if (!res.ok) throw new Error("Failed to fetch users");
+      // const data: User[] = await res.json();
+      // set({ allData: data });
+
+      return set({ allData: mockUsers });
+      
     } catch (err) {
       console.error("Fetch users failed", err);
     }
@@ -39,17 +43,19 @@ export const useUserStore = create<UserState>((set) => ({
   // Create a new user
   createUser: async (user) => {
     try {
-      const res = await fetch("/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      });
-      if (!res.ok) throw new Error("Failed to create user");
-      const newUser: User = await res.json();
+      // const res = await fetch("/api/users", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(user),
+      // });
+      // if (!res.ok) throw new Error("Failed to create user");
+      // const newUser: User = await res.json();
 
-      set((state) => ({
-        allData: [...state.allData, newUser],
-      }));
+      // set((state) => ({
+      //   allData: [...state.allData, newUser],
+      // }));
+
+      // ✅ Optional: show success toast or reset form
     } catch (err) {
       console.error("Create user failed", err);
     }
