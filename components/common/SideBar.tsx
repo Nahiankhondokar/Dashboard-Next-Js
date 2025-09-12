@@ -18,11 +18,13 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
+  AppWindowIcon,
   Calendar,
   ChevronDown,
   ChevronUp,
   Home,
   Inbox,
+  MonitorCogIcon,
   NewspaperIcon,
   Plus,
   Projector,
@@ -55,7 +57,8 @@ const items = [
   { title: "Home", url: "/", icon: Home },
   { title: "User", url: "/user", icon: User2Icon },
   { title: "Blog", url: "/blog", icon: NewspaperIcon },
-  { title: "Social Media", url: "/social-meida", icon: TvMinimalPlay },
+  { title: "Services", url: "/services", icon: MonitorCogIcon },
+  { title: "Projects", url: "/projects", icon: AppWindowIcon },
   // { title: "Settings", url: "#", icon: Settings },
 ];
 
@@ -106,7 +109,7 @@ const SideBar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupAction>
             <Plus /> <span className="sr-only">Add Project</span>
@@ -129,10 +132,10 @@ const SideBar = () => {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
 
         {/* Collapsable Menu */}
-        <Collapsible defaultOpen className="group/collapsible">
+        {/* <Collapsible defaultOpen className="group/collapsible">
           <SidebarGroup>
             <SidebarGroupLabel asChild>
               <CollapsibleTrigger>
@@ -161,7 +164,7 @@ const SideBar = () => {
               </SidebarGroupContent>
             </CollapsibleContent>
           </SidebarGroup>
-        </Collapsible>
+        </Collapsible> */}
       </SidebarContent>
 
       {/* FOOTER WITH DROPDOWN */}
