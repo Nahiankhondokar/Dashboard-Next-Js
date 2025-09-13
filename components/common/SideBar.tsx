@@ -42,10 +42,10 @@ const items = [
   { title: "Home", url: "/", icon: Home },
   { title: "User", url: "/user", icon: User2Icon },
   { title: "Blog", url: "/blog", icon: NewspaperIcon },
-  { title: "Services", url: "/services", icon: MonitorCogIcon },
-  { title: "Projects", url: "/projects", icon: AppWindowIcon },
+  { title: "Services", url: "/service", icon: MonitorCogIcon },
+  { title: "Projects", url: "/project", icon: AppWindowIcon },
   { title: "Experience", url: "/experience", icon: LayersIcon },
-  { title: "Skills", url: "/skills", icon: LibraryBig },
+  { title: "Skill", url: "/skill", icon: LibraryBig },
   // { title: "Settings", url: "#", icon: Settings },
 ];
 
