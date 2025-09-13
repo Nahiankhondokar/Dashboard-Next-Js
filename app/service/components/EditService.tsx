@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useBlogStore } from "@/stores/useBlogStore";
-import EditBlogForm from "./EditBlogForm";
+import EditServiceForm from "./EditServiceForm";
 
 
 const EditBlog = () => {
@@ -20,12 +20,12 @@ const EditBlog = () => {
     <Dialog open={open} onOpenChange={closeModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Blog</DialogTitle>
+          <DialogTitle>Edit Service</DialogTitle>
         </DialogHeader>
         {selectedBlog ? (
-          <EditBlogForm blog={selectedBlog} closeModal={closeModal} />
+          <EditServiceForm blog={selectedBlog} closeModal={closeModal} />
         ) : (
-          <p>No blog selected</p>
+          <p>No service selected</p>
         )}
       </DialogContent>
     </Dialog>
