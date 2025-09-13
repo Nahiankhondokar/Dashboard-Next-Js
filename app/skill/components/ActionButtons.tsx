@@ -7,16 +7,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { NotebookTabs, Edit, Trash, MoreHorizontal } from "lucide-react";
-import { Service } from "../interface/Service";
+import { Skill } from "../interface/Skill";
 import { useBlogStore } from "@/stores/useBlogStore";
 import Link from "next/link";
 import DeleteAlert from "./DeleteAlert";
 import { usePathname } from "next/navigation";
 
-const ActionButtons = ({ service }: { service: Service }) => {
+const ActionButtons = ({ skill }: { skill: Skill }) => {
   const { openModal } = useBlogStore();
   const { deleteBlog } = useBlogStore();
-    const pathname = usePathname();
+  const pathname = usePathname();
 
   const handleDelete = async ({ blogId }: { blogId: number }) => {
     try {
@@ -40,7 +40,7 @@ const ActionButtons = ({ service }: { service: Service }) => {
         {/* Details → navigation (so keep asChild with Link) */}
         <DropdownMenuItem asChild>
           <Link
-            href={`${pathname}/${service.id}`}
+            href={`${pathname}/${skill.id}`}
             className="flex items-center w-full font-medium"
           >
             <NotebookTabs className="mr-2 h-4 w-4" />
@@ -53,7 +53,7 @@ const ActionButtons = ({ service }: { service: Service }) => {
           onClick={(e) => {
             e.preventDefault(); // stop navigation
             e.stopPropagation(); // stop event bubbling to parent row
-            openModal(service); // open your modal
+            openModal(skill); // open your modal
           }}
           className="flex items-center w-full font-medium"
         >
@@ -63,7 +63,7 @@ const ActionButtons = ({ service }: { service: Service }) => {
 
         {/* Delete → confirmation modal */}
         <DeleteAlert
-          onConfirm={() => handleDelete({ blogId: service.id })}
+          onConfirm={() => handleDelete({ blogId: skill.id })}
         />
       </DropdownMenuContent>
     </DropdownMenu>

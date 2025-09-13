@@ -5,9 +5,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import ActionButtons from "./ActionButtons";
 import Image from "next/image";
 import fallbackImage from "./../../../public/assets/img/fallbackimage.png";
-import { Service } from "../interface/Service";
+import { Skill } from "../interface/Skill";
 
-export const Columns: ColumnDef<Service>[] = [
+export const Columns: ColumnDef<Skill>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -72,6 +72,6 @@ export const Columns: ColumnDef<Service>[] = [
   // },
   {
     id: "actions",
-    cell: ({ row }) => <ActionButtons blog={row.original} />,
+    cell: ({ row }) => <ActionButtons skill={row.original} />,
   },
 ];

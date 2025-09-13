@@ -15,7 +15,7 @@ import AddNewBlog from "./components/AddNewService";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
 import EditBlogModal from "./components/EditService";
-import { BlogDataTable } from "./components/ServiceDataTable";
+import { ServiceDataTable } from "./components/ServiceDataTable";
 
 const allData = [
   {
@@ -66,7 +66,7 @@ const Service = () => {
         </div>
 
         {/* Blog Data Table */}
-        <BlogDataTable columns={Columns} data={allData} />
+        <ServiceDataTable columns={Columns} data={allData} />
 
         {/* Edit modal */}
         <EditBlogModal />
