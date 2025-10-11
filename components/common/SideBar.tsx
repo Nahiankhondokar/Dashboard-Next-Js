@@ -39,7 +39,7 @@ import {
 
 // Menu items.
 const items = [
-  { title: "Home", url: "/", icon: Home },
+  { title: "Home", url: "/dashboard", icon: Home },
   { title: "User", url: "/user", icon: User2Icon },
   { title: "Blog", url: "/blog", icon: NewspaperIcon },
   { title: "Services", url: "/service", icon: MonitorCogIcon },
@@ -57,7 +57,7 @@ const SideBar = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/">
+              <Link href="/dashboard">
                 <Image
                   src={Avatar}
                   alt="User"
