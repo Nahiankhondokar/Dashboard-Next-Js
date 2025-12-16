@@ -1,8 +1,8 @@
 "use client";
 
 import { create } from "zustand";
-import {mockUsers} from "../app/user/mockUsers/mockUsers";
-import { User } from "../app/user/type/user";
+import {mockUsers} from "@/app/(dashboard)/dashboard/user/mockUsers/mockUsers";
+import { User } from "@/app/(dashboard)/dashboard/user/type/user";
 
 
 interface UserState {

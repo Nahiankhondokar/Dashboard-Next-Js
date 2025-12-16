@@ -1,5 +1,5 @@
 // stores/useExperienceStore.ts
-import { Experience } from "@/app/experience/interface/Experience";
+import { Experience } from "@/app/(dashboard)/dashboard/experience/interface/Experience";
 import { create } from "zustand";
 
 type UpdatePayload =

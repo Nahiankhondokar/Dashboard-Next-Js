@@ -1,5 +1,5 @@
 // stores/useBlogStore.ts
-import { Blog } from "@/app/blog/interface/Blog";
+import { Blog } from "@/app/(dashboard)/dashboard/blog/interface/Blog";
 import { create } from "zustand";
 
 type UpdatePayload =

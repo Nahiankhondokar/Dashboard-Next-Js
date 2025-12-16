@@ -1,5 +1,5 @@
 // stores/useSkillStore.ts
-import { Skill } from "@/app/skill/interface/Skill";
+import { Skill } from "@/app/(dashboard)/dashboard/skill/interface/Skill";
 import { create } from "zustand";
 
 type UpdatePayload =

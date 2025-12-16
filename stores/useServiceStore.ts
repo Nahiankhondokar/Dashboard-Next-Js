@@ -1,5 +1,5 @@
 // stores/useserviceStore.ts
-import { Service } from "@/app/service/interface/Service";
+import { Service } from "@/app/(dashboard)/dashboard/service/interface/Service";
 import { create } from "zustand";
 
 type UpdatePayload =

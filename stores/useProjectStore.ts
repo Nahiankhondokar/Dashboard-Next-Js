@@ -1,5 +1,5 @@
 // stores/useProjectStore.ts
-import { Project } from "@/app/project/interface/Project";
+import { Project } from "@/app/(dashboard)/dashboard/project/interface/Project";
 import { create } from "zustand";
 
 type UpdatePayload =
