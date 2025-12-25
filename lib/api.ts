@@ -2,20 +2,28 @@ export async function apiFetch<T>(
     url: string,
     options: RequestInit = {}
 ): Promise<T> {
-    const baseUrl = "http://localhost:8000";
-    const res = await fetch(
-        `${baseUrl}${url}`,
-        {
-            ...options,
-            credentials: "include", // 🔥 required for auth cookies
-            headers: {
-                "Content-Type": "application/json",
-                ...options.headers,
-            },
-        }
-    );
+    const token = typeof window !== "undefined"
+            ? localStorage.getItem("auth_token")
+            : null;
 
-    console.log('res '+ res)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...options.headers,
+        },
+    });
+
+    // 🔥 Handle unauthenticated globally
+    if (res.status === 401 || res.status === 403) {
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+        }
+        throw new Error("Unauthorized");
+    }
 
     if (!res.ok) {
         const error = await res.json().catch(() => ({}));

@@ -26,9 +26,28 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
+import {apiFetch} from "@/lib/api";
+import {toast} from "sonner";
 
 const Navabar = () => {
   const { setTheme } = useTheme();
+
+  const handleLogout = async () => {
+    try {
+      await apiFetch("logout", {
+        method: "POST",
+      });
+
+      document.cookie = `auth_token=; path=/; SameSite=Lax; Max-Age=;`;
+      localStorage.removeItem('auth_token');
+      toast.success("Loggedout successfully");
+    } catch {
+      // even if API fails, we must logout locally
+    } finally {
+      window.location.href = "/login";
+    }
+  };
+
 
   return (
     <nav className="flex items-center justify-between px-4 py-2 border-b bg-background sticky top-0 z-10">
@@ -85,8 +104,11 @@ const Navabar = () => {
               <Settings className="mr-2 h-4 w-4" /> Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">
-              <LogOut className="mr-2 h-4 w-4" /> Logout
+            <DropdownMenuItem className="text-red-600" asChild>
+              <div className="font-bold cursor-pointer" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

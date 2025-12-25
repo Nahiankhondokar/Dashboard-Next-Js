@@ -40,12 +40,12 @@ import {
 // Menu items.
 const items = [
   { title: "Home", url: "/dashboard", icon: Home },
-  { title: "User", url: "/user", icon: User2Icon },
-  { title: "Blog", url: "/blog", icon: NewspaperIcon },
-  { title: "Services", url: "/service", icon: MonitorCogIcon },
-  { title: "Projects", url: "/project", icon: AppWindowIcon },
-  { title: "Experience", url: "/experience", icon: LayersIcon },
-  { title: "Skill", url: "/skill", icon: LibraryBig },
+  { title: "User", url: "/dashboard/user", icon: User2Icon },
+  { title: "Blog", url: "/dashboard/blog", icon: NewspaperIcon },
+  { title: "Services", url: "/dashboard/service", icon: MonitorCogIcon },
+  { title: "Projects", url: "/dashboard/project", icon: AppWindowIcon },
+  { title: "Experience", url: "/dashboard/experience", icon: LayersIcon },
+  { title: "Skill", url: "/dashboard/skill", icon: LibraryBig },
   // { title: "Settings", url: "#", icon: Settings },
 ];
 

@@ -17,6 +17,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import {User} from "@/type/user";
+
+
+
+export interface LoginResponse {
+    token: string;
+    user: User;
+}
 
 export default function LoginPage() {
     const router = useRouter();
@@ -30,22 +38,16 @@ export default function LoginPage() {
         try {
             setLoading(true);
 
-            // CSRF (if Sanctum)
-            // const baseUrl = "http://localhost:8000";
-            // await fetch(
-            //     `${baseUrl}/sanctum/csrf-cookie`,
-            //     { credentials: "include" }
-            // );
-
-            await fetch(
-                "http://localhost:8000/sanctum/csrf-cookie",
-                { credentials: "include" }
-            );
-
-            await apiFetch("/api/login", {
+            const res = await apiFetch<LoginResponse>("login", {
                 method: "POST",
                 body: JSON.stringify(data),
             });
+
+            // store in cookie (for middleware)
+            // 7 days
+            document.cookie = `auth_token=${res.token}; path=/; SameSite=Lax; Max-Age=${60 * 60 * 24 * 7}`;
+            localStorage.setItem("auth_token", res.token);
+
 
             router.push("/dashboard");
         } catch (error: any) {
@@ -56,6 +58,7 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="min-h-screen flex items-center justify-center">
