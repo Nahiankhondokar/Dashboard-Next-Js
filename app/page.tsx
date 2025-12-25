@@ -74,7 +74,7 @@ function HomeSection({ onNavigate }: { onNavigate: (s: Section) => void }) {
             </div>
             <div className="w-full lg:w-2/3 mt-10 lg:mt-0 lg:pl-10 text-center lg:text-left">
                 <h1 className="text-4xl lg:text-6xl font-extrabold uppercase leading-tight">
-                    <span className="text-yellow-500 block">I'm Abdullah Al Nahian.</span>
+                    <span className="text-yellow-500 block">I am Abdullah Al Nahian.</span>
                     Software Engineer
                 </h1>
                 <p className="mt-6 text-gray-300 max-w-xl text-lg leading-relaxed mx-auto lg:mx-0">
@@ -302,7 +302,7 @@ function ContactSection() {
             <h2 className="text-center text-4xl lg:text-5xl font-black uppercase mb-16">Get In <span className="text-yellow-500">Touch</span></h2>
             <div className="grid lg:grid-cols-3 gap-10">
                 <div className="lg:col-span-1 space-y-8">
-                    <h3 className="text-2xl font-bold uppercase">Don't be shy!</h3>
+                    <h3 className="text-2xl font-bold uppercase">Do not be shy!</h3>
                     <p className="text-gray-400">Feel free to get in touch with me. I am always open to discussing new projects or creative ideas.</p>
                     <div className="flex items-center gap-4">
                         <div className="text-yellow-500"><MapPin /></div>
