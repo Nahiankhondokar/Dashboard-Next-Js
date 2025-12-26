@@ -4,11 +4,12 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Home, User, Briefcase, Mail, FileText,
-    ExternalLink, Download, MapPin, Phone, Mail as MailIcon, GraduationCapIcon
+    ExternalLink, Download, MapPin, Phone, Mail as MailIcon, GraduationCapIcon, LogInIcon
 } from "lucide-react";
 import {GraduationCap} from "lucide";
 import Image from "next/image";
 import Me from "@/public/assets/me/me.jpg";
+import Link from "next/link";
 
 // --- Types ---
 type Section = "home" | "about" | "portfolio" | "contact";
@@ -22,6 +23,7 @@ export default function Portfolio() {
         { id: "about", icon: <User size={20} />, label: "About" },
         { id: "portfolio", icon: <Briefcase size={20} />, label: "Portfolio" },
         { id: "contact", icon: <Mail size={20} />, label: "Contact" },
+        { id: "signin", icon: <LogInIcon size={20} />, label: "Signin" },
     ];
 
     return (
@@ -36,12 +38,12 @@ export default function Portfolio() {
                             activeSection === item.id ? "bg-yellow-500 text-white" : "bg-[#2b2b2b] hover:bg-yellow-500"
                         }`}
                     >
-            <span className={activeSection === item.id ? "text-white" : "group-hover:text-white"}>
-              {item.icon}
-            </span>
+                        <span className={activeSection === item.id ? "text-white" : "group-hover:text-white"}>
+                          {item.icon}
+                        </span>
                         <span className="absolute right-14 px-4 py-2 bg-yellow-500 text-black font-bold opacity-0 group-hover:opacity-100 transition-all rounded-l-full uppercase text-xs tracking-widest pointer-events-none">
-              {item.label}
-            </span>
+                          {item.label}
+                        </span>
                     </button>
                 ))}
             </nav>
@@ -53,6 +55,7 @@ export default function Portfolio() {
                     {activeSection === "about" && <AboutSection key="about" />}
                     {activeSection === "portfolio" && <PortfolioSection key="portfolio" />}
                     {activeSection === "contact" && <ContactSection key="contact" />}
+                    {/*{activeSection === "signin" && <Link href="/login" />}*/}
                 </AnimatePresence>
             </main>
         </div>
