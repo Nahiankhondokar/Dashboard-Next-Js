@@ -7,6 +7,8 @@ import {
     ExternalLink, Download, MapPin, Phone, Mail as MailIcon, GraduationCapIcon
 } from "lucide-react";
 import {GraduationCap} from "lucide";
+import Image from "next/image";
+import Me from "@/public/assets/me/me.jpg";
 
 // --- Types ---
 type Section = "home" | "about" | "portfolio" | "contact";
@@ -68,13 +70,13 @@ function HomeSection({ onNavigate }: { onNavigate: (s: Section) => void }) {
                 <div className="w-72 h-72 lg:w-[450px] lg:h-[550px] rounded-3xl border-4 border-[#252525] overflow-hidden shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
                     {/* Replace with your image */}
                     <div className="bg-[#252525] w-full h-full flex items-center justify-center text-gray-500">
-                        [Your Image]
+                        <Image src={Me} alt="image"/>
                     </div>
                 </div>
             </div>
             <div className="w-full lg:w-2/3 mt-10 lg:mt-0 lg:pl-10 text-center lg:text-left">
                 <h1 className="text-4xl lg:text-6xl font-extrabold uppercase leading-tight">
-                    <span className="text-yellow-500 block">I am Abdullah Al Nahian.</span>
+                    <span className="text-yellow-500 block">I'm Abdullah Al Nahian.</span>
                     Software Engineer
                 </h1>
                 <p className="mt-6 text-gray-300 max-w-xl text-lg leading-relaxed mx-auto lg:mx-0">
