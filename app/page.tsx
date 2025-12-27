@@ -26,7 +26,7 @@ export default function Portfolio() {
     ];
 
     return (
-        <div className="bg-[#111111] text-white min-h-screen font-sans selection:bg-yellow-500 selection:text-black">
+        <div className="bg-[#0f172a] text-white min-h-screen font-sans selection:bg-yellow-500 selection:text-black">
 
             <div className="fixed top-8 right-8 z-[60]">
                 <Link href="/login">
