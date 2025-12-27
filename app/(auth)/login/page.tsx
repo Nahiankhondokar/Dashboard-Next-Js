@@ -18,6 +18,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import {User} from "@/type/user";
+import {LogInIcon, StepBackIcon} from "lucide-react";
+import {StepBack} from "lucide";
+import Link from "next/link";
 
 
 
@@ -64,7 +67,7 @@ export default function LoginPage() {
         <div className="min-h-screen flex items-center justify-center">
             <Card className="w-[380px]">
                 <CardHeader className="text-center border-b-2 mb-1">
-                    <CardTitle>SignIn</CardTitle>
+                    <CardTitle>Sign In</CardTitle>
                     <CardDescription>
                         Login to access your dashboard
                     </CardDescription>
@@ -112,8 +115,14 @@ export default function LoginPage() {
                             type="submit"
                             disabled={loading}
                         >
+                            <LogInIcon size="16" />
                             {loading ? "Logging in..." : "Login"}
                         </Button>
+                        <Link href="/" className="flex justify-center items-center gap-2 text-yellow-500">
+                            <StepBackIcon size="16" />
+                            Home Page
+                        </Link>
+
                     </form>
                 </CardContent>
             </Card>

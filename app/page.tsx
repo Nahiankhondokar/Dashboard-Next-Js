@@ -23,11 +23,19 @@ export default function Portfolio() {
         { id: "about", icon: <User size={20} />, label: "About" },
         { id: "portfolio", icon: <Briefcase size={20} />, label: "Portfolio" },
         { id: "contact", icon: <Mail size={20} />, label: "Contact" },
-        { id: "signin", icon: <LogInIcon size={20} />, label: "Signin" },
     ];
 
     return (
         <div className="bg-[#111111] text-white min-h-screen font-sans selection:bg-yellow-500 selection:text-black">
+
+            <div className="fixed top-8 right-8 z-[60]">
+                <Link href="/login">
+                    <button className="flex items-center gap-3 bg-[#2b2b2b] border border-yellow-500/30 px-6 py-2 rounded-full hover:bg-yellow-500 hover:text-black transition-all font-bold uppercase text-xs tracking-widest">
+                        <LogInIcon size={16} />
+                        Sign In
+                    </button>
+                </Link>
+            </div>
             {/* Fixed Desktop Navigation */}
             <nav className="fixed right-8 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-5">
                 {navItems.map((item) => (
@@ -55,7 +63,6 @@ export default function Portfolio() {
                     {activeSection === "about" && <AboutSection key="about" />}
                     {activeSection === "portfolio" && <PortfolioSection key="portfolio" />}
                     {activeSection === "contact" && <ContactSection key="contact" />}
-                    {/*{activeSection === "signin" && <Link href="/login" />}*/}
                 </AnimatePresence>
             </main>
         </div>
