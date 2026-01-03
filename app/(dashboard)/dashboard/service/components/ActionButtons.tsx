@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { NotebookTabs, Edit, Trash, MoreHorizontal } from "lucide-react";
+import { NotebookTabs, Edit, MoreHorizontal } from "lucide-react";
 import { Service } from "../interface/Service";
 import { useBlogStore } from "@/stores/useBlogStore";
 import Link from "next/link";
@@ -40,7 +40,7 @@ const ActionButtons = ({ service }: { service: Service }) => {
         {/* Details → navigation (so keep asChild with Link) */}
         <DropdownMenuItem asChild>
           <Link
-            href={`${pathname}/${service.id}`}
+            href={`${pathname}/${service?.id}`}
             className="flex items-center w-full font-medium"
           >
             <NotebookTabs className="mr-2 h-4 w-4" />

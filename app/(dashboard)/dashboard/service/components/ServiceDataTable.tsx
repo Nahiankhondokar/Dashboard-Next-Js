@@ -82,7 +82,9 @@ export function ServiceDataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                      <Link href={`${pathname}/${row.original.id}`} key={row.original.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Link>
+                      <Link href={`${pathname}/${row?.original?.id}`} key={row?.original?.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Link>
                   </TableCell>
                 ))}
               </TableRow>
@@ -97,7 +99,7 @@ export function ServiceDataTable<TData, TValue>({
         </TableBody>
       </Table>
 
-      {/* Paginatio */}
+      {/* Pagination */}
       <div className="my-4">
         <DataTablePagination table={table} />
       </div>

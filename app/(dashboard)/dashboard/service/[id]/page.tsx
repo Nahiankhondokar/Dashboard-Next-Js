@@ -11,19 +11,19 @@ import { CalendarDays, Clock, User } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useState } from "react";
-import { Blog } from "../interface/Service";
+import { Service } from "../interface/Service";
 import fallbackImage from "../../../../../public/assets/img/fallbackimage.png";
 
  
 
 export default function BlogDetailPage({ params }: { params: { id: string } }) {
 
-  const [blog, setBlog] = useState<Blog | null>(null);
+  const [service, setService] = useState<Service | null>(null);
 
-  const fetchBlog = async () => {
-    const res = await fetch(`/api/blog/${params.id}`);
+  const fetchServices = async () => {
+    const res = await fetch(`/api/services/${params.id}`);
     const data = await res.json();
-    setBlog(data);
+    setService(data);
   };
 
   return (
@@ -31,9 +31,9 @@ export default function BlogDetailPage({ params }: { params: { id: string } }) {
       <Card className="overflow-hidden">
         {/* Blog Image */}
         <div className="relative aspect-image border bg-muted">
-          {blog && <Image
-            src={blog.image || fallbackImage}
-            alt="blog"
+          {service && <Image
+            src={service.image || fallbackImage}
+            alt="service"
             width={400}
             height={200}
             className="object-cover w-full h-full"
