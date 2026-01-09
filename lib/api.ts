@@ -16,7 +16,6 @@ export async function apiFetch<T>(
         },
     });
 
-    // 🔥 Handle unauthenticated globally
     if (res.status === 401 || res.status === 403) {
         if (typeof window !== "undefined") {
             localStorage.removeItem("token");
