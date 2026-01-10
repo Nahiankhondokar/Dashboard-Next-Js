@@ -14,32 +14,17 @@ import { Columns } from "./components/Columns";
 import AddNewSkill from "./components/AddNewExperience";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
-import { SkillDataTable } from "./components/ExperienceDataTable";
+import { ExperienceDataTable } from "./components/ExperienceDataTable";
 import EditSkill from "./components/EditExperience";
 import {apiFetch} from "@/lib/api";
 
-// const allData = [
-//   {
-//     id: 1,
-//     title: "Namian",
-//     description:
-//       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-//     image: null,
-//     // status: true,
-//   },
-//   {
-//     id: 2,
-//     title: "Namian",
-//     description:
-//       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-//     image: null,
-//     // status: true,
-//   },
-// ];
+const allData = [];
 
-const allData = apiFetch('experiences');
+// const allData = apiFetch('experiences', {
+//   method : "GET"
+// });
 
-const Skill = () => {
+const Experience = () => {
   const pathname = usePathname();
 
   return (
@@ -69,7 +54,7 @@ const Skill = () => {
         </div>
 
         {/* Blog Data Table */}
-        <SkillDataTable columns={Columns} data={allData} />
+        <ExperienceDataTable columns={Columns} data={allData} />
 
         {/* Edit modal */}
         <EditSkill />
@@ -78,4 +63,4 @@ const Skill = () => {
   );
 };
 
-export default Skill;
+export default Experience;

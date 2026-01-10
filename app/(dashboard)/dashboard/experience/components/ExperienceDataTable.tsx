@@ -28,7 +28,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[],
 }
 
-export function SkillDataTable<TData, TValue>({
+export function ExperienceDataTable<TData, TValue>({
   columns,
   data
 }: DataTableProps<TData, TValue>) {
@@ -36,7 +36,6 @@ export function SkillDataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
   const pathname = usePathname();
-  // alert(pathname)
 
   const table = useReactTable({
     data,
@@ -82,7 +81,9 @@ export function SkillDataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                      <Link href={`${pathname}/${row.original.id}`} key={row.original.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Link>
+                      <Link href={`${pathname}/${row?.original?.id}`} key={row?.original?.id}>{
+                        flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Link>
                   </TableCell>
                 ))}
               </TableRow>
