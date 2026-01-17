@@ -18,11 +18,11 @@ import { ExperienceDataTable } from "./components/ExperienceDataTable";
 import EditSkill from "./components/EditExperience";
 import {apiFetch} from "@/lib/api";
 
-const allData = [];
+// const allData = [];
 
-// const allData = apiFetch('experiences', {
-//   method : "GET"
-// });
+const allData = apiFetch('experiences', {
+  method : "GET"
+});
 
 const Experience = () => {
   const pathname = usePathname();
@@ -54,7 +54,7 @@ const Experience = () => {
         </div>
 
         {/* Blog Data Table */}
-        <ExperienceDataTable columns={Columns} data={allData} />
+        <ExperienceDataTable columns={Columns} data={allData.data} />
 
         {/* Edit modal */}
         <EditSkill />
