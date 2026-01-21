@@ -11,12 +11,10 @@ type UpdatePayload =
   | FormData; // Add FormData as a possible type
 
 interface ExperienceState {
-  open: boolean;
   selectedExperience: Experience | null;
-  openModal: (Experience: Experience) => void;
-  closeModal: () => void;
   Experiences: Experience[];
   setExperiences: (items: Experience[]) => void;
+  fetchExperience: () => Promise<Experience>;
   updateExperience: (id: number, payload: UpdatePayload) => Promise<Experience>; // Update parameter type
   deleteExperience: (id: number) => Promise<void>;
   loading: boolean;
@@ -24,14 +22,32 @@ interface ExperienceState {
 }
 
 export const useExperienceStore = create<ExperienceState>((set) => ({
-  open: false,
   selectedExperience: null,
-  openModal: (Experience) => set({ open: true, selectedExperience: Experience }),
-  closeModal: () => set({ open: false, selectedExperience: null }),
   Experiences: [],
   loading: false,
   error: null,
   setExperiences: (items) => set({ Experiences: items }),
+  fetchExperience: async () => {
+    set({ loading: true, error: null });
+    try {
+      const res = await fetch(`/api/Experiences`, {
+        method: "GET",
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed with status ${res.status}`);
+      }
+
+      set((state) => ({
+        Experiences: res.data,
+        loading: false,
+      }));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      set({ loading: false, error: message });
+      throw err;
+    }
+  },
   updateExperience: async (id, payload) => {
     set({ loading: true, error: null });
     try {
