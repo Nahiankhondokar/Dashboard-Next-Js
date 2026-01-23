@@ -14,16 +14,10 @@ import { Columns } from "./components/Columns";
 import AddNewSkill from "./components/AddNewExperience";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
-import { ExperienceTable } from "./components/ExperienceTable";
+import ExperienceTable  from "./components/ExperienceTable";
 import EditSkill from "./components/EditExperience";
 import {apiFetch} from "@/lib/api";
 import EditExperience from "./components/EditExperience";
-
-// const allData = [];
-
-const allData = apiFetch('experiences', {
-  method : "GET"
-});
 
 const Experience = () => {
   const pathname = usePathname();

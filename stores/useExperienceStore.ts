@@ -2,12 +2,14 @@
 import {ApiResponse, Experience} from "@/app/(dashboard)/dashboard/experience/interface/Experience";
 import { create } from "zustand";
 import {apiFetch} from "@/lib/api";
+import {PaginationResponse} from "@/components/common/pagination/PaginationType";
 
 interface ExperienceState {
   selectedExperience: Experience | null;
   experiences: Experience[];
+  pagination: PaginationResponse<Experience>["meta"] | null;
   setExperiences: (items: Experience[]) => void;
-  fetchExperience: () => Promise<void>;
+  fetchExperiences: (page?: number) => Promise<void>;
   loading: boolean;
   error?: string | null;
 }
@@ -15,16 +17,17 @@ interface ExperienceState {
 export const useExperienceStore = create<ExperienceState>((set) => ({
   selectedExperience: null,
   experiences: [],
+  pagination: null,
   loading: false,
   error: null,
   setExperiences: (items) => set({ experiences: items }),
-  fetchExperience: async () => {
+  fetchExperiences: async (page = 1, limit = 10) => {
     set({ loading: true, error: null });
     try {
 
-      const res = await apiFetch<ApiResponse<Experience[]>>('experience', {
-        method: 'GET'
-      })
+      const res = await apiFetch<PaginationResponse<Experience>>(
+          `experiences?page=${page}&limit=${limit}`
+      );
 
       console.log(res);
 
@@ -34,6 +37,7 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
 
       set({
         experiences: res.data,
+        pagination: res.meta,
         loading: false,
       });
     } catch (err: unknown) {
