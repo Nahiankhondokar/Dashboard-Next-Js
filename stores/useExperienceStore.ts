@@ -29,12 +29,6 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
           `experiences?page=${page}&limit=${limit}`
       );
 
-      console.log(res);
-
-      // if (!res.ok) {
-      //   throw new Error(`Failed with status ${res.status}`);
-      // }
-
       set({
         experiences: res.data,
         pagination: res.meta,

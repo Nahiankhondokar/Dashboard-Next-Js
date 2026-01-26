@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
+import {AuthProvider} from "@/components/providers/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Nahian - Portfolio",
@@ -19,7 +20,9 @@ export default function RootLayout({children}: {
           enableSystem
           disableTransitionOnChange
       >
-        {children}
+          <AuthProvider>
+              {children}
+          </AuthProvider>
       </ThemeProvider>
       </body>
       </html>

@@ -1,19 +1,26 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-    const rawToken = req.cookies.get("auth_token")?.value;
-    const token = rawToken && rawToken.length > 0 ? rawToken : null;
+    const token = req.cookies.get("auth_token")?.value ?? null;
+    const { pathname } = req.nextUrl;
 
-    const pathname = req.nextUrl.pathname;
+    const isAuthPage =
+        pathname === "/login" || pathname === "/register";
 
-    // 🔐 Protect dashboard
-    if (pathname.startsWith("/dashboard") && !token) {
-        return NextResponse.redirect(new URL("/login", req.url));
+    const isProtectedRoute = pathname.startsWith("/dashboard");
+
+    // 🔐 Not logged in → block protected routes
+    if (isProtectedRoute && !token) {
+        const loginUrl = new URL("/login", req.url);
+        loginUrl.searchParams.set("redirect", pathname);
+
+        return NextResponse.redirect(loginUrl);
     }
 
-    // 🚫 Prevent login/register when logged in
-    if ((pathname === "/login" || pathname === "/register") && token) {
+    // 🚫 Logged in → block auth pages
+    if (isAuthPage && token) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
