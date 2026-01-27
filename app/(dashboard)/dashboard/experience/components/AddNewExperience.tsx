@@ -19,6 +19,11 @@ import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   title: z.string(),
+    company: z.string().nullable(),
+    duration: z.string().nullable(),
+    position: z.string().nullable(),
+    start_date: z.date().nullable(),
+    end_date: z.date().nullable(),
   description: z.string().optional(),
   image: z.any().nullable().optional(),
   // status: z.boolean().default(true),
@@ -31,6 +36,11 @@ const AddNewExperience = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
+        company: "",
+        duration: "",
+        position: "",
+        start_date: null,
+        end_date: null,
       description: "",
       image: null,
       // status: true,
@@ -64,6 +74,36 @@ const AddNewExperience = () => {
               </FormItem>
             )}
           />
+
+            {/* Company */}
+            <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Company</FormLabel>
+                        <FormControl>
+                            <Input placeholder="company" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            {/* Position */}
+            <FormField
+                control={form.control}
+                name="position"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Position</FormLabel>
+                        <FormControl>
+                            <Input placeholder="position" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
 
           {/* Description */}
           <FormField
