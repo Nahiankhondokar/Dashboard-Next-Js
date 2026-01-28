@@ -2,11 +2,12 @@ export interface Experience {
   id: number;
   title: string;
   description: string | null;
+  position: string | null;
   duration: string | null;
   company: string | null;
   start_date: string | null;
   end_date: string | null;
-  media: Record<string, unknown> | null;
+  image: Record<string, unknown> | null;
 }
 export interface ApiResponse<T> {
   data: T;

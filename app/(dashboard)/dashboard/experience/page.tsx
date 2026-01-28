@@ -10,17 +10,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Columns } from "./components/Columns";
-import AddNewSkill from "./components/AddNewExperience";
+import AddNewExperience from "./components/AddNewExperience";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
 import ExperienceTable  from "./components/ExperienceTable";
-import EditSkill from "./components/EditExperience";
-import {apiFetch} from "@/lib/api";
 import EditExperience from "./components/EditExperience";
+import {useState} from "react";
 
 const Experience = () => {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
   return (
     <div>
@@ -28,7 +27,7 @@ const Experience = () => {
       <div>
         <div className="flex items-center justify-between w-full">
           <h1 className="text-2xl font-bold">Experience List</h1>
-          <Dialog>
+          <Dialog open={open} onOpenChange={(v) => setOpen(!open)}>
             <DialogTrigger asChild>
               <Button variant="outline">Add New Experience</Button>
             </DialogTrigger>
@@ -43,7 +42,7 @@ const Experience = () => {
               <Separator className="my-2" />
 
               {/* Your Experience form component */}
-              <AddNewSkill />
+              <AddNewExperience open={open}/>
             </DialogContent>
           </Dialog>
         </div>

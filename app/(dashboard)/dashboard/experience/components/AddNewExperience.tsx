@@ -16,39 +16,58 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import {useExperienceStore} from "@/stores/useExperienceStore";
+import {toast} from "sonner";
 
 const formSchema = z.object({
-  title: z.string(),
-    company: z.string().nullable(),
-    duration: z.string().nullable(),
-    position: z.string().nullable(),
-    start_date: z.date().nullable(),
-    end_date: z.date().nullable(),
-  description: z.string().optional(),
-  image: z.any().nullable().optional(),
-  // status: z.boolean().default(true),
+    title: z.string().min(1, "Title is required"),
+    company: z.string().optional(),
+    duration: z.string().optional(),
+    position: z.string().optional(),
+    start_date: z.string().nullable(),
+    end_date: z.string().nullable(),
+    description: z.string().optional(),
+    image: z
+        .instanceof(File)
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+            message: "Max file size is 2MB",
+        })
+        .optional()
+        .or(z.null()),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
 
 const AddNewExperience = () => {
+
+    const { createExperience, fetchExperiences} = useExperienceStore();
+
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
+        title: "",
         company: "",
         duration: "",
         position: "",
         start_date: null,
         end_date: null,
-      description: "",
-      image: null,
-      // status: true,
+        description: "",
+        image: null,
     },
   });
 
   const onSubmit = async (values: formSchemaType) => {
-    console.log("Blog submitted:", values);
+      const formData = new FormData();
+
+      Object.entries(values).forEach(([key, value]) => {
+          if (value !== null && value !== undefined) {
+              formData.append(key, value);
+          }
+      });
+
+      await createExperience(formData);
+
+      toast.success('Experience added');
   };
 
   return (
@@ -99,6 +118,21 @@ const AddNewExperience = () => {
                         <FormLabel>Position</FormLabel>
                         <FormControl>
                             <Input placeholder="position" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            {/* Duration */}
+            <FormField
+                control={form.control}
+                name="duration"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Duration</FormLabel>
+                        <FormControl>
+                            <Input placeholder="duration" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

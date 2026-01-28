@@ -10,6 +10,7 @@ interface ExperienceState {
   pagination: PaginationResponse<Experience>["meta"] | null;
   setExperiences: (items: Experience[]) => void;
   fetchExperiences: (page?: number) => Promise<void>;
+  createExperience: (data: FormData) => Promise<Experience>;
   loading: boolean;
   error?: string | null;
 }
@@ -35,6 +36,27 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      set({ loading: false, error: message });
+      throw err;
+    }
+  },
+  createExperience: async (data: FormData) => {
+    set({ loading: true, error: null});
+
+    try {
+      const res = await apiFetch<ApiResponse<Experience>>("experiences",{
+        method : "POST",
+        body: data
+      });
+
+      set((state) => ({
+        experiences: [res.data, ...state.experiences],
+        loading: false
+      }));
+
+      return res.data;
+    }catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Unknown error";
       set({ loading: false, error: message });
       throw err;
