@@ -42,7 +42,7 @@ const Experience = () => {
               <Separator className="my-2" />
 
               {/* Your Experience form component */}
-              <AddNewExperience open={open}/>
+              <AddNewExperience />
             </DialogContent>
           </Dialog>
         </div>
