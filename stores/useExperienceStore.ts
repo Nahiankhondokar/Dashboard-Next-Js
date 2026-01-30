@@ -4,6 +4,8 @@ import { create } from "zustand";
 import {apiFetch} from "@/lib/api";
 import {PaginationResponse} from "@/components/common/pagination/PaginationType";
 
+type Mode = "create" | "edit";
+
 interface ExperienceState {
   selectedExperience: Experience | null;
   experiences: Experience[];
@@ -13,14 +15,49 @@ interface ExperienceState {
   createExperience: (data: FormData) => Promise<Experience>;
   loading: boolean;
   error?: string | null;
+
+  // modal
+  modalOpen: boolean;
+  mode: Mode;
+
+  // actions
+  openCreateModal: () => void;
+  openEditModal: (exp: Experience) => void;
+  closeModal: () => void;
 }
 
 export const useExperienceStore = create<ExperienceState>((set) => ({
   selectedExperience: null,
   experiences: [],
+
   pagination: null,
+  modalOpen: false,
+  mode: "create",
+
   loading: false,
   error: null,
+
+  openCreateModal: () =>
+      set({
+        modalOpen: true,
+        mode: "create",
+        selectedExperience: null,
+      }),
+
+  openEditModal: (exp) =>
+      set({
+        modalOpen: true,
+        mode: "edit",
+        selectedExperience: exp,
+      }),
+
+  closeModal: () =>
+      set({
+        modalOpen: false,
+        selectedExperience: null,
+        error: null,
+      }),
+
   setExperiences: (items) => set({ experiences: items }),
   fetchExperiences: async (page = 1, limit = 10) => {
     set({ loading: true, error: null });
@@ -53,6 +90,13 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
       set((state) => ({
         experiences: [res.data, ...state.experiences],
         loading: false
+      }));
+
+      set((state) => ({
+        experiences: [res.data, ...state.experiences],
+        loading: false,
+        modalOpen: false,          // 🔥 close modal
+        selectedExperience: null,  // 🔥 reset
       }));
 
       return res.data;

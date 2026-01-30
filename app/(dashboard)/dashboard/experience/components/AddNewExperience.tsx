@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useEffect, useRef } from "react";
 import {
   Form,
   FormControl,
@@ -40,7 +40,13 @@ type formSchemaType = z.infer<typeof formSchema>;
 
 const AddNewExperience = () => {
 
-    const { createExperience, fetchExperiences} = useExperienceStore();
+    const {
+        createExperience,
+        fetchExperiences,
+        mode,
+        selectedExperience,
+        modalOpen
+    } = useExperienceStore();
 
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
@@ -69,6 +75,7 @@ const AddNewExperience = () => {
 
       toast.success('Experience added');
   };
+
 
   return (
     <div>

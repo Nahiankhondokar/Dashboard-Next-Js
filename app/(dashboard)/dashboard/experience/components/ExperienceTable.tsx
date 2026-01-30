@@ -16,6 +16,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash } from "lucide-react";
+import {Separator} from "@/components/ui/separator";
 
 export default function ExperienceTable() {
     const {
@@ -23,6 +24,7 @@ export default function ExperienceTable() {
         pagination,
         fetchExperiences,
         loading,
+        openEditModal
     } = useExperienceStore();
 
     useEffect(() => {
@@ -33,6 +35,7 @@ export default function ExperienceTable() {
         <>
             <Table>
                 <TableCaption>
+                    <Separator/>
                     A list of <b>Experiences</b>
                 </TableCaption>
 
@@ -62,9 +65,9 @@ export default function ExperienceTable() {
                             </TableCell>
                         </TableRow>
                     ) : (
-                        experiences.map((exp) => (
-                            <TableRow key={exp.id}>
-                                <TableCell>{exp.id}</TableCell>
+                        experiences.map((exp, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{index+1}</TableCell>
                                 <TableCell className="font-medium">
                                     {exp.title}
                                 </TableCell>
@@ -75,7 +78,7 @@ export default function ExperienceTable() {
 
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <Button size="icon" variant="outline">
+                                        <Button size="icon" variant="outline" onClick={() => openEditModal(exp)}>
                                             <Pencil size={16} />
                                         </Button>
                                         <Button size="icon" variant="destructive">

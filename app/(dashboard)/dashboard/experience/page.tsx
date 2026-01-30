@@ -15,43 +15,38 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
 import ExperienceTable  from "./components/ExperienceTable";
 import EditExperience from "./components/EditExperience";
-import {useState} from "react";
+import {useExperienceStore} from "@/stores/useExperienceStore";
 
 const Experience = () => {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const { modalOpen, openCreateModal, closeModal, mode } =
+      useExperienceStore();
 
   return (
     <div>
       <BreadcrumbComponent pathname={pathname} />
       <div>
-        <div className="flex items-center justify-between w-full">
-          <h1 className="text-2xl font-bold">Experience List</h1>
-          <Dialog open={open} onOpenChange={(v) => setOpen(!open)}>
-            <DialogTrigger asChild>
-              <Button variant="outline">Add New Experience</Button>
-            </DialogTrigger>
+        <>
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Experience</h1>
+            <Button onClick={openCreateModal}>Add New</Button>
+          </div>
+
+          <ExperienceTable />
+
+          <Dialog open={modalOpen} onOpenChange={(v) => !v && closeModal()}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add New Experience</DialogTitle>
-                <DialogDescription>
-                  Fill out the details below to create a Experience.
-                </DialogDescription>
+                <DialogTitle>
+                  {mode === "create" ? "Add Experience" : "Edit Experience"}
+                </DialogTitle>
               </DialogHeader>
 
-              <Separator className="my-2" />
-
-              {/* Your Experience form component */}
               <AddNewExperience />
             </DialogContent>
           </Dialog>
-        </div>
+        </>
 
-        {/* Experience Data Table */}
-        <ExperienceTable />
-
-        {/* Edit modal */}
-        <EditExperience />
       </div>
     </div>
   );
