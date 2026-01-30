@@ -13,7 +13,7 @@ interface ExperienceState {
   setExperiences: (items: Experience[]) => void;
   fetchExperiences: (page?: number) => Promise<void>;
   createExperience: (data: FormData) => Promise<Experience>;
-  // showExperience: (data: FormData) => Promise<Experience>;
+  updateExperience: (id: number, data: FormData) => Promise<void>;
   loading: boolean;
   error?: string | null;
 
@@ -108,7 +108,25 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
       set({ loading: false, error: message });
       throw err;
     }
-  }
+  },
+  updateExperience: async (id, data) => {
+    set({ loading: true });
+
+    const res = await apiFetch<{ data: Experience }>(
+        `experiences/${id}`,
+        {
+          method: "PUT", // or PUT with _method
+          body: data,
+        }
+    );
+
+    await get().fetchExperiences();
+    set((state) => ({
+      loading: false,
+      modalOpen: false,          // 🔥 close modal
+      selectedExperience: null,  // 🔥 reset
+    }));
+  },
 }));
 
 

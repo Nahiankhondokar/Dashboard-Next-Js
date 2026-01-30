@@ -18,7 +18,6 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {useExperienceStore} from "@/stores/useExperienceStore";
 import {toast} from "sonner";
-import {toFormData} from "@/app/(dashboard)/dashboard/experience/interface/Experience-dto";
 import {formSchema} from "@/app/(dashboard)/dashboard/experience/schema/formSchema";
 import {Experience} from "@/app/(dashboard)/dashboard/experience/interface/Experience";
 
@@ -41,7 +40,7 @@ const AddNewExperience = () => {
         mode,
         selectedExperience,
         createExperience,
-        // updateExperience,
+        updateExperience,
         modalOpen,
         loading,
     } = useExperienceStore();
@@ -73,7 +72,7 @@ const AddNewExperience = () => {
                 await createExperience(fd);
                 toast.success("Experience created");
             } else {
-                // await updateExperience(selectedExperience!.id, fd);
+                await updateExperience(selectedExperience!.id, fd);
                 toast.success("Experience updated");
             }
         } catch {
@@ -218,9 +217,9 @@ const AddNewExperience = () => {
           /> */}
 
           {/* Submit */}
-          <Button type="submit" variant="outline" className="w-full">
-            Submit
-          </Button>
+            <Button type="submit" disabled={loading} className="w-full">
+                {mode === "create" ? "Create" : "Update"}
+            </Button>
         </form>
       </Form>
     </div>
