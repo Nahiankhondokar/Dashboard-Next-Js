@@ -7,7 +7,10 @@ export interface Experience {
   company: string | null;
   start_date: string | null;
   end_date: string | null;
-  image: Record<string, unknown> | null;
+  image: {
+    url: string;
+    thumbnail?: string;
+  } | null;
 }
 export interface ApiResponse<T> {
   data: T;

@@ -92,6 +92,7 @@ export default function ExperienceTable() {
                 </TableBody>
             </Table>
 
+            {/*Pagination */}
             {pagination && (
                 <Pagination
                     meta={pagination}

@@ -13,6 +13,7 @@ interface ExperienceState {
   setExperiences: (items: Experience[]) => void;
   fetchExperiences: (page?: number) => Promise<void>;
   createExperience: (data: FormData) => Promise<Experience>;
+  // showExperience: (data: FormData) => Promise<Experience>;
   loading: boolean;
   error?: string | null;
 
@@ -26,9 +27,10 @@ interface ExperienceState {
   closeModal: () => void;
 }
 
-export const useExperienceStore = create<ExperienceState>((set) => ({
+export const useExperienceStore = create<ExperienceState>((set, get) => ({
   selectedExperience: null,
   experiences: [],
+  setExperiences: (items) => set({ experiences: items }),
 
   pagination: null,
   modalOpen: false,
@@ -44,12 +46,14 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
         selectedExperience: null,
       }),
 
-  openEditModal: (exp) =>
-      set({
-        modalOpen: true,
-        mode: "edit",
-        selectedExperience: exp,
-      }),
+  openEditModal: (exp: Experience) => {
+    set({
+      modalOpen: true,
+      mode: "edit",
+      selectedExperience: exp,
+    });
+    console.log("openEditModal called with:", get().selectedExperience);
+  },
 
   closeModal: () =>
       set({
@@ -58,7 +62,6 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
         error: null,
       }),
 
-  setExperiences: (items) => set({ experiences: items }),
   fetchExperiences: async (page = 1, limit = 10) => {
     set({ loading: true, error: null });
     try {

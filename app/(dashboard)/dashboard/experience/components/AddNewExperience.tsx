@@ -18,35 +18,35 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {useExperienceStore} from "@/stores/useExperienceStore";
 import {toast} from "sonner";
-
-const formSchema = z.object({
-    title: z.string().min(1, "Title is required"),
-    company: z.string().optional(),
-    duration: z.string().optional(),
-    position: z.string().optional(),
-    start_date: z.string().nullable(),
-    end_date: z.string().nullable(),
-    description: z.string().optional(),
-    image: z
-        .instanceof(File)
-        .refine((file) => file.size <= 2 * 1024 * 1024, {
-            message: "Max file size is 2MB",
-        })
-        .optional()
-        .or(z.null()),
-});
+import {toFormData} from "@/app/(dashboard)/dashboard/experience/interface/Experience-dto";
+import {formSchema} from "@/app/(dashboard)/dashboard/experience/schema/formSchema";
+import {Experience} from "@/app/(dashboard)/dashboard/experience/interface/Experience";
 
 type formSchemaType = z.infer<typeof formSchema>;
+
+const mapExperienceToForm = (exp: Experience): formSchemaType => ({
+    title: exp.title ?? "",
+    company: exp.company ?? "",
+    duration: exp.duration ?? "",
+    position: exp.position ?? "",
+    start_date: exp.start_date ?? "",
+    end_date: exp.end_date ?? "",
+    description: exp.description ?? "",
+    image: null, // file can't be prefilled
+});
 
 const AddNewExperience = () => {
 
     const {
-        createExperience,
-        fetchExperiences,
         mode,
         selectedExperience,
-        modalOpen
+        createExperience,
+        // updateExperience,
+        modalOpen,
+        loading,
     } = useExperienceStore();
+
+    const fileRef = useRef<HTMLInputElement | null>(null);
 
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
@@ -55,27 +55,42 @@ const AddNewExperience = () => {
         company: "",
         duration: "",
         position: "",
-        start_date: null,
-        end_date: null,
+        start_date: "",
+        end_date: "",
         description: "",
         image: null,
     },
   });
 
-  const onSubmit = async (values: formSchemaType) => {
-      const formData = new FormData();
+    const onSubmit = async (values: formSchemaType) => {
+        const fd = new FormData();
+        Object.entries(values).forEach(([k, v]) => {
+            if (v !== null && v !== undefined) fd.append(k, v);
+        });
 
-      Object.entries(values).forEach(([key, value]) => {
-          if (value !== null && value !== undefined) {
-              formData.append(key, value);
-          }
-      });
+        try {
+            if (mode === "create") {
+                await createExperience(fd);
+                toast.success("Experience created");
+            } else {
+                // await updateExperience(selectedExperience!.id, fd);
+                toast.success("Experience updated");
+            }
+        } catch {
+            toast.error("Something went wrong");
+        }
+    };
 
-      await createExperience(formData);
+    useEffect(() => {
+        if (mode === "edit" && selectedExperience) {
+            form.reset(mapExperienceToForm(selectedExperience));
+        }
 
-      toast.success('Experience added');
-  };
-
+        if (!modalOpen) {
+            form.reset();
+            if (fileRef.current) fileRef.current.value = "";
+        }
+    }, [mode, selectedExperience, modalOpen]);
 
   return (
     <div>
