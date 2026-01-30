@@ -40,6 +40,7 @@
 
 // lib/api.ts
 import { ApiError } from "@/type/api-error";
+import {toast} from "sonner";
 
 export async function apiFetch<T>(
     url: string,
@@ -78,6 +79,7 @@ export async function apiFetch<T>(
 
     if (!res.ok) {
         const error = await res.json().catch(() => ({}));
+        console.log(error.message)
         throw new ApiError(res.status, error.message || "Request failed");
     }
 
