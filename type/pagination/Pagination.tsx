@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {PaginationMeta} from "@/components/common/pagination/PaginationType";
+import {PaginationMeta} from "@/type/pagination/PaginationType";
 
 interface Props {
     meta: PaginationMeta;

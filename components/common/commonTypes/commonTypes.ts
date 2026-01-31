@@ -1,24 +1,24 @@
-export interface Pagination {
-    current_page: number;
-    last_page: number;
-      from: number;
-      to: number;
-      per_page: number;
-      total: number
-}
-export interface Links {
-    prev: string | null;
-    next: string | null;
-}
-export interface Meta {
-    search?: string|null
-}  
-export interface PaddingValues {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-  }
+// export interface Pagination {
+//     current_page: number;
+//     last_page: number;
+//       from: number;
+//       to: number;
+//       per_page: number;
+//       total: number
+// }
+// export interface Links {
+//     prev: string | null;
+//     next: string | null;
+// }
+// export interface Meta {
+//     search?: string|null
+// }
+// export interface PaddingValues {
+//     top: number;
+//     bottom: number;
+//     left: number;
+//     right: number;
+//   }
 
    export type PaginationLinksType = {
     first: string;

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useExperienceStore } from "@/stores/useExperienceStore";
-import Pagination from "@/components/common/pagination/Pagination";
+
 
 import {
     Table,
@@ -17,6 +17,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
+import ConfirmationAlert from "@/components/common/ConfirmationAlert";
+import {toast} from "sonner";
+import Pagination from "@/type/pagination/Pagination";
 
 export default function ExperienceTable() {
     const {
@@ -24,7 +27,8 @@ export default function ExperienceTable() {
         pagination,
         fetchExperiences,
         loading,
-        openEditModal
+        openEditModal,
+        deleteExperience
     } = useExperienceStore();
 
     useEffect(() => {
@@ -81,9 +85,26 @@ export default function ExperienceTable() {
                                         <Button size="icon" variant="outline" onClick={() => openEditModal(exp)}>
                                             <Pencil size={16} />
                                         </Button>
-                                        <Button size="icon" variant="destructive">
-                                            <Trash size={16} />
-                                        </Button>
+
+                                        {/*Delete*/}
+                                        <ConfirmationAlert
+                                            title="Delete experience?"
+                                            description="This experience will be permanently removed."
+                                            confirmText="Delete"
+                                            onConfirm={async () => {
+                                                try {
+                                                    await deleteExperience(exp.id);
+                                                    toast.success("Experience deleted");
+                                                } catch {
+                                                    toast.error("Delete failed");
+                                                }
+                                            }}
+                                            trigger={
+                                                <Button size="icon" variant="destructive">
+                                                    <Trash size={16} />
+                                                </Button>
+                                            }
+                                        />
                                     </div>
                                 </TableCell>
                             </TableRow>

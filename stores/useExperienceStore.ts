@@ -2,7 +2,7 @@
 import {ApiResponse, Experience} from "@/app/(dashboard)/dashboard/experience/interface/Experience";
 import { create } from "zustand";
 import {apiFetch} from "@/lib/api";
-import {PaginationResponse} from "@/components/common/pagination/PaginationType";
+import {PaginationResponse} from "@/type/pagination/PaginationType";
 
 type Mode = "create" | "edit";
 
@@ -14,6 +14,7 @@ interface ExperienceState {
   fetchExperiences: (page?: number) => Promise<void>;
   createExperience: (data: FormData) => Promise<Experience>;
   updateExperience: (id: number, data: FormData) => Promise<void>;
+  deleteExperience: (id: number) => Promise<void>
   loading: boolean;
   error?: string | null;
 
@@ -127,6 +128,28 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
       selectedExperience: null,  // 🔥 reset
     }));
   },
+  deleteExperience: async (id: number) => {
+    set({ loading: true, error: null });
+
+    try {
+      await apiFetch(`experiences/${id}`, {
+        method: "DELETE",
+      });
+
+      // ✅ Remove from store instantly
+      set((state) => ({
+        experiences: state.experiences.filter((exp) => exp.id !== id),
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({
+        loading: false,
+        error: err.message ?? "Delete failed",
+      });
+      throw err;
+    }
+  },
+
 }));
 
 
