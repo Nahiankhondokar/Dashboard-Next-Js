@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
 import {AuthProvider} from "@/components/providers/AuthProvider";
+import {Toaster} from "sonner";
 
 export const metadata: Metadata = {
   title: "Nahian - Portfolio",
@@ -22,6 +23,9 @@ export default function RootLayout({children}: {
       >
           <AuthProvider>
               {children}
+
+              {/* ✅ REQUIRED for toast */}
+              <Toaster position="top-right" richColors />
           </AuthProvider>
       </ThemeProvider>
       </body>
