@@ -14,14 +14,17 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import {useServiceStore} from "@/stores/useServiceStore";
+import {toast} from "sonner";
 
 const formSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
-  image: z.any().nullable().optional(),
-  // status: z.boolean().default(true),
+    title: z.string().min(1, "Title field is required"),
+    sub_title: z.string().optional(),
+    description: z.string().optional(),
+    status: z.number().optional(),
+    project_link: z.string().optional(),
+    image: z.any().nullable().optional(),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
@@ -30,15 +33,39 @@ const AddNewBlog = () => {
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      image: null,
-      // status: true,
+        title: "",
+        description: "",
+        sub_title: "",
+        status: 0,
+        project_link: "",
+        image: null,
     },
   });
 
+  const {
+      mode,
+      openCreateModal,
+      closeModal,
+      createService
+  } = useServiceStore();
+
   const onSubmit = async (values: formSchemaType) => {
-    console.log("Blog submitted:", values);
+    const fd = new FormData();
+    Object.entries(values).forEach(([k,v]) => {
+        if(v !== null && v !== undefined){
+            fd.append(k, v);
+        }
+    })
+
+      try {
+          if(mode === 'create'){
+              await createService(fd);
+              toast.success("Service is created");
+          }
+      }catch (err: unknown){
+          toast.error("Something went wrong");
+      }
+
   };
 
   return (
@@ -64,6 +91,36 @@ const AddNewBlog = () => {
               </FormItem>
             )}
           />
+
+            {/* Sub Title */}
+            <FormField
+                control={form.control}
+                name="sub_title"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Sub Title</FormLabel>
+                        <FormControl>
+                            <Input placeholder="sub title" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            {/* Project Link */}
+            <FormField
+                control={form.control}
+                name="project_link"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Project Link</FormLabel>
+                        <FormControl>
+                            <Input placeholder="project link" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
 
           {/* Description */}
           <FormField
@@ -123,7 +180,7 @@ const AddNewBlog = () => {
 
           {/* Submit */}
           <Button type="submit" variant="outline" className="w-full">
-            Submit
+              {mode === "create" ? "Create" : "Update"}
           </Button>
         </form>
       </Form>

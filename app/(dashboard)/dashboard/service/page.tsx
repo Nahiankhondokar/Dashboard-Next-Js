@@ -5,72 +5,54 @@ import { usePathname } from "next/navigation";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Columns } from "./components/Columns";
-import AddNewBlog from "./components/AddNewService";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-separator";
-import EditBlogModal from "./components/EditService";
-import { ServiceDataTable } from "./components/ServiceDataTable";
-
-const allData = [
-  {
-    id: 1,
-    title: "Namian",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: null,
-    // status: true,
-  },
-  {
-    id: 2,
-    title: "Namian",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: null,
-    // status: true,
-  },
-];
+import {useServiceStore} from "@/stores/useServiceStore";
+import {useEffect} from "react";
+import AddNewService from "./components/AddNewService";
+import ServiceTable from "@/app/(dashboard)/dashboard/service/components/ServiceTable";
 
 const Service = () => {
   const pathname = usePathname();
+  const {
+      fetchService,
+      loading,
+      error,
+    openCreateModal,
+    modalOpen,
+    closeModal,
+    mode
+  } = useServiceStore();
+
+  useEffect(() => {
+    fetchService();
+  }, []);
 
   return (
     <div>
       <BreadcrumbComponent pathname={pathname} />
-      <div>
-        <div className="flex items-center justify-between w-full">
-          <h1 className="text-2xl font-bold">Service List</h1>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Add New Service</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Service</DialogTitle>
-                <DialogDescription>
-                  Fill out the details below to create a new blog.
-                </DialogDescription>
-              </DialogHeader>
-
-              <Separator className="my-2" />
-
-              {/* Your blog form component */}
-              <AddNewBlog />
-            </DialogContent>
-          </Dialog>
+      <>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Service</h1>
+          <Button  variant={"outline"} onClick={openCreateModal}>Add New</Button>
         </div>
 
-        {/* Blog Data Table */}
-        <ServiceDataTable columns={Columns} data={allData} />
+        <ServiceTable />
 
-        {/* Edit modal */}
-        <EditBlogModal />
-      </div>
+        <Dialog open={modalOpen} onOpenChange={(v) => !v && closeModal()}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {mode === "create" ? "Add Service" : "Edit Service"}
+              </DialogTitle>
+            </DialogHeader>
+
+            <AddNewService />
+          </DialogContent>
+        </Dialog>
+      </>
     </div>
   );
 };

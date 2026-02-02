@@ -1,94 +1,112 @@
-// stores/useserviceStore.ts
+// stores/useServiceStore.ts
 import { Service } from "@/app/(dashboard)/dashboard/service/interface/Service";
 import { create } from "zustand";
+import {apiFetch} from "@/lib/api";
+import {PaginationResponse} from "@/type/pagination/PaginationType";
+import {Experience} from "@/app/(dashboard)/dashboard/experience/interface/Experience";
+import {ApiResponse} from "@/type/api-response";
 
-type UpdatePayload =
-  | {
-      title?: string;
-      description?: string;
-      image?: File | null;
-    }
-  | FormData; // Add FormData as a possible type
+type Mode = "create" | "edit";
 
 interface serviceState {
-  open: boolean;
-  selectedservice: Service | null;
-  openModal: (service: Service) => void;
-  closeModal: () => void;
+  selectedService: Service | null;
   services: Service[];
-  setservices: (items: Service[]) => void;
-  updateService: (id: number, payload: UpdatePayload) => Promise<Service>; // Update parameter type
-  deleteService: (id: number) => Promise<void>;
+  setServices: (items: Service[]) => void;
   loading: boolean;
   error?: string | null;
+  pagination: PaginationResponse<Experience>["meta"] | null;
+
+  // actions
+  openCreateModal: () => void;
+  openEditModal: (service: Service) => void;
+  closeModal: () => void;
+
+  // Modals details
+  mode: Mode,
+  modalOpen : boolean
+
+  // Methods
+  fetchService: (page?: number, limit?: number) => Promise<void>;
+  createService: (data: FormData) => Promise<Service>
 }
 
-export const useServiceStore = create<serviceState>((set) => ({
-  open: false,
-  selectedservice: null,
-  openModal: (service) => set({ open: true, selectedservice: service }),
-  closeModal: () => set({ open: false, selectedservice: null }),
+export const useServiceStore = create<serviceState>((set, get) => ({
+  selectedService: null,
   services: [],
+  pagination: null,
   loading: false,
   error: null,
-  setservices: (items) => set({ services: items }),
-  updateService: async (id, payload) => {
-    set({ loading: true, error: null });
+
+  modalOpen: false,
+  mode: "create",
+
+  setServices: (items) => set({ services: items }),
+  openCreateModal: () =>
+      set({
+        modalOpen: true,
+        mode: "create",
+        selectedService: null,
+      }),
+
+  openEditModal: (service: Service) => {
+    set({
+      modalOpen: true,
+      mode: "edit",
+      selectedService: service,
+    });
+    console.log("openEditModal called with:", get().selectedService);
+  },
+
+  closeModal: () =>
+      set({
+        modalOpen: false,
+        selectedService: null,
+        error: null,
+      }),
+
+  fetchService: async (page = 1, limit = 10) => {
+    set({loading: true, error: null});
     try {
-      let body: BodyInit;
-      const headers: HeadersInit = {};
+      const res = await apiFetch<PaginationResponse<Service>>(
+          `services?page=${page}&limit=${limit}`
+      );
 
-      // Check if payload is FormData
-      if (payload instanceof FormData) {
-        body = payload;
-      } else {
-        body = JSON.stringify(payload);
-        headers["Content-Type"] = "application/json";
-      }
-
-      const res = await fetch(`/api/services/${id}`, {
-        method: "PUT",
-        headers,
-        body,
-      });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `HTTP ${res.status}`);
-      }
-      const updated: Service = await res.json();
-      set((state) => ({
-        services: state.services.map((b) => (b.id === id ? updated : b)),
+      set({
+        services: res.data,
+        pagination: res.meta,
         loading: false,
-      }));
-      return updated;
-    } catch (err: unknown) {
+      });
+    }catch (err: unknown){
       if (err instanceof Error) {
-        set({ loading: false, error: err.message ?? "Update failed" });
+        set({ loading: false, error: err.message ?? "Fetching failed" });
       } else {
         set({ loading: false, error: "An unknown error occurred" });
       }
       throw err;
     }
   },
-  deleteService: async (id: number) => {
-    set({ loading: true, error: null });
+  createService: async (data: FormData) => {
+    set({loading: true, error: null});
     try {
-      const res = await fetch(`/api/services/${id}`, {
-        method: "DELETE",
-      });
+      const res = await apiFetch<ApiResponse<Service>>('services',{
+        method : "POST",
+        body : data
+      })
 
-      if (!res.ok) {
-        throw new Error(`Failed with status ${res.status}`);
-      }
-
-      set((state) => ({
-        services: state.services.filter((b) => b.id !== id),
+      set((state)=> ({
         loading: false,
+        services: [res.data, ...state.services],
+        modalOpen: false,          // 🔥 close modal
       }));
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      set({ loading: false, error: message });
+
+      return res.data;
+    }catch (err: unknown){
+      if (err instanceof Error) {
+        set({ loading: false, error: err.message ?? "Create failed" });
+      } else {
+        set({ loading: false, error: "An unknown error occurred" });
+      }
       throw err;
     }
-  },
+  }
 }));

@@ -11,10 +11,12 @@ interface ExperienceState {
   experiences: Experience[];
   pagination: PaginationResponse<Experience>["meta"] | null;
   setExperiences: (items: Experience[]) => void;
+
   fetchExperiences: (page?: number) => Promise<void>;
   createExperience: (data: FormData) => Promise<Experience>;
   updateExperience: (id: number, data: FormData) => Promise<void>;
   deleteExperience: (id: number) => Promise<void>
+
   loading: boolean;
   error?: string | null;
 
@@ -90,11 +92,6 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
         method : "POST",
         body: data
       });
-
-      set((state) => ({
-        experiences: [res.data, ...state.experiences],
-        loading: false
-      }));
 
       set((state) => ({
         experiences: [res.data, ...state.experiences],

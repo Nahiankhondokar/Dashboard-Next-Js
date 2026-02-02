@@ -5,16 +5,12 @@ import { usePathname } from "next/navigation";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import AddNewExperience from "./components/AddNewExperience";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-separator";
 import ExperienceTable  from "./components/ExperienceTable";
-import EditExperience from "./components/EditExperience";
 import {useExperienceStore} from "@/stores/useExperienceStore";
 
 const Experience = () => {
