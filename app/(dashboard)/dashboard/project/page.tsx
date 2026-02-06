@@ -10,12 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Columns } from "./components/Columns";
 import AddNewSkill from "./components/AddNewProject";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
 import { ProjectDataTable } from "./components/ProjectDataTable";
-import EditProject from "./components/EditProject";
 
 const allData = [
   {
@@ -66,10 +64,7 @@ const Skill = () => {
         </div>
 
         {/* Blog Data Table */}
-        <ProjectDataTable columns={Columns} data={allData} />
 
-        {/* Edit modal */}
-        <EditProject />
       </div>
     </div>
   );
