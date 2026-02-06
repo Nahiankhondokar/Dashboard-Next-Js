@@ -110,13 +110,21 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
   updateExperience: async (id, data) => {
     set({ loading: true });
 
-    const res = await apiFetch<{ data: Experience }>(
-        `experiences/${id}`,
-        {
-          method: "PUT", // or PUT with _method
-          body: data,
-        }
-    );
+    try {
+      const res = await apiFetch<{ data: Experience }>(
+          `experiences/${id}`,
+          {
+            method: "PUT", // or PUT with _method
+            body: data,
+          }
+      );
+    } catch (err: any) {
+      set({
+        loading: false,
+        error: err.message ?? "Update failed",
+      });
+      throw err;
+    }
 
     await get().fetchExperiences();
     set((state) => ({

@@ -29,6 +29,7 @@ interface serviceState {
   fetchService: (page?: number, limit?: number) => Promise<void>;
   createService: (data: FormData) => Promise<Service>
   updateService: (id: number, data: FormData) => Promise<void>
+  deleteService: (id: number) => Promise<void>
 }
 
 export const useServiceStore = create<serviceState>((set, get) => ({
@@ -127,5 +128,26 @@ export const useServiceStore = create<serviceState>((set, get) => ({
       modalOpen: false,
       selectedService: null,
     }));
+  },
+  deleteService: async (id: number) => {
+    set({ loading: true, error: null });
+
+    try {
+      await apiFetch(`services/${id}`, {
+        method: "DELETE",
+      });
+
+      // ✅ Remove from store instantly
+      set((state) => ({
+        services: state.services.filter((service) => service.id !== id),
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({
+        loading: false,
+        error: err.message ?? "Delete failed",
+      });
+      throw err;
+    }
   }
 }));

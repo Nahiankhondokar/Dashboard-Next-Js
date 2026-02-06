@@ -16,6 +16,8 @@ import { Pencil, Trash } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import Pagination from "@/type/pagination/Pagination";
 import {useServiceStore} from "@/stores/useServiceStore";
+import ConfirmationAlert from "@/components/common/ConfirmationAlert";
+import {toast} from "sonner";
 
 export default function ServiceTable() {
     const {
@@ -24,6 +26,7 @@ export default function ServiceTable() {
         fetchService,
         loading,
         openEditModal,
+        deleteService
     } = useServiceStore();
 
     useEffect(() => {
@@ -74,7 +77,6 @@ export default function ServiceTable() {
                                 <TableCell>{service.sub_title ?? "-"}</TableCell>
                                 <TableCell>{service.project_link ?? "-"}</TableCell>
                                 <TableCell>{service.description ?? "-"}</TableCell>
-                                <TableCell>{service.status ?? "-"}</TableCell>
                                 <TableCell>{service.media ?? "-"}</TableCell>
                                 <TableCell>{service.created_at ?? "-"}</TableCell>
 
@@ -85,17 +87,24 @@ export default function ServiceTable() {
                                         </Button>
 
                                         {/*Delete*/}
-                                        {/*<ConfirmationAlert*/}
-                                        {/*    title="Delete experience?"*/}
-                                        {/*    description="This experience will be permanently removed."*/}
-                                        {/*    confirmText="Delete"*/}
-                                        {/*    onConfirm=""*/}
-                                        {/*    trigger={*/}
-                                        {/*        <Button size="icon" variant="destructive">*/}
-                                        {/*            <Trash size={16} />*/}
-                                        {/*        </Button>*/}
-                                        {/*    }*/}
-                                        {/*/>*/}
+                                        <ConfirmationAlert
+                                            title="Delete experience?"
+                                            description="This experience will be permanently removed."
+                                            confirmText="Delete"
+                                            onConfirm={async () => {
+                                                try {
+                                                    await deleteService(service.id);
+                                                    toast.success("Experience deleted");
+                                                } catch {
+                                                    toast.error("Delete failed");
+                                                }
+                                            }}
+                                            trigger={
+                                                <Button size="icon" variant="destructive">
+                                                    <Trash size={16} />
+                                                </Button>
+                                            }
+                                        />
                                     </div>
                                 </TableCell>
                             </TableRow>
