@@ -1,49 +1,95 @@
 // stores/useProjectStore.ts
-import { Project } from "@/app/(dashboard)/dashboard/project/interface/Project";
+import {Project} from "@/app/(dashboard)/dashboard/project/interface/Project";
 import { create } from "zustand";
 import {apiFetch} from "@/lib/api";
+import {PaginationResponse} from "@/type/pagination/PaginationType";
 import {ApiResponse} from "@/type/api-response";
-import {Service} from "@/app/(dashboard)/dashboard/service/interface/Service";
-
-type UpdatePayload =
-  | {
-      title?: string;
-      description?: string;
-      image?: File | null;
-    }
-  | FormData; // Add FormData as a possible type
 
 type Mode = "create" | "edit";
 
-interface ProjectState {
-  open: boolean;
+interface projectState {
   selectedProject: Project | null;
-  openModal: (Project: Project) => void;
-  closeModal: () => void;
   projects: Project[];
   setProjects: (items: Project[]) => void;
-  updateProject: (id: number, payload: UpdatePayload) => Promise<Project>; // Update parameter type
-  deleteProject: (id: number) => Promise<void>;
-  createProject: (data: FormData) => Promise<Project>
   loading: boolean;
   error?: string | null;
-  mode : Mode
+  pagination: PaginationResponse<Project>["meta"] | null;
+
+  // actions
+  openCreateModal: () => void;
+  openEditModal: (project: Project) => void;
+  closeModal: () => void;
+
+  // Modals details
+  mode: Mode,
+  modalOpen : boolean
+
+  // Methods
+  fetchProject: (page?: number, limit?: number) => Promise<void>;
+  createProject: (data: FormData) => Promise<Project>
+  updateProject: (id: number, data: FormData) => Promise<void>
+  deleteProject: (id: number) => Promise<void>
 }
 
-export const useProjectStore = create<ProjectState>((set) => ({
-  open: false,
-  mode : 'create',
+export const useProjectStore = create<projectState>((set, get) => ({
   selectedProject: null,
-  openModal: (Project) => set({ open: true, selectedProject: Project }),
-  closeModal: () => set({ open: false, selectedProject: null }),
   projects: [],
+  pagination: null,
   loading: false,
   error: null,
+
+  modalOpen: false,
+  mode: "create",
+
   setProjects: (items) => set({ projects: items }),
+  openCreateModal: () =>
+      set({
+        modalOpen: true,
+        mode: "create",
+        selectedProject: null,
+      }),
+
+  openEditModal: (project: Project) => {
+    set({
+      modalOpen: true,
+      mode: "edit",
+      selectedProject: project,
+    });
+    console.log("openEditModal called with:", get().selectedProject);
+  },
+
+  closeModal: () =>
+      set({
+        modalOpen: false,
+        selectedProject: null,
+        error: null,
+      }),
+
+  fetchProject: async (page = 1, limit = 10) => {
+    set({loading: true, error: null});
+    try {
+      const res = await apiFetch<PaginationResponse<Project>>(
+          `projects?page=${page}&limit=${limit}`
+      );
+
+      set({
+        projects: res.data,
+        pagination: res.meta,
+        loading: false,
+      });
+    }catch (err: unknown){
+      if (err instanceof Error) {
+        set({ loading: false, error: err.message ?? "Fetching failed" });
+      } else {
+        set({ loading: false, error: "An unknown error occurred" });
+      }
+      throw err;
+    }
+  },
   createProject: async (data: FormData) => {
     set({loading: true, error: null});
     try {
-      const res = await apiFetch<ApiResponse<Service>>('projects',{
+      const res = await apiFetch<ApiResponse<Project>>('projects',{
         method : "POST",
         body : data
       })
@@ -64,63 +110,43 @@ export const useProjectStore = create<ProjectState>((set) => ({
       throw err;
     }
   },
-  updateProject: async (id, payload) => {
-    set({ loading: true, error: null });
-    try {
-      let body: BodyInit;
-      const headers: HeadersInit = {};
+  updateProject: async (id: number, data: FormData) => {
+    set({ loading: true });
 
-      // Check if payload is FormData
-      if (payload instanceof FormData) {
-        body = payload;
-      } else {
-        body = JSON.stringify(payload);
-        headers["Content-Type"] = "application/json";
-      }
+    const res = await apiFetch<{ data: Project }>(
+        `projects/${id}`,
+        {
+          method: "PUT",
+          body: data,
+        }
+    );
 
-      const res = await fetch(`/api/projects/${id}`, {
-        method: "PUT",
-        headers,
-        body,
-      });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `HTTP ${res.status}`);
-      }
-      const updated: Project = await res.json();
-      set((state) => ({
-        projects: state.projects.map((b) => (b.id === id ? updated : b)),
-        loading: false,
-      }));
-      return updated;
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        set({ loading: false, error: err.message ?? "Update failed" });
-      } else {
-        set({ loading: false, error: "An unknown error occurred" });
-      }
-      throw err;
-    }
+    await get().fetchProject();
+    set((state) => ({
+      loading: false,
+      modalOpen: false,
+      selectedProject: null,
+    }));
   },
   deleteProject: async (id: number) => {
     set({ loading: true, error: null });
+
     try {
-      const res = await fetch(`/api/projects/${id}`, {
+      await apiFetch(`projects/${id}`, {
         method: "DELETE",
       });
 
-      if (!res.ok) {
-        throw new Error(`Failed with status ${res.status}`);
-      }
-
+      // ✅ Remove from store instantly
       set((state) => ({
-        projects: state.projects.filter((b) => b.id !== id),
+        projects: state.projects.filter((project) => project.id !== id),
         loading: false,
       }));
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      set({ loading: false, error: message });
+    } catch (err: any) {
+      set({
+        loading: false,
+        error: err.message ?? "Delete failed",
+      });
       throw err;
     }
-  },
+  }
 }));

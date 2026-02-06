@@ -1,152 +1,124 @@
-// stores/useProjectStore.ts
-import {Project} from "@/app/(dashboard)/dashboard/project/interface/Project";
-import { create } from "zustand";
-import {apiFetch} from "@/lib/api";
-import {PaginationResponse} from "@/type/pagination/PaginationType";
-import {ApiResponse} from "@/type/api-response";
+"use client";
 
-type Mode = "create" | "edit";
+import { useEffect } from "react";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 
-interface projectState {
-    selectedProject: Project | null;
-    projects: Project[];
-    setProjects: (items: Project[]) => void;
-    loading: boolean;
-    error?: string | null;
-    pagination: PaginationResponse<Project>["meta"] | null;
+import { Button } from "@/components/ui/button";
+import { Pencil, Trash } from "lucide-react";
+import {Separator} from "@/components/ui/separator";
+import Pagination from "@/type/pagination/Pagination";
+import {useServiceStore} from "@/stores/useServiceStore";
+import ConfirmationAlert from "@/components/common/ConfirmationAlert";
+import {toast} from "sonner";
+import {useProjectStore} from "@/stores/useProjectStore";
 
-    // actions
-    openCreateModal: () => void;
-    openEditModal: (project: Project) => void;
-    closeModal: () => void;
+export default function ProjectTable() {
+    const {
+        projects,
+        pagination,
+        fetchProject,
+        loading,
+        openEditModal,
+        deleteProject
+    } = useProjectStore();
 
-    // Modals details
-    mode: Mode,
-    modalOpen : boolean
+    useEffect(() => {
+        fetchProject();
+    }, []);
 
-    // Methods
-    fetchProject: (page?: number, limit?: number) => Promise<void>;
-    createProject: (data: FormData) => Promise<Project>
-    updateProject: (id: number, data: FormData) => Promise<void>
-    deleteProject: (id: number) => Promise<void>
+    return (
+        <>
+            <Table>
+                <TableCaption>
+                    <Separator/>
+                    A list of <b>Projects</b>
+                </TableCaption>
+
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[60px]">ID</TableHead>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Project Link</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Media</TableHead>
+                        <TableHead>Created At</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                    {loading ? (
+                        <TableRow>
+                            <TableCell colSpan={7} className="text-center">
+                                Loading...
+                            </TableCell>
+                        </TableRow>
+                    ) : projects.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={7} className="text-center">
+                                No data found
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        projects.map((project, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{index+1}</TableCell>
+                                <TableCell className="font-medium">
+                                    {project.title}
+                                </TableCell>
+                                <TableCell>{project.project_link ?? "-"}</TableCell>
+                                <TableCell>{project.description ?? "-"}</TableCell>
+                                <TableCell>{projects.media ?? "-"}</TableCell>
+                                <TableCell>{projects.created_at ?? "-"}</TableCell>
+
+                                <TableCell className="text-right">
+                                    <div className="flex justify-end gap-2">
+                                        <Button size="icon" variant="outline" onClick={() => openEditModal(project)}>
+                                            <Pencil size={16} />
+                                        </Button>
+
+                                        {/*Delete*/}
+                                        {/*<ConfirmationAlert*/}
+                                        {/*    title="Delete experience?"*/}
+                                        {/*    description="This experience will be permanently removed."*/}
+                                        {/*    confirmText="Delete"*/}
+                                        {/*    onConfirm={async () => {*/}
+                                        {/*        try {*/}
+                                        {/*            await deleteService(service.id);*/}
+                                        {/*            toast.success("Experience deleted");*/}
+                                        {/*        } catch {*/}
+                                        {/*            toast.error("Delete failed");*/}
+                                        {/*        }*/}
+                                        {/*    }}*/}
+                                        {/*    trigger={*/}
+                                        {/*        <Button size="icon" variant="destructive">*/}
+                                        {/*            <Trash size={16} />*/}
+                                        {/*        </Button>*/}
+                                        {/*    }*/}
+                                        {/*/>*/}
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
+                </TableBody>
+            </Table>
+
+            {/*Pagination */}
+            {pagination && (
+                <Pagination
+                    meta={pagination}
+                    onPageChange={(page) => fetchProject(page)}
+                />
+            )}
+        </>
+    );
 }
-
-export const useProjectStore = create<projectState>((set, get) => ({
-    selectedProject: null,
-    projects: [],
-    pagination: null,
-    loading: false,
-    error: null,
-
-    modalOpen: false,
-    mode: "create",
-
-    setProjects: (items) => set({ projects: items }),
-    openCreateModal: () =>
-        set({
-            modalOpen: true,
-            mode: "create",
-            selectedProject: null,
-        }),
-
-    openEditModal: (project: Project) => {
-        set({
-            modalOpen: true,
-            mode: "edit",
-            selectedProject: project,
-        });
-        console.log("openEditModal called with:", get().selectedProject);
-    },
-
-    closeModal: () =>
-        set({
-            modalOpen: false,
-            selectedProject: null,
-            error: null,
-        }),
-
-    fetchProject: async (page = 1, limit = 10) => {
-        set({loading: true, error: null});
-        try {
-            const res = await apiFetch<PaginationResponse<Project>>(
-                `projects?page=${page}&limit=${limit}`
-            );
-
-            set({
-                projects: res.data,
-                pagination: res.meta,
-                loading: false,
-            });
-        }catch (err: unknown){
-            if (err instanceof Error) {
-                set({ loading: false, error: err.message ?? "Fetching failed" });
-            } else {
-                set({ loading: false, error: "An unknown error occurred" });
-            }
-            throw err;
-        }
-    },
-    createProject: async (data: FormData) => {
-        set({loading: true, error: null});
-        try {
-            const res = await apiFetch<ApiResponse<Project>>('projects',{
-                method : "POST",
-                body : data
-            })
-
-            set((state)=> ({
-                loading: false,
-                projects: [res.data, ...state.projects],
-                modalOpen: false,          // 🔥 close modal
-            }));
-
-            return res.data;
-        }catch (err: unknown){
-            if (err instanceof Error) {
-                set({ loading: false, error: err.message ?? "Create failed" });
-            } else {
-                set({ loading: false, error: "An unknown error occurred" });
-            }
-            throw err;
-        }
-    },
-    updateProject: async (id: number, data: FormData) => {
-        set({ loading: true });
-
-        const res = await apiFetch<{ data: Project }>(
-            `projects/${id}`,
-            {
-                method: "PUT",
-                body: data,
-            }
-        );
-
-        await get().fetchProject();
-        set((state) => ({
-            loading: false,
-            modalOpen: false,
-            selectedProject: null,
-        }));
-    },
-    deleteProject: async (id: number) => {
-        set({ loading: true, error: null });
-
-        try {
-            await apiFetch(`projects/${id}`, {
-                method: "DELETE",
-            });
-
-            // ✅ Remove from store instantly
-            set((state) => ({
-                projects: state.projects.filter((project) => project.id !== id),
-                loading: false,
-            }));
-        } catch (err: any) {
-            set({
-                loading: false,
-                error: err.message ?? "Delete failed",
-            });
-            throw err;
-        }
-    }
-}));
