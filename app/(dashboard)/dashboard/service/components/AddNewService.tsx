@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useEffect} from "react";
 import {
   Form,
   FormControl,
@@ -17,56 +17,73 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea";
 import {useServiceStore} from "@/stores/useServiceStore";
 import {toast} from "sonner";
-
-const formSchema = z.object({
-    title: z.string().min(1, "Title field is required"),
-    sub_title: z.string().optional(),
-    description: z.string().optional(),
-    status: z.number().optional(),
-    project_link: z.string().optional(),
-    image: z.any().nullable().optional(),
-});
+import {formSchema} from "@/app/(dashboard)/dashboard/service/schema/formSchema";
+import {Service} from "@/app/(dashboard)/dashboard/service/interface/Service";
 
 type formSchemaType = z.infer<typeof formSchema>;
 
-const AddNewBlog = () => {
+const mapServiceToForm = (service: Service) => ({
+    title: service.title ?? "",
+    description: service.description ?? "",
+    sub_title: service.sub_title ?? "",
+    status: service.status ?? false,
+    project_link: service.project_link ?? "",
+    created_at: service.created_at ?? "",
+    media: null,
+})
+
+const AddNewService = () => {
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
         title: "",
         description: "",
         sub_title: "",
-        status: 0,
+        status: false,
         project_link: "",
-        image: null,
+        media: "",
+        created_at: ""
     },
   });
 
   const {
       mode,
-      openCreateModal,
-      closeModal,
-      createService
+      createService,
+      selectedService,
+      updateService
   } = useServiceStore();
 
   const onSubmit = async (values: formSchemaType) => {
-    const fd = new FormData();
-    Object.entries(values).forEach(([k,v]) => {
-        if(v !== null && v !== undefined){
-            fd.append(k, v);
-        }
-    })
+      const fd = new FormData();
+      Object.entries(values).forEach(([k, v]) => {
+          if (v === null || v === undefined) return;
+
+          if (typeof v === "boolean") {
+              fd.append(k, v ? "1" : "0"); // or "true"/"false" based on backend
+          } else {
+              fd.append(k, v);
+          }
+      });
 
       try {
           if(mode === 'create'){
               await createService(fd);
               toast.success("Service is created");
+          }else {
+              await updateService(selectedService!.id, fd);
+              toast.success("Service is updated");
           }
       }catch (err: unknown){
           toast.error("Something went wrong");
       }
-
   };
+
+    useEffect(() => {
+        if(mode === 'edit' && selectedService){
+            form.reset(mapServiceToForm(selectedService));
+        }
+    }, [mode, selectedService]);
+
 
   return (
     <div>
@@ -141,10 +158,10 @@ const AddNewBlog = () => {
           {/* Image Upload (Optional) */}
           <FormField
             control={form.control}
-            name="image"
+            name="media"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Profile Image</FormLabel>
+                <FormLabel>Image</FormLabel>
                 <FormControl>
                   <Input
                     type="file"
@@ -188,6 +205,6 @@ const AddNewBlog = () => {
   );
 };
 
-export default AddNewBlog;
+export default AddNewService;
 
 // ToDo: service all the finish.

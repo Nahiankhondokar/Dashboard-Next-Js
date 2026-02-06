@@ -28,6 +28,7 @@ interface serviceState {
   // Methods
   fetchService: (page?: number, limit?: number) => Promise<void>;
   createService: (data: FormData) => Promise<Service>
+  updateService: (id: number, data: FormData) => Promise<void>
 }
 
 export const useServiceStore = create<serviceState>((set, get) => ({
@@ -108,5 +109,23 @@ export const useServiceStore = create<serviceState>((set, get) => ({
       }
       throw err;
     }
+  },
+  updateService: async (id: number, data: FormData) => {
+    set({ loading: true });
+
+    const res = await apiFetch<{ data: Service }>(
+        `services/${id}`,
+        {
+          method: "PUT",
+          body: data,
+        }
+    );
+
+    await get().fetchService();
+    set((state) => ({
+      loading: false,
+      modalOpen: false,
+      selectedService: null,
+    }));
   }
 }));

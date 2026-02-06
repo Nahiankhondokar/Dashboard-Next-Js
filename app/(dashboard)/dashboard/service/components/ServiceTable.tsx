@@ -43,10 +43,10 @@ export default function ServiceTable() {
                         <TableHead className="w-[60px]">ID</TableHead>
                         <TableHead>Title</TableHead>
                         <TableHead>Sub Title</TableHead>
+                        <TableHead>Project Link</TableHead>
                         <TableHead>Description</TableHead>
                         <TableHead>Media</TableHead>
                         <TableHead>Created At</TableHead>
-                        <TableHead>Active</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -72,9 +72,10 @@ export default function ServiceTable() {
                                     {service.title}
                                 </TableCell>
                                 <TableCell>{service.sub_title ?? "-"}</TableCell>
+                                <TableCell>{service.project_link ?? "-"}</TableCell>
                                 <TableCell>{service.description ?? "-"}</TableCell>
-                                <TableCell>{service.media ?? "-"}</TableCell>
                                 <TableCell>{service.status ?? "-"}</TableCell>
+                                <TableCell>{service.media ?? "-"}</TableCell>
                                 <TableCell>{service.created_at ?? "-"}</TableCell>
 
                                 <TableCell className="text-right">
