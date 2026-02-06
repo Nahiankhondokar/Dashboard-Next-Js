@@ -10,64 +10,50 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import AddNewSkill from "./components/AddNewProject";
+import AddNewProject from "./components/AddNewProject";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
-import { ProjectDataTable } from "./components/ProjectDataTable";
+import ServiceTable from "@/app/(dashboard)/dashboard/service/components/ServiceTable";
+import AddNewService from "@/app/(dashboard)/dashboard/service/components/AddNewService";
+import {useProjectStore} from "@/app/(dashboard)/dashboard/project/components/ProjectTable";
 
-const allData = [
-  {
-    id: 1,
-    title: "Namian",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: null,
-    // status: true,
-  },
-  {
-    id: 2,
-    title: "Namian",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: null,
-    // status: true,
-  },
-];
-
-const Skill = () => {
+const Project = () => {
   const pathname = usePathname();
+  const {
+    fetchProject,
+    loading,
+    error,
+    openCreateModal,
+    modalOpen,
+    closeModal,
+    mode
+  } = useProjectStore();
 
   return (
-    <div>
-      <BreadcrumbComponent pathname={pathname} />
       <div>
-        <div className="flex items-center justify-between w-full">
-          <h1 className="text-2xl font-bold">Skill List</h1>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Add New Skill</Button>
-            </DialogTrigger>
+        <BreadcrumbComponent pathname={pathname} />
+        <>
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Project</h1>
+            <Button  variant={"outline"} onClick={openCreateModal}>Add New</Button>
+          </div>
+
+          <ServiceTable />
+
+          <Dialog open={modalOpen} onOpenChange={(v) => !v && closeModal()}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add New Skill</DialogTitle>
-                <DialogDescription>
-                  Fill out the details below to create a new blog.
-                </DialogDescription>
+                <DialogTitle>
+                  {mode === "create" ? "Add Project" : "Edit Project"}
+                </DialogTitle>
               </DialogHeader>
 
-              <Separator className="my-2" />
-
-              {/* Your blog form component */}
-              <AddNewSkill />
+              <AddNewProject />
             </DialogContent>
           </Dialog>
-        </div>
-
-        {/* Blog Data Table */}
-
-      </div>
+        </>
     </div>
   );
 };
 
-export default Skill;
+export default Project;

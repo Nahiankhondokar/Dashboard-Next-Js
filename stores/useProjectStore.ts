@@ -1,6 +1,9 @@
 // stores/useProjectStore.ts
 import { Project } from "@/app/(dashboard)/dashboard/project/interface/Project";
 import { create } from "zustand";
+import {apiFetch} from "@/lib/api";
+import {ApiResponse} from "@/type/api-response";
+import {Service} from "@/app/(dashboard)/dashboard/service/interface/Service";
 
 type UpdatePayload =
   | {
@@ -10,28 +13,57 @@ type UpdatePayload =
     }
   | FormData; // Add FormData as a possible type
 
+type Mode = "create" | "edit";
+
 interface ProjectState {
   open: boolean;
   selectedProject: Project | null;
   openModal: (Project: Project) => void;
   closeModal: () => void;
-  Projects: Project[];
+  projects: Project[];
   setProjects: (items: Project[]) => void;
   updateProject: (id: number, payload: UpdatePayload) => Promise<Project>; // Update parameter type
   deleteProject: (id: number) => Promise<void>;
+  createProject: (data: FormData) => Promise<Project>
   loading: boolean;
   error?: string | null;
+  mode : Mode
 }
 
 export const useProjectStore = create<ProjectState>((set) => ({
   open: false,
+  mode : 'create',
   selectedProject: null,
   openModal: (Project) => set({ open: true, selectedProject: Project }),
   closeModal: () => set({ open: false, selectedProject: null }),
-  Projects: [],
+  projects: [],
   loading: false,
   error: null,
-  setProjects: (items) => set({ Projects: items }),
+  setProjects: (items) => set({ projects: items }),
+  createProject: async (data: FormData) => {
+    set({loading: true, error: null});
+    try {
+      const res = await apiFetch<ApiResponse<Service>>('projects',{
+        method : "POST",
+        body : data
+      })
+
+      set((state)=> ({
+        loading: false,
+        projects: [res.data, ...state.projects],
+        modalOpen: false,          // 🔥 close modal
+      }));
+
+      return res.data;
+    }catch (err: unknown){
+      if (err instanceof Error) {
+        set({ loading: false, error: err.message ?? "Create failed" });
+      } else {
+        set({ loading: false, error: "An unknown error occurred" });
+      }
+      throw err;
+    }
+  },
   updateProject: async (id, payload) => {
     set({ loading: true, error: null });
     try {
@@ -46,7 +78,7 @@ export const useProjectStore = create<ProjectState>((set) => ({
         headers["Content-Type"] = "application/json";
       }
 
-      const res = await fetch(`/api/Projects/${id}`, {
+      const res = await fetch(`/api/projects/${id}`, {
         method: "PUT",
         headers,
         body,
@@ -57,7 +89,7 @@ export const useProjectStore = create<ProjectState>((set) => ({
       }
       const updated: Project = await res.json();
       set((state) => ({
-        Projects: state.Projects.map((b) => (b.id === id ? updated : b)),
+        projects: state.projects.map((b) => (b.id === id ? updated : b)),
         loading: false,
       }));
       return updated;
@@ -73,7 +105,7 @@ export const useProjectStore = create<ProjectState>((set) => ({
   deleteProject: async (id: number) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch(`/api/Projects/${id}`, {
+      const res = await fetch(`/api/projects/${id}`, {
         method: "DELETE",
       });
 
@@ -82,7 +114,7 @@ export const useProjectStore = create<ProjectState>((set) => ({
       }
 
       set((state) => ({
-        Projects: state.Projects.filter((b) => b.id !== id),
+        projects: state.projects.filter((b) => b.id !== id),
         loading: false,
       }));
     } catch (err: unknown) {

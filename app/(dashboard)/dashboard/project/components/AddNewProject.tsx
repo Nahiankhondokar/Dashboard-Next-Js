@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useEffect} from "react";
 import {
   Form,
   FormControl,
@@ -16,6 +16,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import {useServiceStore} from "@/stores/useServiceStore";
+import {useProjectStore} from "@/stores/useProjectStore";
+import {toast} from "sonner";
+import {Project} from "@/app/(dashboard)/dashboard/project/interface/Project";
 
 const formSchema = z.object({
   title: z.string(),
@@ -23,6 +27,12 @@ const formSchema = z.object({
   image: z.any().nullable().optional(),
   // status: z.boolean().default(true),
 });
+
+const mapProjectToForm = (project: Project) => ({
+        title : project.title ?? "",
+    description : project.description ?? "",
+    image : null
+})
 
 type formSchemaType = z.infer<typeof formSchema>;
 
@@ -37,9 +47,43 @@ const AddNewProject = () => {
     },
   });
 
+    const {
+        mode,
+        createProject,
+        selectedProject,
+        updateProject
+    } = useProjectStore();
+
   const onSubmit = async (values: formSchemaType) => {
-    console.log("Blog submitted:", values);
+      const fd = new FormData();
+      Object.entries(values).forEach(([k, v]) => {
+          if (v === null || v === undefined) return;
+
+          if (typeof v === "boolean") {
+              fd.append(k, v ? "1" : "0"); // or "true"/"false" based on backend
+          } else {
+              fd.append(k, v);
+          }
+      });
+
+      try {
+          if(mode === 'create'){
+              await createProject(fd);
+              toast.success("Project is created");
+          }else {
+              await updateProject(selectedProject!.id, fd);
+              toast.success("Project is updated");
+          }
+      }catch (err: unknown){
+          toast.error("Something went wrong");
+      }
   };
+
+    useEffect(() => {
+        if(mode === 'edit' && selectedProject){
+            form.reset(mapProjectToForm(selectedProject));
+        }
+    }, [mode, selectedProject]);
 
   return (
     <div>
@@ -87,7 +131,7 @@ const AddNewProject = () => {
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Profile Image</FormLabel>
+                <FormLabel>Image</FormLabel>
                 <FormControl>
                   <Input
                     type="file"

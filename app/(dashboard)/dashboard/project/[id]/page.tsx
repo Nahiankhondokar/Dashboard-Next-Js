@@ -14,8 +14,6 @@ import { useState } from "react";
 import { Project } from "../interface/Project";
 import fallbackImage from "../../../../../public/assets/img/fallbackimage.png";
 
- 
-
 export default function BlogDetailPage({ params }: { params: { id: string } }) {
 
   const [blog, setBlog] = useState<Project | null>(null);
