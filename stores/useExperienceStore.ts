@@ -1,8 +1,9 @@
 // stores/useExperienceStore.ts
-import {ApiResponse, Experience} from "@/app/(dashboard)/dashboard/experience/interface/Experience";
+import {Experience} from "@/app/(dashboard)/dashboard/experience/interface/Experience";
 import { create } from "zustand";
 import {apiFetch} from "@/lib/api";
 import {PaginationResponse} from "@/type/pagination/PaginationType";
+import {ApiResponse} from "@/type/api-response";
 
 type Mode = "create" | "edit";
 
@@ -68,7 +69,6 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
   fetchExperiences: async (page = 1, limit = 10) => {
     set({ loading: true, error: null });
     try {
-
       const res = await apiFetch<PaginationResponse<Experience>>(
           `experiences?page=${page}&limit=${limit}`
       );
@@ -96,8 +96,8 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
       set((state) => ({
         experiences: [res.data, ...state.experiences],
         loading: false,
-        modalOpen: false,          // 🔥 close modal
-        selectedExperience: null,  // 🔥 reset
+        modalOpen: false,
+        selectedExperience: null,
       }));
 
       return res.data;
@@ -154,76 +154,4 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
       throw err;
     }
   },
-
 }));
-
-
-
-// updateExperience: (id: number, payload: UpdatePayload) => Promise<Experience>; // Update parameter type
-// deleteExperience: (id: number) => Promise<void>;
-
-// updateExperience: async (id, payload) => {
-//   set({ loading: true, error: null });
-//   try {
-//     let body: BodyInit;
-//     const headers: HeadersInit = {};
-//
-//     // Check if payload is FormData
-//     if (payload instanceof FormData) {
-//       body = payload;
-//     } else {
-//       body = JSON.stringify(payload);
-//       headers["Content-Type"] = "application/json";
-//     }
-//
-//     const res = await fetch(`/api/Experiences/${id}`, {
-//       method: "PUT",
-//       headers,
-//       body,
-//     });
-//     if (!res.ok) {
-//       const text = await res.text();
-//       throw new Error(text || `HTTP ${res.status}`);
-//     }
-//     const updated: Experience = await res.json();
-//     set((state) => ({
-//       Experiences: state.Experiences.map((b) => (b.id === id ? updated : b)),
-//       loading: false,
-//     }));
-//     return updated;
-//   } catch (err: unknown) {
-//     if (err instanceof Error) {
-//       set({ loading: false, error: err.message ?? "Update failed" });
-//     } else {
-//       set({ loading: false, error: "An unknown error occurred" });
-//     }
-//     throw err;
-//   }
-// },
-// deleteExperience: async (id: number) => {
-//   set({ loading: true, error: null });
-//   try {
-//     const res = await fetch(`/api/Experiences/${id}`, {
-//       method: "DELETE",
-//     });
-//
-//     if (!res.ok) {
-//       throw new Error(`Failed with status ${res.status}`);
-//     }
-//
-//     set((state) => ({
-//       Experiences: state.Experiences.filter((b) => b.id !== id),
-//       loading: false,
-//     }));
-//   } catch (err: unknown) {
-//     const message = err instanceof Error ? err.message : "Unknown error";
-//     set({ loading: false, error: message });
-//     throw err;
-//   }
-// },
-
-
-// ToDo: exerience table dynamci data render
-// ToDo: Data render from store
-// ToDo: Pagination componenet added for each table.
-

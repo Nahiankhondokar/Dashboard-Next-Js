@@ -11,7 +11,7 @@ import { CalendarDays, Clock, User } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useState } from "react";
-import { Skill } from "../interface/Skill";
+import { Skill } from "../interface/Expertise";
 import fallbackImage from "../../../../../public/assets/img/fallbackimage.png";
 
  
