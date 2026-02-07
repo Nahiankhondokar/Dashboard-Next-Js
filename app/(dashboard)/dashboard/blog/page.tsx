@@ -5,74 +5,47 @@ import { usePathname } from "next/navigation";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Columns } from "./components/Columns";
-import AddNewBlog from "./components/AddNewBlog";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-separator";
-import EditBlogModal from "./components/EditBlog";
-import { BlogDataTable } from "./components/BlogDataTable";
+import {useBlogStore} from "@/stores/useBlogStore";
+import AddNewBlog from "@/app/(dashboard)/dashboard/blog/components/AddNewBlog";
+import BlogTable from "@/app/(dashboard)/dashboard/blog/components/BlogTable";
 
-const allData = [
-  {
-    id: 1,
-    title: "Namian",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: null,
-    // status: true,
-  },
-  {
-    id: 2,
-    title: "Namian",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui ipsam aut atque magnam ut quaerat blanditiis autem? Ad, voluptatibus quam.",
-    image: null,
-    // status: true,
-  },
-];
-
-const BlogPage = () => {
+const Blog = () => {
   const pathname = usePathname();
+  const { modalOpen, openCreateModal, closeModal, mode } =
+      useBlogStore();
 
   return (
-    <div>
-      <BreadcrumbComponent pathname={pathname} />
       <div>
-        <div className="flex items-center justify-between w-full">
-          <h1 className="text-2xl font-bold">Blog List</h1>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Add New Blog</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Blog</DialogTitle>
-                <DialogDescription>
-                  Fill out the details below to create a new blog.
-                </DialogDescription>
-              </DialogHeader>
+        <BreadcrumbComponent pathname={pathname} />
+        <div>
+          <>
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold">Blogs</h1>
+              <Button  variant={"outline"} onClick={openCreateModal}>Add New</Button>
+            </div>
 
-              <Separator className="my-2" />
+            <BlogTable />
 
-              {/* Your blog form component */}
-              <AddNewBlog />
-            </DialogContent>
-          </Dialog>
+            <Dialog open={modalOpen} onOpenChange={(v) => !v && closeModal()}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    {mode === "create" ? "Add Blog" : "Edit Blog"}
+                  </DialogTitle>
+                </DialogHeader>
+
+                <AddNewBlog />
+              </DialogContent>
+            </Dialog>
+          </>
+
         </div>
-
-        {/* Blog Data Table */}
-        <BlogDataTable columns={Columns} data={allData} />
-
-        {/* Edit modal */}
-        <EditBlogModal />
       </div>
-    </div>
   );
 };
 
-export default BlogPage;
+export default Blog;

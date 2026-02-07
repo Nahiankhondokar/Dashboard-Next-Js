@@ -1,109 +1,179 @@
 "use client";
 
-import React from "react";
+import { useEffect, useRef } from "react";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-
-const formSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
-  image: z.any().nullable().optional(),
-  // status: z.boolean().default(true),
-});
+import {toast} from "sonner";
+import {formSchema} from "@/app/(dashboard)/dashboard/blog/schema/formSchema";
+import {Blog} from "@/app/(dashboard)/dashboard/blog/interface/Blog";
+import {useBlogStore} from "@/stores/useBlogStore";
 
 type formSchemaType = z.infer<typeof formSchema>;
 
+const mapBlogToForm = (blog: Blog): formSchemaType => ({
+    title: blog.title ?? "",
+    subtitle: blog.subtitle ?? "",
+    status: blog.status ?? true,
+    description: blog.description ?? "",
+    image: null, // file can't be prefilled
+});
+
 const AddNewBlog = () => {
-  const form = useForm<formSchemaType>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      image: null,
-      // status: true,
-    },
-  });
 
-  const onSubmit = async (values: formSchemaType) => {
-    console.log("Blog submitted:", values);
-  };
+    const {
+        mode,
+        selectedBlog,
+        createBlog,
+        updateBlog,
+        modalOpen,
+        loading,
+    } = useBlogStore();
 
-  return (
-    <div>
-      <Form {...form}>
-        <form
-          id="user-form"
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+    const fileRef = useRef<HTMLInputElement | null>(null);
 
-          {/* Title */}
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input placeholder="title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    const form = useForm<formSchemaType>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            title: "",
+            subtitle: "",
+            status: true,
+            description: "",
+            image: null,
+        },
+    });
 
-          {/* Description */}
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="description" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    const onSubmit = async (values: formSchemaType) => {
+
+        const fd = new FormData();
+        Object.entries(values).forEach(([k, v]) => {
+            if (v === null || v === undefined) return;
+
+            if (typeof v === "boolean") {
+                fd.append(k, v ? "1" : "0"); // or "true"/"false" based on backend
+            } else {
+                fd.append(k, v);
+            }
+        });
+
+        try {
+            if (mode === "create") {
+                await createBlog(fd);
+                toast.success("Blog created");
+            } else {
+                await updateBlog(selectedBlog!.id, fd);
+                toast.success("Blog updated");
+            }
+        } catch {
+            toast.error("Something went wrong");
+        }
+    };
+
+    useEffect(() => {
+        if (mode === "edit" && selectedBlog) {
+            form.reset(mapBlogToForm(selectedBlog));
+        }
+
+        if (!modalOpen) {
+            form.reset();
+            if (fileRef.current) fileRef.current.value = "";
+        }
+    }, [mode, selectedBlog, modalOpen]);
+
+    return (
+        <div>
+            <Form {...form}>
+                <form
+                    id="user-form"
+                    onSubmit={form.handleSubmit(
+                        onSubmit,
+                        (errors) => {
+                            console.log("❌ FORM ERRORS:", errors);
+                        }
+                    )}
+                    className="space-y-6"
+                >
+
+                    {/* Title */}
+                    <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Title</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="title" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Sub Title */}
+                    <FormField
+                        control={form.control}
+                        name="subtitle"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Sub Title</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="sub title" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Description */}
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="description" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
 
-          {/* Image Upload (Optional) */}
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Profile Image</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      field.onChange(e.target.files?.[0] ?? null)
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    {/* Image Upload (Optional) */}
+                    <FormField
+                        control={form.control}
+                        name="image"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Image</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) =>
+                                            field.onChange(e.target.files?.[0] ?? null)
+                                        }
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-          {/* Status */}
-          {/* <FormField
+                    {/* Status */}
+                    {/* <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
@@ -121,14 +191,14 @@ const AddNewBlog = () => {
             )}
           /> */}
 
-          {/* Submit */}
-          <Button type="submit" variant="outline" className="w-full">
-            Submit
-          </Button>
-        </form>
-      </Form>
-    </div>
-  );
+                    {/* Submit */}
+                    <Button type="submit" disabled={false} className="w-full">
+                        {mode === "create" ? "Create" : "Update"}
+                    </Button>
+                </form>
+            </Form>
+        </div>
+    );
 };
 
-export default AddNewBlog;
+export default AddNewBlog

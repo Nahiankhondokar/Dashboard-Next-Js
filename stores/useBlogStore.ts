@@ -1,94 +1,153 @@
-// stores/useBlogStore.ts
-import { Blog } from "@/app/(dashboard)/dashboard/blog/interface/Blog";
-import { create } from "zustand";
 
-type UpdatePayload =
-  | {
-      title?: string;
-      description?: string;
-      image?: File | null;
-    }
-  | FormData; // Add FormData as a possible type
+import { create } from "zustand";
+import {apiFetch} from "@/lib/api";
+import {PaginationResponse} from "@/type/pagination/PaginationType";
+import {ApiResponse} from "@/type/api-response";
+import {Blog} from "@/app/(dashboard)/dashboard/blog/interface/Blog";
+
+type Mode = "create" | "edit";
 
 interface BlogState {
-  open: boolean;
   selectedBlog: Blog | null;
-  openModal: (blog: Blog) => void;
-  closeModal: () => void;
   blogs: Blog[];
   setBlogs: (items: Blog[]) => void;
-  updateBlog: (id: number, payload: UpdatePayload) => Promise<Blog>; // Update parameter type
-  deleteBlog: (id: number) => Promise<void>
   loading: boolean;
   error?: string | null;
+  pagination: PaginationResponse<Blog>["meta"] | null;
+
+  // actions
+  openCreateModal: () => void;
+  openEditModal: (blog: Blog) => void;
+  closeModal: () => void;
+
+  // Modals details
+  mode: Mode,
+  modalOpen : boolean
+
+  // Methods
+  fetchBlog: (page?: number, limit?: number) => Promise<void>;
+  createBlog: (data: FormData) => Promise<Blog>
+  updateBlog: (id: number, data: FormData) => Promise<void>
+  deleteBlog: (id: number) => Promise<void>
 }
 
-export const useBlogStore = create<BlogState>((set) => ({
-  open: false,
+export const useBlogStore = create<BlogState>((set, get) => ({
   selectedBlog: null,
-  openModal: (blog) => set({ open: true, selectedBlog: blog }),
-  closeModal: () => set({ open: false, selectedBlog: null }),
   blogs: [],
+  setBlogs: (items) => set({ blogs: items }),
+  pagination: null,
   loading: false,
   error: null,
-  setBlogs: (items) => set({ blogs: items }),
-  updateBlog: async (id, payload) => {
-    set({ loading: true, error: null });
+
+  modalOpen: false,
+  mode: "create",
+
+  openCreateModal: () =>
+      set({
+        modalOpen: true,
+        mode: "create",
+        selectedBlog: null,
+      }),
+
+  openEditModal: (blog: Blog) => {
+    set({
+      modalOpen: true,
+      mode: "edit",
+      selectedBlog: blog,
+    });
+    console.log("openEditModal called with:", get().selectedBlog);
+  },
+
+  closeModal: () =>
+      set({
+        modalOpen: false,
+        selectedBlog: null,
+        error: null,
+      }),
+
+  fetchBlog: async (page = 1, limit = 10) => {
+    set({loading: true, error: null});
     try {
-      let body: BodyInit;
-      const headers: HeadersInit = {};
+      const res = await apiFetch<PaginationResponse<Blog>>(
+          `blogs?page=${page}&limit=${limit}`
+      );
 
-      // Check if payload is FormData
-      if (payload instanceof FormData) {
-        body = payload;
-      } else {
-        body = JSON.stringify(payload);
-        headers["Content-Type"] = "application/json";
-      }
-
-      const res = await fetch(`/api/blogs/${id}`, {
-        method: "PUT",
-        headers,
-        body,
-      });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `HTTP ${res.status}`);
-      }
-      const updated: Blog = await res.json();
-      set((state) => ({
-        blogs: state.blogs.map((b) => (b.id === id ? updated : b)),
+      set({
+        blogs: res.data,
+        pagination: res.meta,
         loading: false,
-      }));
-      return updated;
-    } catch (err: unknown) {
+      });
+    }catch (err: unknown){
       if (err instanceof Error) {
-        set({ loading: false, error: err.message ?? "Update failed" });
+        set({ loading: false, error: err.message ?? "Fetching failed" });
       } else {
         set({ loading: false, error: "An unknown error occurred" });
       }
       throw err;
     }
   },
-  deleteBlog: async (id: number) => {
-    set({ loading: true, error: null });
+  createBlog: async (data: FormData) => {
+    set({loading: true, error: null});
     try {
-      const res = await fetch(`/api/blogs/${id}`, {
-        method: "DELETE",
-      });
+      const res = await apiFetch<ApiResponse<Blog>>('blogs',{
+        method : "POST",
+        body : data
+      })
 
-      if (!res.ok) {
-        throw new Error(`Failed with status ${res.status}`);
-      }
-
-      set((state) => ({
-        blogs: state.blogs.filter((b) => b.id !== id),
+      set((state)=> ({
         loading: false,
+        blogs: [res.data, ...state.blogs],
+        modalOpen: false,
       }));
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      set({ loading: false, error: message });
+
+      return res.data;
+    }catch (err: unknown){
+      if (err instanceof Error) {
+        set({ loading: false, error: err.message ?? "Create failed" });
+      } else {
+        set({ loading: false, error: "An unknown error occurred" });
+      }
       throw err;
     }
   },
+  updateBlog: async (id: number, data: FormData) => {
+    set({ loading: true });
+    console.log("blog store")
+
+    const res = await apiFetch<{ data: Blog }>(
+        `blogs/${id}`,
+        {
+          method: "PUT",
+          body: data,
+        }
+    );
+
+    await get().fetchBlog();
+    set((state) => ({
+      loading: false,
+      modalOpen: false,
+      selectedBlog: null,
+    }));
+  },
+  deleteBlog: async (id: number) => {
+    set({ loading: true, error: null });
+
+    try {
+      await apiFetch(`blogs/${id}`, {
+        method: "DELETE",
+      });
+
+      // ✅ Remove from store instantly
+      set((state) => ({
+        blogs: state.blogs.filter((blog) => blog.id !== id),
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({
+        loading: false,
+        error: err.message ?? "Delete failed",
+      });
+      throw err;
+    }
+  }
 }));

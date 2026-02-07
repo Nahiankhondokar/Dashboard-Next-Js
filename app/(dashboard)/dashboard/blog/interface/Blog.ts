@@ -1,9 +1,10 @@
-"use client";
+
 export interface Blog {
   id: number;
   title: string;
-  description?: string;
+  subtitle?: string
+  description: string;
+  status?: boolean;
+  created_at?: string | null;
   image?: string | null;
-//   status?: number; // 0 or 1
-  // add any fields your app uses
 }
