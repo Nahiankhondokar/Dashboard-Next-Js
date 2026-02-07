@@ -13,9 +13,9 @@ import {
 import AddNewProject from "./components/AddNewProject";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
-import ServiceTable from "@/app/(dashboard)/dashboard/service/components/ServiceTable";
 import AddNewService from "@/app/(dashboard)/dashboard/service/components/AddNewService";
-import {useProjectStore} from "@/app/(dashboard)/dashboard/project/components/ProjectTable";
+import {useProjectStore} from "@/stores/useProjectStore";
+import ProjectTable from "@/app/(dashboard)/dashboard/project/components/ProjectTable";
 
 const Project = () => {
   const pathname = usePathname();
@@ -38,7 +38,7 @@ const Project = () => {
             <Button  variant={"outline"} onClick={openCreateModal}>Add New</Button>
           </div>
 
-          <ServiceTable />
+          <ProjectTable />
 
           <Dialog open={modalOpen} onOpenChange={(v) => !v && closeModal()}>
             <DialogContent>

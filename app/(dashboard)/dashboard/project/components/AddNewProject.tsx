@@ -16,22 +16,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import {useServiceStore} from "@/stores/useServiceStore";
 import {useProjectStore} from "@/stores/useProjectStore";
 import {toast} from "sonner";
 import {Project} from "@/app/(dashboard)/dashboard/project/interface/Project";
 
 const formSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
-  image: z.any().nullable().optional(),
-  // status: z.boolean().default(true),
+    title: z.string(),
+    description: z.string().optional(),
+    project_link: z.string().url().optional(),
+    status: z.boolean().default(true).optional(),
+    media: z.any().nullable().optional()
 });
 
 const mapProjectToForm = (project: Project) => ({
-        title : project.title ?? "",
+    title : project.title ?? "",
     description : project.description ?? "",
-    image : null
+    project_link : project.project_link ?? "",
+    status: project.status ?? true,
+    media : null
 })
 
 type formSchemaType = z.infer<typeof formSchema>;
@@ -40,10 +42,11 @@ const AddNewProject = () => {
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      image: null,
-      // status: true,
+        title: "",
+        description: "",
+        project_link: "",
+        status: true,
+        media: null
     },
   });
 
@@ -109,6 +112,21 @@ const AddNewProject = () => {
             )}
           />
 
+            {/* Project link */}
+            <FormField
+                control={form.control}
+                name="project_link"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Project Link</FormLabel>
+                        <FormControl>
+                            <Input placeholder="project link" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
           {/* Description */}
           <FormField
             control={form.control}
@@ -128,7 +146,7 @@ const AddNewProject = () => {
           {/* Image Upload (Optional) */}
           <FormField
             control={form.control}
-            name="image"
+            name="media"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Image</FormLabel>

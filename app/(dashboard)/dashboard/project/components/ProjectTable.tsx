@@ -15,10 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import Pagination from "@/type/pagination/Pagination";
-import {useServiceStore} from "@/stores/useServiceStore";
 import ConfirmationAlert from "@/components/common/ConfirmationAlert";
 import {toast} from "sonner";
 import {useProjectStore} from "@/stores/useProjectStore";
+import {Project} from "@/app/(dashboard)/dashboard/project/interface/Project";
 
 export default function ProjectTable() {
     const {
@@ -68,7 +68,7 @@ export default function ProjectTable() {
                             </TableCell>
                         </TableRow>
                     ) : (
-                        projects.map((project, index) => (
+                        projects.map((project, index: number) => (
                             <TableRow key={index}>
                                 <TableCell>{index+1}</TableCell>
                                 <TableCell className="font-medium">
@@ -76,8 +76,8 @@ export default function ProjectTable() {
                                 </TableCell>
                                 <TableCell>{project.project_link ?? "-"}</TableCell>
                                 <TableCell>{project.description ?? "-"}</TableCell>
-                                <TableCell>{projects.media ?? "-"}</TableCell>
-                                <TableCell>{projects.created_at ?? "-"}</TableCell>
+                                <TableCell>{project.media ?? "-"}</TableCell>
+                                <TableCell>{project.created_at ?? "-"}</TableCell>
 
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
@@ -86,24 +86,24 @@ export default function ProjectTable() {
                                         </Button>
 
                                         {/*Delete*/}
-                                        {/*<ConfirmationAlert*/}
-                                        {/*    title="Delete experience?"*/}
-                                        {/*    description="This experience will be permanently removed."*/}
-                                        {/*    confirmText="Delete"*/}
-                                        {/*    onConfirm={async () => {*/}
-                                        {/*        try {*/}
-                                        {/*            await deleteService(service.id);*/}
-                                        {/*            toast.success("Experience deleted");*/}
-                                        {/*        } catch {*/}
-                                        {/*            toast.error("Delete failed");*/}
-                                        {/*        }*/}
-                                        {/*    }}*/}
-                                        {/*    trigger={*/}
-                                        {/*        <Button size="icon" variant="destructive">*/}
-                                        {/*            <Trash size={16} />*/}
-                                        {/*        </Button>*/}
-                                        {/*    }*/}
-                                        {/*/>*/}
+                                        <ConfirmationAlert
+                                            title="Delete Project?"
+                                            description="This project will be permanently removed."
+                                            confirmText="Delete"
+                                            onConfirm={async () => {
+                                                try {
+                                                    await deleteProject(project.id);
+                                                    toast.success("Project deleted");
+                                                } catch {
+                                                    toast.error("Delete failed");
+                                                }
+                                            }}
+                                            trigger={
+                                                <Button size="icon" variant="destructive">
+                                                    <Trash size={16} />
+                                                </Button>
+                                            }
+                                        />
                                     </div>
                                 </TableCell>
                             </TableRow>
