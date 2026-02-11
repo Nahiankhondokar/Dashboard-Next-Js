@@ -98,7 +98,11 @@ const Navabar = () => {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" /> Profile
+              <Link href="/dashboard/profile" >
+                <div className="flex">
+                  <User className="mr-2 h-4 w-4" /> Profile
+                </div>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4" /> Settings
