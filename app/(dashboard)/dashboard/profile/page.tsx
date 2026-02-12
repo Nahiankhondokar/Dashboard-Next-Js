@@ -29,6 +29,8 @@ import { Label } from "@/components/ui/label"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
+import { Eye, EyeOff } from "lucide-react"
+
 
 
 /* ===============================
@@ -84,6 +86,8 @@ const Profile = () => {
     }
 
     /* ---------- PASSWORD FORM ---------- */
+    const [showNewPassword, setShowNewPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const passwordForm = useForm<PasswordFormValues>({
         resolver: zodResolver(passwordSchema),
@@ -200,10 +204,21 @@ const Profile = () => {
                                 {/* New Password */}
                                 <div className="space-y-2">
                                     <Label>New Password</Label>
-                                    <Input
-                                        type="password"
-                                        {...passwordForm.register("newPassword")}
-                                    />
+
+                                    <div className="relative">
+                                        <Input
+                                            type={showNewPassword ? "text" : "password"}
+                                            {...passwordForm.register("newPassword")}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowNewPassword(!showNewPassword)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                                        >
+                                            {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
+
                                     <p className="text-sm text-red-500">
                                         {passwordForm.formState.errors.newPassword?.message}
                                     </p>
@@ -212,14 +227,28 @@ const Profile = () => {
                                 {/* Confirm Password */}
                                 <div className="space-y-2">
                                     <Label>Confirm Password</Label>
-                                    <Input
-                                        type="password"
-                                        {...passwordForm.register("confirmPassword")}
-                                    />
+
+                                    <div className="relative">
+                                        <Input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            {...passwordForm.register("confirmPassword")}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setShowConfirmPassword(!showConfirmPassword)
+                                            }
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                                        >
+                                            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
+
                                     <p className="text-sm text-red-500">
                                         {passwordForm.formState.errors.confirmPassword?.message}
                                     </p>
                                 </div>
+
 
                                 <Button type="submit" className="w-full">
                                     Update Password
