@@ -82,13 +82,13 @@ export default function ExpertiseTable() {
 
                                         {/*Delete*/}
                                         <ConfirmationAlert
-                                            title="Delete Expertise?"
+                                            title="Delete Profile?"
                                             description="This expertise will be permanently removed."
                                             confirmText="Delete"
                                             onConfirm={async () => {
                                                 try {
                                                     await deleteExpertise(expertise.id);
-                                                    toast.success("Expertise deleted");
+                                                    toast.success("Profile deleted");
                                                 } catch {
                                                     toast.error("Delete failed");
                                                 }

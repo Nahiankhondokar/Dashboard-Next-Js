@@ -17,9 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {toast} from "sonner";
-import {useProjectStore} from "@/stores/useProjectStore";
 import {useExpertiseStore} from "@/stores/useExpertiseStore";
-import {Project} from "@/app/(dashboard)/dashboard/project/interface/Project";
 import {Expertise} from "@/app/(dashboard)/dashboard/expertise/interface/Expertise";
 
 const formSchema = z.object({
@@ -71,10 +69,10 @@ const AddNewExpertise = () => {
       try {
           if(mode === 'create'){
               await createExpertise(fd);
-              toast.success("Expertise is created");
+              toast.success("Profile is created");
           }else {
               await updateExpertise(selectedExpertise!.id, fd);
-              toast.success("Expertise is updated");
+              toast.success("Profile is updated");
           }
       }catch (err: unknown){
           toast.error("Something went wrong");

@@ -45,7 +45,7 @@ const items = [
   { title: "Services", url: "/dashboard/service", icon: MonitorCogIcon },
   { title: "Projects", url: "/dashboard/project", icon: AppWindowIcon },
   { title: "Experience", url: "/dashboard/experience", icon: LayersIcon },
-  { title: "Expertise", url: "/dashboard/expertise", icon: LibraryBig },
+  { title: "Profile", url: "/dashboard/expertise", icon: LibraryBig },
   // { title: "Settings", url: "#", icon: Settings },
 ];
 

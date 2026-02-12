@@ -34,7 +34,7 @@ const Experitse = () => {
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>
-                    {mode === "create" ? "Add Expertise" : "Edit Expertise"}
+                    {mode === "create" ? "Add Profile" : "Edit Profile"}
                   </DialogTitle>
                 </DialogHeader>
 
