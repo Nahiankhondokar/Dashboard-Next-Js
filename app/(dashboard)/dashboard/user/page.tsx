@@ -12,7 +12,7 @@ import { useUserStore } from "@/stores/useUserStore";
 
 const UserPage = () => {
   const pathname = usePathname();
-  const { Users, fetchUsers, deleteUser, updateUser } = useUserStore();
+  const { users, fetchUsers, deleteUser, updateUser } = useUserStore();
 
   useEffect(() => {
     fetchUsers(); // load data when mounted
@@ -34,7 +34,7 @@ const UserPage = () => {
           </div>
         </div>
         {/* User List Show */}
-        <DataTable columns={Columns} data={Users} />
+        <DataTable columns={Columns} data={users} />
       </div>
     </div>
   );

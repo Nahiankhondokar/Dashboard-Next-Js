@@ -12,8 +12,7 @@ export type User = {
   email: string;
   username: string;
   phone: string;
-  role: string;
+  role?: string;
   image?: string;
-  status: boolean;
-  social?: SocialLinks;
+  social?: string[];
 };

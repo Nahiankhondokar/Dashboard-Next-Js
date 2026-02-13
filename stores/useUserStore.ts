@@ -3,11 +3,15 @@
 import { create } from "zustand";
 import {mockUsers} from "@/app/(dashboard)/dashboard/user/mockUsers/mockUsers";
 import { User } from "@/app/(dashboard)/dashboard/user/type/user";
+import {apiFetch} from "@/lib/api";
+import {PaginationResponse} from "@/type/pagination/PaginationType";
 
 
 interface UserState {
-  Users: User[];
-  fetchUsers: () => Promise<void>;
+  users: User[];
+  loading: boolean,
+  pagination: PaginationResponse<User>["meta"] | null;
+  fetchUsers: (page?: number, limit?: number) => Promise<void>;
   createUser: (user: Omit<User, "id">) => Promise<void>;
   updateUser: (user: User) => Promise<void>;
   deleteUser: (id: number) => Promise<void>;
@@ -15,17 +19,19 @@ interface UserState {
 }
 
 export const useUserStore = create<UserState>((set) => ({
-  Users: [],
+  users: [],
+  loading: false,
+  pagination: null,
 
   // Fetch all users
-  fetchUsers: async () => {
+  fetchUsers: async (page = 1) => {
     try {
-      // const res = await fetch("/api/users");
-      // if (!res.ok) throw new Error("Failed to fetch users");
-      // const data: User[] = await res.json();
-      // set({ allData: data });
+      const res = await apiFetch<PaginationResponse<User>>(`users?page=${page}`);
 
-      return set({ Users: mockUsers });
+      return set({
+        users: res.data,
+        pagination: res.meta
+      });
       
     } catch (err) {
       console.error("Fetch users failed", err);
@@ -55,36 +61,36 @@ export const useUserStore = create<UserState>((set) => ({
 
   // Update existing user
   updateUser: async (updatedUser) => {
-    try {
-      const res = await fetch(`/api/users/${updatedUser.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedUser),
-      });
-      if (!res.ok) throw new Error("Failed to update user");
-
-      set((state) => ({
-        Users: state.Users.map((u) =>
-          u.id === updatedUser.id ? updatedUser : u
-        ),
-      }));
-    } catch (err) {
-      console.error("Update user failed", err);
-    }
+    // try {
+    //   const res = await fetch(`/api/users/${updatedUser.id}`, {
+    //     method: "PUT",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(updatedUser),
+    //   });
+    //   if (!res.ok) throw new Error("Failed to update user");
+    //
+    //   set((state) => ({
+    //     Users: state.Users.map((u) =>
+    //       u.id === updatedUser.id ? updatedUser : u
+    //     ),
+    //   }));
+    // } catch (err) {
+    //   console.error("Update user failed", err);
+    // }
   },
 
   // Delete user
   deleteUser: async (id) => {
-    try {
-      const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete user");
-
-      set((state) => ({
-        Users: state.Users.filter((u) => u.id !== id),
-      }));
-    } catch (err) {
-      console.error("Delete failed", err);
-    }
+    // try {
+    //   const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
+    //   if (!res.ok) throw new Error("Failed to delete user");
+    //
+    //   set((state) => ({
+    //     Users: state.Users.filter((u) => u.id !== id),
+    //   }));
+    // } catch (err) {
+    //   console.error("Delete failed", err);
+    // }
   },
 
   // Get user details

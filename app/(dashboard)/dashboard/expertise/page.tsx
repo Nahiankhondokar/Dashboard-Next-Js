@@ -24,7 +24,7 @@ const Experitse = () => {
         <div>
           <>
             <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold">Experience</h1>
+              <h1 className="text-2xl font-bold">Expertise</h1>
               <Button  variant={"outline"} onClick={openCreateModal}>Add New</Button>
             </div>
 
