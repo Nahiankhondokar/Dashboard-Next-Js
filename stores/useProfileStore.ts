@@ -14,6 +14,7 @@ interface ProfileState {
     // Methods
     fetchProfile: () => Promise<void>;
     updateProfile: (data: FormData) => Promise<void>;
+    updatePassword: (data: FormData) => Promise<void>;
 }
 
 export const useProfileStore = create<ProfileState>((set, get) => ({
@@ -56,6 +57,25 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
                 profile: res.data,
                 loading: false,
             });
+        }catch (err: unknown){
+            if (err instanceof Error) {
+                set({ loading: false, error: err.message ?? "Fetching failed" });
+            } else {
+                set({ loading: false, error: "An unknown error occurred" });
+            }
+            throw err;
+        }
+    },
+    updatePassword: async (data: FormData) => {
+        set({loading: true, error: null});
+        try {
+            await apiFetch<ApiResponse<Profile>>(
+                `password/update`, {
+                    method : "PATCH",
+                    body: data
+                }
+            );
+
         }catch (err: unknown){
             if (err instanceof Error) {
                 set({ loading: false, error: err.message ?? "Fetching failed" });

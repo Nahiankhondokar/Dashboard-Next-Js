@@ -9,9 +9,9 @@ import {toast} from "sonner";
 import {toFormData} from "@/lib/toFormData";
 import {z} from "zod";
 import {useProfileStore} from "@/stores/useProfileStore";
-import {Profile} from "@/app/(dashboard)/dashboard/profile/interface/Profile";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Separator} from "@radix-ui/react-separator";
+import {Profile} from "@/app/(dashboard)/dashboard/profile/interface/Profile";
 
 /* ===============================
    ZOD SCHEMAS
@@ -29,10 +29,23 @@ const schema = z.object({
         .instanceof(File)
         .optional()
         .nullable(),
-})
+});
 
 
 type ProfileFormValues = z.infer<typeof schema>
+
+/*------ Profile data mapping ------ */
+const mapProfileToForm = (profile: Profile) => ({
+    name: profile.name ?? "",
+    email: profile.email ?? "",
+    username: profile.username ?? "",
+    bio: profile.bio ?? "",
+    location: profile.location ?? "",
+    website: profile.website ?? "",
+    phone: profile.phone ?? "",
+    socials: profile.socials ?? [],
+    image: null,
+})
 
 
 const UpdateProfileForm = () => {
@@ -75,8 +88,8 @@ const UpdateProfileForm = () => {
         try {
             await updateProfile(fd)
             toast.success("Profile updated successfully");
-        } catch (e) {
-            toast.error("Update failed");
+        } catch (e: any) {
+            toast.error(e.message);
         }
     };
 
@@ -92,7 +105,9 @@ const UpdateProfileForm = () => {
     /*------ FETCH PROFILE ----- */
     const handleFetchProfile = async () => {
         await fetchProfile();
-        profileForm.reset(profile);
+        if(profile != null){
+            profileForm.reset(mapProfileToForm(profile));
+        }
     }
 
     useEffect(()=> {
