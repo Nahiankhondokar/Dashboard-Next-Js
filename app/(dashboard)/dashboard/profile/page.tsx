@@ -5,38 +5,15 @@ import { usePathname } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-
 import BreadcrumbComponent from "@/components/common/Breadcrumb"
-
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from "@/components/ui/card"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
-import { Eye, EyeOff } from "lucide-react"
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
 import UpdateProfileForm from "@/app/(dashboard)/dashboard/profile/components/UpdateProfileForm";
-import {Profile} from "@/app/(dashboard)/dashboard/profile/interface/Profile";
 
 
 /* ===============================
@@ -93,97 +70,99 @@ const Profile = () => {
                 </TabsList>
 
                 {/* ================= PROFILE TAB ================= */}
-                <UpdateProfileForm />
+                <TabsContent value="profile">
+                    <UpdateProfileForm />
+                </TabsContent>
 
                 {/* ================= PASSWORD TAB ================= */}
 
                 <TabsContent value="password">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Update Password</CardTitle>
-                            <CardDescription>
-                                Change your account password
-                            </CardDescription>
-                        </CardHeader>
+                    {/*<Card>*/}
+                    {/*    <CardHeader>*/}
+                    {/*        <CardTitle>Update Password</CardTitle>*/}
+                    {/*        <CardDescription>*/}
+                    {/*            Change your account password*/}
+                    {/*        </CardDescription>*/}
+                    {/*    </CardHeader>*/}
 
-                        <CardContent>
-                            <Form {...passwordForm}>
-                                <form
-                                    onSubmit={passwordForm.handleSubmit(handlePasswordSubmit)}
-                                    className="space-y-6"
-                                >
-                                    {/* Password */}
-                                    <FormField
-                                        control={passwordForm.control}
-                                        name="password"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>New Password</FormLabel>
-                                                <FormControl>
-                                                    <div className="relative">
-                                                        <Input
-                                                            type={showNewPassword ? "text" : "password"}
-                                                            {...field}
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setShowNewPassword(!showNewPassword)}
-                                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                                                        >
-                                                            {showNewPassword ? (
-                                                                <EyeOff size={18} />
-                                                            ) : (
-                                                                <Eye size={18} />
-                                                            )}
-                                                        </button>
-                                                    </div>
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                    {/*    <CardContent>*/}
+                    {/*        <Form {...passwordForm}>*/}
+                    {/*            <form*/}
+                    {/*                onSubmit={passwordForm.handleSubmit(handlePasswordSubmit)}*/}
+                    {/*                className="space-y-6"*/}
+                    {/*            >*/}
+                    {/*                /!* Password *!/*/}
+                    {/*                <FormField*/}
+                    {/*                    control={passwordForm.control}*/}
+                    {/*                    name="password"*/}
+                    {/*                    render={({ field }) => (*/}
+                    {/*                        <FormItem>*/}
+                    {/*                            <FormLabel>New Password</FormLabel>*/}
+                    {/*                            <FormControl>*/}
+                    {/*                                <div className="relative">*/}
+                    {/*                                    <Input*/}
+                    {/*                                        type={showNewPassword ? "text" : "password"}*/}
+                    {/*                                        {...field}*/}
+                    {/*                                    />*/}
+                    {/*                                    <button*/}
+                    {/*                                        type="button"*/}
+                    {/*                                        onClick={() => setShowNewPassword(!showNewPassword)}*/}
+                    {/*                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"*/}
+                    {/*                                    >*/}
+                    {/*                                        {showNewPassword ? (*/}
+                    {/*                                            <EyeOff size={18} />*/}
+                    {/*                                        ) : (*/}
+                    {/*                                            <Eye size={18} />*/}
+                    {/*                                        )}*/}
+                    {/*                                    </button>*/}
+                    {/*                                </div>*/}
+                    {/*                            </FormControl>*/}
+                    {/*                            <FormMessage />*/}
+                    {/*                        </FormItem>*/}
+                    {/*                    )}*/}
+                    {/*                />*/}
 
-                                    {/* Confirm Password */}
-                                    <FormField
-                                        control={passwordForm.control}
-                                        name="password_confirmation"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Confirm Password</FormLabel>
-                                                <FormControl>
-                                                    <div className="relative">
-                                                        <Input
-                                                            type={showConfirmPassword ? "text" : "password"}
-                                                            {...field}
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            onClick={() =>
-                                                                setShowConfirmPassword(!showConfirmPassword)
-                                                            }
-                                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                                                        >
-                                                            {showConfirmPassword ? (
-                                                                <EyeOff size={18} />
-                                                            ) : (
-                                                                <Eye size={18} />
-                                                            )}
-                                                        </button>
-                                                    </div>
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                    {/*                /!* Confirm Password *!/*/}
+                    {/*                <FormField*/}
+                    {/*                    control={passwordForm.control}*/}
+                    {/*                    name="password_confirmation"*/}
+                    {/*                    render={({ field }) => (*/}
+                    {/*                        <FormItem>*/}
+                    {/*                            <FormLabel>Confirm Password</FormLabel>*/}
+                    {/*                            <FormControl>*/}
+                    {/*                                <div className="relative">*/}
+                    {/*                                    <Input*/}
+                    {/*                                        type={showConfirmPassword ? "text" : "password"}*/}
+                    {/*                                        {...field}*/}
+                    {/*                                    />*/}
+                    {/*                                    <button*/}
+                    {/*                                        type="button"*/}
+                    {/*                                        onClick={() =>*/}
+                    {/*                                            setShowConfirmPassword(!showConfirmPassword)*/}
+                    {/*                                        }*/}
+                    {/*                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"*/}
+                    {/*                                    >*/}
+                    {/*                                        {showConfirmPassword ? (*/}
+                    {/*                                            <EyeOff size={18} />*/}
+                    {/*                                        ) : (*/}
+                    {/*                                            <Eye size={18} />*/}
+                    {/*                                        )}*/}
+                    {/*                                    </button>*/}
+                    {/*                                </div>*/}
+                    {/*                            </FormControl>*/}
+                    {/*                            <FormMessage />*/}
+                    {/*                        </FormItem>*/}
+                    {/*                    )}*/}
+                    {/*                />*/}
 
-                                    <Button type="submit" className="w-full">
-                                        Update Password
-                                    </Button>
-                                </form>
-                            </Form>
+                    {/*                <Button type="submit" className="w-full">*/}
+                    {/*                    Update Password*/}
+                    {/*                </Button>*/}
+                    {/*            </form>*/}
+                    {/*        </Form>*/}
 
-                        </CardContent>
-                    </Card>
+                    {/*    </CardContent>*/}
+                    {/*</Card>*/}
                 </TabsContent>
 
             </Tabs>
