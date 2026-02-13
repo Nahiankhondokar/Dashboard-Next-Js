@@ -1,37 +1,59 @@
 
 import { create } from "zustand";
 import {apiFetch} from "@/lib/api";
-import {PaginationResponse} from "@/type/pagination/PaginationType";
 import {ApiResponse} from "@/type/api-response";
-import {Blog} from "@/app/(dashboard)/dashboard/blog/interface/Blog";
+import {Profile} from "@/app/(dashboard)/dashboard/profile/interface/Profile";
 
 
-interface BlogState {
-    profile: Blog[];
-    setProfile: (items: Blog[]) => void;
+interface ProfileState {
+    profile: Profile | null;
+    setProfile: (items: Profile) => void;
     loading: boolean;
     error?: string | null;
 
     // Methods
-    fetchBlog: (page?: number, limit?: number) => Promise<void>;
+    fetchProfile: () => Promise<void>;
+    updateProfile: (data: FormData) => Promise<void>;
 }
 
-export const useBlogStore = create<BlogState>((set, get) => ({
-    profile: [],
-    setProfile: (items) => set({ blogs: items }),
+export const useProfileStore = create<ProfileState>((set, get) => ({
+    profile: null,
+    setProfile: (items) => set({ profile: items }),
     loading: false,
     error: null,
 
-    fetchBlog: async (page = 1, limit = 10) => {
+    fetchProfile: async () => {
         set({loading: true, error: null});
         try {
-            const res = await apiFetch<ApiResponse<Blog>>(
-                `blogs?page=${page}&limit=${limit}`
+            const res = await apiFetch<ApiResponse<Profile>>(
+                `profile`
             );
 
             set({
-                blogs: res.data,
-                pagination: res.meta,
+                profile: res.data,
+                loading: false,
+            });
+        }catch (err: unknown){
+            if (err instanceof Error) {
+                set({ loading: false, error: err.message ?? "Fetching failed" });
+            } else {
+                set({ loading: false, error: "An unknown error occurred" });
+            }
+            throw err;
+        }
+    },
+    updateProfile: async (data: FormData) => {
+        set({loading: true, error: null});
+        try {
+            const res = await apiFetch<ApiResponse<Profile>>(
+                `profile/update`, {
+                    method : "PUT",
+                    body: data
+                }
+            );
+
+            set({
+                profile: res.data,
                 loading: false,
             });
         }catch (err: unknown){
