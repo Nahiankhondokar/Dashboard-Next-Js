@@ -1,6 +1,12 @@
 // --- Types ---
 export type Section = "home" | "about" | "portfolio" | "contact";
 export type Home = Pick<UserInfo, "name" | "subtitle" | "image" | "bio">
+export type About = Pick<UserInfo,
+    "name" | "location" | "nationality" | "bio" |
+    "phone" | "job_type" | "exp_year" | "clients" |
+    "expertise" | "experience" | "certificate" | "email" |
+    "awards"
+>
 
 
 export interface UserInfo {

@@ -2,7 +2,7 @@
 import React  from "react";
 import Me from "@/public/assets/me/me.jpg";
 import PortfolioClient from "@/app/(portfolio)/PortfolioClient";
-import {Home} from "@/app/(portfolio)/type/type";
+import {About, Home} from "@/app/(portfolio)/type/type";
 
 // ---- APIs calls ----
 async function getHome(): Promise<Home> {
@@ -20,7 +20,7 @@ async function getHome(): Promise<Home> {
     return {
         name: data.data.name,
         subtitle: data.data.subtitle ?? "",
-        bio: data.data.description ?? "",
+        bio: data.data.bio ?? "",
         image: data.data.image ?? Me,
     };
 }
@@ -62,7 +62,7 @@ async function getPortfolio(): Promise<Home> {
         image: data.data.image ?? Me,
     };
 }
-async function getAbout(): Promise<Home> {
+async function getAbout(): Promise<About> {
     const url = "v1/public/profile";
 
     const res = await fetch(
@@ -76,9 +76,18 @@ async function getAbout(): Promise<Home> {
 
     return {
         name: data.data.name,
-        subtitle: data.data.subtitle ?? null,
-        bio: data.data.description ?? null,
-        image: data.data.image ?? Me,
+        location: data.data.location ?? "",
+        bio: data.data.bio ?? "",
+        nationality: data.data.nationality ?? "",
+        job_type: data.data.job_type ?? "",
+        clients: data.data.clients ?? "",
+        expertise: data.data.expertise ?? "",
+        experience: data.data.experience ?? "",
+        certificate: data.data.certificate ?? "",
+        email: data.data.email ?? "",
+        awards: data.data.awards ?? "",
+        phone: data.data.phone ?? "",
+        exp_year: data.data.exp_year ?? "",
     };
 }
 

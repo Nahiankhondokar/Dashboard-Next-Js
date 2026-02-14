@@ -1,11 +1,8 @@
 import { motion } from "framer-motion";
 import {Briefcase, Download, GraduationCapIcon} from "lucide-react";
 import Me from "@/public/assets/me/me.jpg";
+import {About} from "@/app/(portfolio)/type/type";
 
-// ----- Type ----
-type About = {
-
-}
 
 const AboutSection = (
     {data} : {
@@ -99,12 +96,12 @@ const AboutSection = (
                 <div className="space-y-6">
                     <h3 className="text-2xl font-bold uppercase tracking-tight">Personal Info</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 text-gray-300">
-                        <p><span className="opacity-60 font-medium">Name:</span> Abdullah Al Nahian</p>
-                        <p><span className="opacity-60 font-medium">Address:</span> Dhaka, BD</p>
-                        <p><span className="opacity-60 font-medium">Phone:</span> +880 1346 767027</p>
-                        <p><span className="opacity-60 font-medium">Email:</span> info.nahian13@gmail.com</p>
-                        <p><span className="opacity-60 font-medium">Freelance:</span> Available</p>
-                        <p><span className="opacity-60 font-medium">Nationality:</span> Bangladeshi</p>
+                        <p><span className="opacity-60 font-medium">Name:</span> {data.name}</p>
+                        <p><span className="opacity-60 font-medium">Address:</span> {data.location}</p>
+                        <p><span className="opacity-60 font-medium">Phone:</span> {data.phone}</p>
+                        <p><span className="opacity-60 font-medium">Email:</span> {data.email}</p>
+                        <p><span className="opacity-60 font-medium">Freelance:</span> {data.job_type}</p>
+                        <p><span className="opacity-60 font-medium">Nationality:</span> {data.nationality}</p>
                     </div>
                     <button className="group mt-6 flex items-center gap-4 border-2 border-yellow-500 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all">
                         Download CV

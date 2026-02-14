@@ -7,11 +7,11 @@ import PortfolioSection from "@/app/(portfolio)/components/PortfolioSection";
 import ContactSection from "@/app/(portfolio)/components/ContactSection";
 import HeaderSection from "@/app/(portfolio)/components/HeaderSection";
 import { motion, AnimatePresence } from "framer-motion";
-import {Home, Section} from "@/app/(portfolio)/type/type";
+import {About, Home, Section} from "@/app/(portfolio)/type/type";
 
 export default function PortfolioClient({ home, about, portfolio, contact }: {
     home: Home,
-    about: Home,
+    about: About,
     portfolio: Home,
     contact: Home
 }) {
