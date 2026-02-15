@@ -1,4 +1,6 @@
-import React from "react";
+"use client"
+
+import React, {useEffect} from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -26,7 +28,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import Avatar from "@/public/assets/img/avatar.png";
+import Me from "@/public/assets/me/me.jpg";
 
 import {
   DropdownMenu,
@@ -36,6 +38,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {useProfileStore} from "@/stores/useProfileStore";
 
 // Menu items.
 const items = [
@@ -50,6 +53,11 @@ const items = [
 ];
 
 const SideBar = () => {
+  const {fetchProfile, profile} = useProfileStore();
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
   return (
     <Sidebar collapsible="icon">
       {/* HEADER */}
@@ -57,15 +65,15 @@ const SideBar = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/dashboard">
+              <Link href="/dashboard" className="flex align-middle">
                 <Image
-                  src={Avatar}
+                  src={profile?.image || Me}
                   alt="User"
                   width={24}
                   height={24}
                   className="rounded-full"
                 />
-                <span className="ml-2 font-medium">Nayeb Raihan</span>
+                <span className="ml-2 font-medium">{profile?.name || "Logged-in User"}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
