@@ -80,14 +80,12 @@ async function getAbout(): Promise<About> {
         bio: data.data.bio ?? "",
         nationality: data.data.nationality ?? "",
         job_type: data.data.job_type ?? "",
-        clients: data.data.clients ?? "",
         expertise: data.data.expertise ?? "",
         experience: data.data.experience ?? "",
         certificate: data.data.certificate ?? "",
         email: data.data.email ?? "",
-        awards: data.data.awards ?? "",
         phone: data.data.phone ?? "",
-        exp_year: data.data.exp_year ?? "",
+        metrics: data.data.metrics ?? []
     };
 }
 

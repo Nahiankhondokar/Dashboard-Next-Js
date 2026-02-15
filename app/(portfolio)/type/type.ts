@@ -3,9 +3,8 @@ export type Section = "home" | "about" | "portfolio" | "contact";
 export type Home = Pick<UserInfo, "name" | "subtitle" | "image" | "bio">
 export type About = Pick<UserInfo,
     "name" | "location" | "nationality" | "bio" |
-    "phone" | "job_type" | "exp_year" | "clients" |
-    "expertise" | "experience" | "certificate" | "email" |
-    "awards"
+    "phone" | "job_type" | "metrics" |
+    "expertise" | "experience" | "certificate" | "email"
 >
 
 
@@ -24,10 +23,7 @@ export interface UserInfo {
     subtitle: string | null;
     address: string | null;
     job_type: string | null;
-    exp_year: string | null;
-    clients: string | null;
-    projects: string | null;
-    awards: string | null;
+    metrics: Metrics[];
     expertise: Expertise[];
     experience: Experience[];
     certificate: Certificate[];
@@ -35,6 +31,10 @@ export interface UserInfo {
 
 
 
+export interface Metrics {
+    label: string | null;
+    value: string | null;
+}
 export interface Expertise {
     id: number;
     name: string;

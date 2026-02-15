@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import {Briefcase, Download, GraduationCapIcon} from "lucide-react";
 import Me from "@/public/assets/me/me.jpg";
-import {About} from "@/app/(portfolio)/type/type";
+import {About, Metrics} from "@/app/(portfolio)/type/type";
 
 
 const AboutSection = (
@@ -9,12 +9,10 @@ const AboutSection = (
         data: About
     }
 ) => {
-    const skills = [
-        { name: "PHP", val: 90 },
-        { name: "Laravel", val: 80 },
-        { name: "React", val: 70 },
-        { name: "JavaScript", val: 80 }
-    ];
+    const skills = data.expertise;
+    const metrics = data.metrics;
+
+    console.log(data);
 
     const experienceData = [
         {
@@ -112,14 +110,9 @@ const AboutSection = (
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    {[
-                        { label: "Years Exp", val: "3+" },
-                        { label: "Projects", val: "20+" },
-                        { label: "Clients", val: "15+" },
-                        { label: "Awards", val: "2" },
-                    ].map((stat, i) => (
+                    {metrics?.map((stat: Metrics, i) => (
                         <div key={i} className="border border-[#252525] p-6 rounded-xl hover:border-yellow-500/30 transition-colors">
-                            <h4 className="text-4xl font-bold text-yellow-500">{stat.val}</h4>
+                            <h4 className="text-4xl font-bold text-yellow-500">{stat.value}</h4>
                             <p className="uppercase text-xs tracking-[2px] mt-2 text-gray-300">{stat.label}</p>
                         </div>
                     ))}
@@ -135,7 +128,7 @@ const AboutSection = (
                     {skills.map(skill => (
                         <div key={skill.name} className="flex flex-col items-center">
                             <div className="relative w-28 h-28 rounded-full border-[6px] border-[#252525] border-t-yellow-500 flex items-center justify-center text-2xl font-bold shadow-lg">
-                                {skill.val}%
+                                {skill.progress}
                             </div>
                             <p className="mt-6 uppercase font-bold tracking-widest text-sm">{skill.name}</p>
                         </div>
