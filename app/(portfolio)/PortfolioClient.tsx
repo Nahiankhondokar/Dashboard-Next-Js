@@ -23,7 +23,7 @@ export default function PortfolioClient({ home, about, portfolio, contact }: {
                 {/* Headers */}
                 <HeaderSection activeSection={activeSection} setActiveSection={setActiveSection} />
 
-                <main className="container mx-auto px-4 lg:px-20">
+                <main className="container mx-auto mb-10 px-4 lg:px-20 ">
                     <AnimatePresence mode="wait">
                         {/* nav omitted */}
                         {activeSection === "home" && <HomeSection data={home} onNavigate={setActiveSection} />}

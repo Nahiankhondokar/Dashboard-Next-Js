@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
+import MobileHeader from "@/app/(portfolio)/components/MobileHeader";
 
 // --- Type ---
 type Section = "home" | "about" | "portfolio" | "contact";
@@ -32,7 +33,7 @@ const HeaderSection = (
 
     return (
         <>
-            <div className="fixed top-8 right-8 z-[60]">
+            <div className="fixed top-8 right-8 z-[60] hidden lg:block">
                 <Link href="/login">
                     <button className="flex items-center gap-3 bg-[#2b2b2b] border border-yellow-500/30 px-6 py-2 rounded-full hover:bg-yellow-500 hover:text-black transition-all font-bold uppercase text-xs tracking-widest">
                         <LogInIcon size={16} />
@@ -60,6 +61,13 @@ const HeaderSection = (
                     </button>
                 ))}
             </nav>
+
+            {/* Fixed Mobile Navigation */}
+            <MobileHeader
+                navItems={navItems}
+                activeSection={activeSection}       // The string value ("home", "about", etc)
+                setActiveSection={setActiveSection} // The function to change it
+            />
         </>
     );
 }
