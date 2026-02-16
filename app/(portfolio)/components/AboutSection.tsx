@@ -12,29 +12,30 @@ const AboutSection = (
     const skills = data.expertise;
     const metrics = data.metrics;
     const experiences = data.experiences;
+    const educations = data.educations;
 
     console.log(data);
 
-    const educationData = [
-        {
-            year: "2021 - 2022",
-            title: "Web Development Course",
-            place: "Interactive Cares",
-            description: "Advanced training in modern web technologies and software engineering principles.",
-        },
-        {
-            year: "2020 - 2021",
-            title: "Web Design Course",
-            place: "Coder Trust Bangladesh",
-            description: "Focused on responsive UI/UX design and frontend fundamentals.",
-        },
-        {
-            year: "2015 - 2019",
-            title: "Bachelor of Business Administration (BBA)",
-            place: "National University of Bangladesh",
-            description: "Academic foundation in business management and administration.",
-        },
-    ];
+    // const educationData = [
+    //     {
+    //         year: "2021 - 2022",
+    //         title: "Web Development Course",
+    //         place: "Interactive Cares",
+    //         description: "Advanced training in modern web technologies and software engineering principles.",
+    //     },
+    //     {
+    //         year: "2020 - 2021",
+    //         title: "Web Design Course",
+    //         place: "Coder Trust Bangladesh",
+    //         description: "Focused on responsive UI/UX design and frontend fundamentals.",
+    //     },
+    //     {
+    //         year: "2015 - 2019",
+    //         title: "Bachelor of Business Administration (BBA)",
+    //         place: "National University of Bangladesh",
+    //         description: "Academic foundation in business management and administration.",
+    //     },
+    // ];
 
     // Internal helper component for Timeline items
     const TimelineItem = (
@@ -50,7 +51,7 @@ const AboutSection = (
             <h5 className="text-lg font-bold uppercase text-white mt-2">
                 {data.title}
                 <span className="block text-sm font-medium text-gray-400 mt-1 opacity-80 before:content-['—'] before:mr-2">
-                    {data.company}
+                    {data.institute}
                 </span>
             </h5>
             <p className="mt-3 text-gray-400 text-sm leading-relaxed">
@@ -143,7 +144,7 @@ const AboutSection = (
                     {/* Education Column */}
                     <div className="mt-12 lg:mt-0">
                         <ul className="list-none p-0">
-                            {educationData.map((item, idx) => (
+                            {educations?.map((item, idx) => (
                                 <TimelineItem key={idx} data={item} icon={<GraduationCapIcon size={18} />} />
                             ))}
                         </ul>

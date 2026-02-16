@@ -4,7 +4,7 @@ export type Home = Pick<UserInfo, "name" | "subtitle" | "image" | "bio">
 export type About = Pick<UserInfo,
     "name" | "location" | "nationality" | "bio" |
     "phone" | "job_type" | "metrics" |
-    "expertise" | "experiences" | "certificates" | "email"
+    "expertise" | "experiences" | "educations" | "email"
 >
 
 
@@ -26,7 +26,7 @@ export interface UserInfo {
     metrics: Metrics[];
     expertise: Expertise[];
     experiences: Experience[];
-    certificates: Certificate[];
+    educations: Education[];
 }
 
 export interface Metrics {
@@ -47,7 +47,7 @@ export interface Experience {
     description: string;
     position: string;
     duration: string;
-    company: string;
+    institute: string;
     start_date: string; // ISO date
     end_date: string;   // ISO date
     media: string | null;
@@ -60,11 +60,16 @@ export interface Social {
     url: string;
 }
 
-export interface Certificate {
+export interface Education {
     id: number;
     title: string;
-    issuer: string;
-    issue_date: string;
-    credential_url: string | null;
+    description: string;
+    position: string;
+    duration: string;
+    institute: string;
+    start_date: string; // ISO date
+    end_date: string;   // ISO date
+    media: string | null;
+    year: string | null
 }
 
