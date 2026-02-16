@@ -109,18 +109,26 @@ const AboutSection = (
             <hr className="border-[#252525] mb-20 max-w-2xl mx-auto" />
 
             {/* Skills Section */}
-            <div className="mb-24">
-                <h3 className="text-center text-3xl font-bold uppercase mb-16 tracking-tight">My Skills</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-                    {skills.map(skill => (
-                        <div key={skill.name} className="flex flex-col items-center">
-                            <div className="relative w-28 h-28 rounded-full border-[6px] border-[#252525] border-t-yellow-500 flex items-center justify-center text-2xl font-bold shadow-lg">
-                                {skill.progress}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+                {skills.map(skill => (
+                    <div key={skill.name} className="flex flex-col items-center">
+                        {/* The outer circle uses a conic gradient based on the progress */}
+                        <div
+                            className="relative w-28 h-28 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg"
+                            style={{
+                                background: `conic-gradient(#eab308 ${skill.progress}%, #252525 0)`
+                            }}
+                        >
+                            {/* This inner div creates the "hole" to make it look like a ring */}
+                            <div className="absolute inset-[6px] bg-[#111] rounded-full flex items-center justify-center">
+                                <span className="text-white">{skill.progress}%</span>
                             </div>
-                            <p className="mt-6 uppercase font-bold tracking-widest text-sm">{skill.name}</p>
                         </div>
-                    ))}
-                </div>
+                        <p className="mt-6 uppercase font-bold tracking-widest text-sm text-gray-300">
+                            {skill.name}
+                        </p>
+                    </div>
+                ))}
             </div>
 
             <hr className="border-[#252525] mb-20 max-w-2xl mx-auto" />
