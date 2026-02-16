@@ -11,23 +11,9 @@ const AboutSection = (
 ) => {
     const skills = data.expertise;
     const metrics = data.metrics;
+    const experiences = data.experiences;
 
     console.log(data);
-
-    const experienceData = [
-        {
-            year: "May, 2023 - Present",
-            title: "Backend Developer (Laravel)",
-            place: "E-commerce & Sales Automation Solution",
-            description: "Focusing on backend architecture including Product, Order, Courier Service, Payment Gateway, and Inventory Management.",
-        },
-        {
-            year: "Jan, 2021 - Apr, 2021",
-            title: "Full Stack Software Engineer",
-            place: "Product for CodeCanyon (Part Time)",
-            description: "Built an E-commerce solution for farmers. Developed APIs for the backend and designed the frontend using React js.",
-        },
-    ];
 
     const educationData = [
         {
@@ -64,7 +50,7 @@ const AboutSection = (
             <h5 className="text-lg font-bold uppercase text-white mt-2">
                 {data.title}
                 <span className="block text-sm font-medium text-gray-400 mt-1 opacity-80 before:content-['—'] before:mr-2">
-                    {data.place}
+                    {data.company}
                 </span>
             </h5>
             <p className="mt-3 text-gray-400 text-sm leading-relaxed">
@@ -148,7 +134,7 @@ const AboutSection = (
                     {/* Experience Column */}
                     <div>
                         <ul className="list-none p-0">
-                            {experienceData.map((item, idx) => (
+                            {experiences.map((item, idx) => (
                                 <TimelineItem key={idx} data={item} icon={<Briefcase size={18} />} />
                             ))}
                         </ul>

@@ -81,8 +81,8 @@ async function getAbout(): Promise<About> {
         nationality: data.data.nationality ?? "",
         job_type: data.data.job_type ?? "",
         expertise: data.data.expertise ?? "",
-        experience: data.data.experience ?? "",
-        certificate: data.data.certificate ?? "",
+        experiences: data.data.experiences ?? "",
+        certificates: data.data.certificates ?? "",
         email: data.data.email ?? "",
         phone: data.data.phone ?? "",
         metrics: data.data.metrics ?? []
