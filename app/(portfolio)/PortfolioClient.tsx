@@ -12,7 +12,7 @@ import {About, Home, Portfolio, Section} from "@/app/(portfolio)/type/type";
 export default function PortfolioClient({ home, about, portfolio, contact }: {
     home: Home,
     about: About,
-    portfolio: Portfolio,
+    portfolio: Portfolio[],
     contact: Home
 }) {
     const [activeSection, setActiveSection] = useState<Section>("home");

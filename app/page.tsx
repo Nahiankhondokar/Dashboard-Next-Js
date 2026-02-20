@@ -44,7 +44,7 @@ async function getContact(): Promise<Home> {
         image: data.data.image ?? Me,
     };
 }
-async function getPortfolio(): Promise<Portfolio> {
+async function getPortfolio(): Promise<Portfolio[]> {
     const url = "v1/public/profile";
 
     const res = await fetch(
