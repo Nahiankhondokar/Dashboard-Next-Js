@@ -7,7 +7,6 @@ export type About = Pick<UserInfo,
     "expertise" | "experiences" | "educations" | "email"
 >
 
-
 export interface UserInfo {
     id: number;
     name: string;
@@ -27,6 +26,7 @@ export interface UserInfo {
     expertise: Expertise[];
     experiences: Experience[];
     educations: Education[];
+    portfolios: Portfolio[];
 }
 
 export interface Metrics {
@@ -73,3 +73,13 @@ export interface Education {
     year: string | null
 }
 
+export interface Portfolio {
+    id: number;
+    title: string;
+    sub_title: string;
+    description: string;
+    project_link: string;
+    media: string | null;
+    status: boolean;
+    created_at?: string
+}

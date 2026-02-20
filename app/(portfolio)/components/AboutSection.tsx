@@ -14,29 +14,6 @@ const AboutSection = (
     const experiences = data.experiences;
     const educations = data.educations;
 
-    console.log(data);
-
-    // const educationData = [
-    //     {
-    //         year: "2021 - 2022",
-    //         title: "Web Development Course",
-    //         place: "Interactive Cares",
-    //         description: "Advanced training in modern web technologies and software engineering principles.",
-    //     },
-    //     {
-    //         year: "2020 - 2021",
-    //         title: "Web Design Course",
-    //         place: "Coder Trust Bangladesh",
-    //         description: "Focused on responsive UI/UX design and frontend fundamentals.",
-    //     },
-    //     {
-    //         year: "2015 - 2019",
-    //         title: "Bachelor of Business Administration (BBA)",
-    //         place: "National University of Bangladesh",
-    //         description: "Academic foundation in business management and administration.",
-    //     },
-    // ];
-
     // Internal helper component for Timeline items
     const TimelineItem = (
         { data, icon }:

@@ -2,7 +2,7 @@
 import React  from "react";
 import Me from "@/public/assets/me/me.jpg";
 import PortfolioClient from "@/app/(portfolio)/PortfolioClient";
-import {About, Home} from "@/app/(portfolio)/type/type";
+import {About, Home, Portfolio} from "@/app/(portfolio)/type/type";
 
 // ---- APIs calls ----
 async function getHome(): Promise<Home> {
@@ -44,7 +44,7 @@ async function getContact(): Promise<Home> {
         image: data.data.image ?? Me,
     };
 }
-async function getPortfolio(): Promise<Home> {
+async function getPortfolio(): Promise<Portfolio> {
     const url = "v1/public/profile";
 
     const res = await fetch(
@@ -55,12 +55,7 @@ async function getPortfolio(): Promise<Home> {
     );
 
     const data = await res.json();
-    return {
-        name: data.data.name,
-        subtitle: data.data.subtitle ?? "",
-        bio: data.data.description ?? "",
-        image: data.data.image ?? Me,
-    };
+    return data.data.portfolios;
 }
 async function getAbout(): Promise<About> {
     const url = "v1/public/profile";
