@@ -7,6 +7,8 @@ export type About = Pick<UserInfo,
     "expertise" | "experiences" | "educations" | "email"
 >
 
+export type Contact = Pick<UserInfo, "name" | "address" | "email">
+
 export interface UserInfo {
     id: number;
     name: string;

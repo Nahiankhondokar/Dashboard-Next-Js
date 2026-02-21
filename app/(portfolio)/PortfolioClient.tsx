@@ -7,13 +7,13 @@ import PortfolioSection from "@/app/(portfolio)/components/PortfolioSection";
 import ContactSection from "@/app/(portfolio)/components/ContactSection";
 import HeaderSection from "@/app/(portfolio)/components/HeaderSection";
 import { motion, AnimatePresence } from "framer-motion";
-import {About, Home, Portfolio, Section} from "@/app/(portfolio)/type/type";
+import {About, Contact, Home, Portfolio, Section} from "@/app/(portfolio)/type/type";
 
 export default function PortfolioClient({ home, about, portfolio, contact }: {
     home: Home,
     about: About,
     portfolio: Portfolio[],
-    contact: Home
+    contact: Contact
 }) {
     const [activeSection, setActiveSection] = useState<Section>("home");
 
