@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useEffect } from "react";
@@ -12,22 +10,19 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-
-import { Button } from "@/components/ui/button";
-import { Pencil, Trash } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import Pagination from "@/type/pagination/Pagination";
-import ConfirmationAlert from "@/components/common/ConfirmationAlert";
-import {toast} from "sonner";
-import {useExpertiseStore} from "@/stores/useExpertiseStore";
 import {useUserStore} from "@/stores/useUserStore";
+import {Pencil} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function UserTable() {
     const {
         users,
         pagination,
         fetchUsers,
-        loading
+        loading,
+        openEditModal
     } = useUserStore();
 
     useEffect(() => {
@@ -39,7 +34,7 @@ export default function UserTable() {
             <Table>
                 <TableCaption>
                     <Separator/>
-                    A list of <b>Expertises</b>
+                    A list of <b>Users</b>
                 </TableCaption>
 
                 <TableHeader>
@@ -49,7 +44,7 @@ export default function UserTable() {
                         <TableHead>Email</TableHead>
                         <TableHead>Phone</TableHead>
                         <TableHead>Role</TableHead>
-                        {/*<TableHead className="text-right">Actions</TableHead>*/}
+                        <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
 
@@ -77,33 +72,33 @@ export default function UserTable() {
                                 <TableCell>{user.phone ?? "-"}</TableCell>
                                 <TableCell>{user.role ?? "-"}</TableCell>
 
-                                {/*<TableCell className="text-right">*/}
-                                {/*    <div className="flex justify-end gap-2">*/}
-                                {/*        <Button size="icon" variant="outline" onClick={() => openEditModal(expertise)}>*/}
-                                {/*            <Pencil size={16} />*/}
-                                {/*        </Button>*/}
+                                <TableCell className="text-right">
+                                    <div className="flex justify-end gap-2">
+                                        <Button size="icon" variant="outline" onClick={() => openEditModal(user)}>
+                                            <Pencil size={16} />
+                                        </Button>
 
-                                {/*        /!*Delete*!/*/}
-                                {/*        <ConfirmationAlert*/}
-                                {/*            title="Delete Profile?"*/}
-                                {/*            description="This expertise will be permanently removed."*/}
-                                {/*            confirmText="Delete"*/}
-                                {/*            onConfirm={async () => {*/}
-                                {/*                try {*/}
-                                {/*                    await deleteExpertise(expertise.id);*/}
-                                {/*                    toast.success("Profile deleted");*/}
-                                {/*                } catch {*/}
-                                {/*                    toast.error("Delete failed");*/}
-                                {/*                }*/}
-                                {/*            }}*/}
-                                {/*            trigger={*/}
-                                {/*                <Button size="icon" variant="destructive">*/}
-                                {/*                    <Trash size={16} />*/}
-                                {/*                </Button>*/}
-                                {/*            }*/}
-                                {/*        />*/}
-                                {/*    </div>*/}
-                                {/*</TableCell>*/}
+                                        {/*Delete*/}
+                                        {/*<ConfirmationAlert*/}
+                                        {/*    title="Delete Profile?"*/}
+                                        {/*    description="This expertise will be permanently removed."*/}
+                                        {/*    confirmText="Delete"*/}
+                                        {/*    onConfirm={async () => {*/}
+                                        {/*        try {*/}
+                                        {/*            await deleteExpertise(expertise.id);*/}
+                                        {/*            toast.success("Profile deleted");*/}
+                                        {/*        } catch {*/}
+                                        {/*            toast.error("Delete failed");*/}
+                                        {/*        }*/}
+                                        {/*    }}*/}
+                                        {/*    trigger={*/}
+                                        {/*        <Button size="icon" variant="destructive">*/}
+                                        {/*            <Trash size={16} />*/}
+                                        {/*        </Button>*/}
+                                        {/*    }*/}
+                                        {/*/>*/}
+                                    </div>
+                                </TableCell>
                             </TableRow>
                         ))
                     )}

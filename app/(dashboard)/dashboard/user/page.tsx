@@ -7,8 +7,8 @@ import React, { useEffect } from "react";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import EditUser from "./components/EditUser";
 import { Button } from "@/components/ui/button";
-import { Columns } from "./components/columns";
 import { useUserStore } from "@/stores/useUserStore";
+import UserTable from "@/app/(dashboard)/dashboard/user/components/UserTable";
 
 const UserPage = () => {
   const pathname = usePathname();
@@ -34,7 +34,8 @@ const UserPage = () => {
           </div>
         </div>
         {/* User List Show */}
-        <DataTable columns={Columns} data={users} />
+        <UserTable />
+        {/*<DataTable columns={Columns} data={users} />*/}
       </div>
     </div>
   );

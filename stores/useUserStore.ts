@@ -5,23 +5,59 @@ import {mockUsers} from "@/app/(dashboard)/dashboard/user/mockUsers/mockUsers";
 import { User } from "@/app/(dashboard)/dashboard/user/type/user";
 import {apiFetch} from "@/lib/api";
 import {PaginationResponse} from "@/type/pagination/PaginationType";
+import {Service} from "@/app/(dashboard)/dashboard/service/interface/Service";
 
 
 interface UserState {
   users: User[];
+  selectedUser: User | null,
   loading: boolean,
+  error?: string | null,
   pagination: PaginationResponse<User>["meta"] | null;
   fetchUsers: (page?: number, limit?: number) => Promise<void>;
   createUser: (user: Omit<User, "id">) => Promise<void>;
   updateUser: (user: User) => Promise<void>;
   deleteUser: (id: number) => Promise<void>;
   detailsUser: (id: number) => Promise<User | undefined>;
+
+  // actions
+  openCreateModal: () => void;
+  openEditModal: (user : User) => void;
+  closeModal: () => void;
+  modalOpen: boolean,
+  mode: string,
+
 }
 
 export const useUserStore = create<UserState>((set) => ({
   users: [],
+  selectedUser: null,
   loading: false,
+  error: null,
   pagination: null,
+  modalOpen: false,
+  mode: "create",
+
+  // actions
+  openCreateModal: () =>
+      set({
+        modalOpen: true,
+        mode: "create",
+        selectedUser: null,
+      }),
+  openEditModal: (user: User) => {
+    set({
+          modalOpen: true,
+          mode: "edit",
+          selectedUser: user,
+        });
+  },
+  closeModal: () =>
+      set({
+        modalOpen: false,
+        selectedUser: null,
+        error: null,
+      }),
 
   // Fetch all users
   fetchUsers: async (page = 1) => {
