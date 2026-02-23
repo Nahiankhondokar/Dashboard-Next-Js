@@ -6,7 +6,7 @@ import {About, Contact, Home, Portfolio} from "@/app/(portfolio)/type/type";
 
 // ---- APIs calls ----
 async function getHome(): Promise<Home> {
-    const url = "v1/public/profile";
+    const url = "v1/public/user-info";
 
     const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}${url}`,
@@ -26,7 +26,7 @@ async function getHome(): Promise<Home> {
 }
 
 async function getContact(): Promise<Contact> {
-    const url = "v1/public/profile";
+    const url = "v1/public/user-info";
 
     const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}${url}`,
@@ -44,7 +44,7 @@ async function getContact(): Promise<Contact> {
     };
 }
 async function getPortfolio(): Promise<Portfolio[]> {
-    const url = "v1/public/profile";
+    const url = "v1/public/user-info";
 
     const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}${url}`,
@@ -57,7 +57,7 @@ async function getPortfolio(): Promise<Portfolio[]> {
     return data.data.portfolios;
 }
 async function getAbout(): Promise<About> {
-    const url = "v1/public/profile";
+    const url = "v1/public/user-info";
 
     const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}${url}`,
