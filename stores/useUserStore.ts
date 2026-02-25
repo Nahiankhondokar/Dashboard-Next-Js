@@ -6,6 +6,7 @@ import { User } from "@/app/(dashboard)/dashboard/user/type/user";
 import {apiFetch} from "@/lib/api";
 import {PaginationResponse} from "@/type/pagination/PaginationType";
 import {Service} from "@/app/(dashboard)/dashboard/service/interface/Service";
+import {ApiResponse} from "@/type/api-response";
 
 
 interface UserState {
@@ -15,10 +16,10 @@ interface UserState {
   error?: string | null,
   pagination: PaginationResponse<User>["meta"] | null;
   fetchUsers: (page?: number, limit?: number) => Promise<void>;
-  createUser: (user: Omit<User, "id">) => Promise<void>;
-  updateUser: (user: User) => Promise<void>;
+  createUser: (data: FormData) => Promise<User>;
+  updateUser: (id: number, data: FormData) => Promise<void>;
   deleteUser: (id: number) => Promise<void>;
-  detailsUser: (id: number) => Promise<User | undefined>;
+  // detailsUser: (id: number) => Promise<User | undefined>;
 
   // actions
   openCreateModal: () => void;
@@ -29,7 +30,7 @@ interface UserState {
 
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>((set, get) => ({
   users: [],
   selectedUser: null,
   loading: false,
@@ -60,9 +61,9 @@ export const useUserStore = create<UserState>((set) => ({
       }),
 
   // Fetch all users
-  fetchUsers: async (page = 1) => {
+  fetchUsers: async (page = 1, limit=10) => {
     try {
-      const res = await apiFetch<PaginationResponse<User>>(`users?page=${page}`);
+      const res = await apiFetch<PaginationResponse<User>>(`users?page=${page}&limit=${limit}`);
 
       return set({
         users: res.data,
@@ -75,72 +76,71 @@ export const useUserStore = create<UserState>((set) => ({
   },
 
   // Create a new user
-  createUser: async (user) => {
+  createUser: async (data) => {
+    set({loading: true, error: null});
     try {
-      // const res = await fetch("/api/users", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(user),
-      // });
-      // if (!res.ok) throw new Error("Failed to create user");
-      // const newUser: User = await res.json();
+      const res = await apiFetch<ApiResponse<User>>('users',{
+        method : "POST",
+        body : data
+      })
 
-      // set((state) => ({
-      //   allData: [...state.allData, newUser],
-      // }));
+      set((state)=> ({
+        loading: false,
+        users: [res.data, ...state.users],
+        modalOpen: false,
+      }));
 
-      // ✅ Optional: show success toast or reset form
-    } catch (err) {
-      console.error("Create user failed", err);
+      return res.data;
+    }catch (err: unknown){
+      if (err instanceof Error) {
+        set({ loading: false, error: err.message ?? "Create failed" });
+      } else {
+        set({ loading: false, error: "An unknown error occurred" });
+      }
+      throw err;
     }
   },
 
   // Update existing user
-  updateUser: async (updatedUser) => {
-    // try {
-    //   const res = await fetch(`/api/users/${updatedUser.id}`, {
-    //     method: "PUT",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(updatedUser),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to update user");
-    //
-    //   set((state) => ({
-    //     Users: state.Users.map((u) =>
-    //       u.id === updatedUser.id ? updatedUser : u
-    //     ),
-    //   }));
-    // } catch (err) {
-    //   console.error("Update user failed", err);
-    // }
+  updateUser: async (id: number, data: FormData) => {
+    set({ loading: true });
+
+    const res = await apiFetch<{ data: User }>(
+        `users/${id}`,
+        {
+          method: "PUT",
+          body: data,
+        }
+    );
+
+    await get().fetchUsers();
+    set((state) => ({
+      loading: false,
+      modalOpen: false,
+      selectedUser: null,
+    }));
   },
 
   // Delete user
   deleteUser: async (id) => {
-    // try {
-    //   const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
-    //   if (!res.ok) throw new Error("Failed to delete user");
-    //
-    //   set((state) => ({
-    //     Users: state.Users.filter((u) => u.id !== id),
-    //   }));
-    // } catch (err) {
-    //   console.error("Delete failed", err);
-    // }
-  },
+    set({ loading: true, error: null });
 
-  // Get user details
-  detailsUser: async (id): Promise<User | undefined> => {
     try {
-      // const res = await fetch(`/api/users/${id}`);
-      // if (!res.ok) throw new Error("Failed to fetch user details");
+      await apiFetch(`users/${id}`, {
+        method: "DELETE",
+      });
 
-      // const user: User = await res.json();
-      // return user;
-
-      return mockUsers.find((user) => user.id === id);
-    } catch (err) {
-      console.error("Fetch user details failed", err);
+      // ✅ Remove from store instantly
+      set((state) => ({
+        users: state.users.filter((users) => users.id !== id),
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({
+        loading: false,
+        error: err.message ?? "Delete failed",
+      });
+      throw err;
     }
   }
 }));

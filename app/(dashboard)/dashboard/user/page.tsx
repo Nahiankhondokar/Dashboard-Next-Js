@@ -1,44 +1,71 @@
 "use client";
 
 import BreadcrumbComponent from "@/components/common/Breadcrumb";
-import { DataTable } from "@/components/common/DataTable";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet";
-import EditUser from "./components/EditUser";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/stores/useUserStore";
 import UserTable from "@/app/(dashboard)/dashboard/user/components/UserTable";
+import AddNewUser from "@/app/(dashboard)/dashboard/user/components/AddNewUser";
 
-const UserPage = () => {
+const User = () => {
   const pathname = usePathname();
-  const { users, fetchUsers, deleteUser, updateUser } = useUserStore();
+
+  // Destructure the necessary states from your store
+  const {
+    fetchUsers,
+    loading,
+    error,
+    openCreateModal,
+    modalOpen,
+    closeModal,
+    mode
+  } = useUserStore();
 
   useEffect(() => {
-    fetchUsers(); // load data when mounted
+    fetchUsers();
   }, [fetchUsers]);
 
   return (
-    <div>
-      <BreadcrumbComponent pathname={pathname} />
-      <div>
+      <div className="p-6 space-y-6">
+        <BreadcrumbComponent pathname={pathname} />
+
         <div className="flex items-center justify-between w-full">
           <h1 className="text-2xl font-bold">Users</h1>
-          <div>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline">Add User</Button>
-              </SheetTrigger>
-              <EditUser />
-            </Sheet>
-          </div>
+
+          {/* The Sheet Container */}
+          <Sheet open={modalOpen} onOpenChange={closeModal}>
+            <Button variant="default" onClick={openCreateModal}>
+              Add User
+            </Button>
+
+            <SheetContent side="right" className="sm:max-w-[540px] overflow-y-auto">
+              <SheetHeader className="mb-6">
+                <SheetTitle className="uppercase font-bold text-2xl">
+                  {mode === "create" ? "Add New" : "Edit"} User
+                </SheetTitle>
+                <SheetDescription>
+                  Fill in the details below to {mode === "create" ? "create a new" : "update the"} user profile.
+                </SheetDescription>
+              </SheetHeader>
+
+              {/* Your Form Component */}
+              <AddNewUser />
+            </SheetContent>
+          </Sheet>
         </div>
-        {/* User List Show */}
+
+        {/* User List Table */}
         <UserTable />
-        {/*<DataTable columns={Columns} data={users} />*/}
       </div>
-    </div>
   );
 };
 
-export default UserPage;
+export default User;

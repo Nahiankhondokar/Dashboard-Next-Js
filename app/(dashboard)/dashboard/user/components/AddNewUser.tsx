@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import {
     Form,
     FormControl,
@@ -13,162 +13,271 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {useServiceStore} from "@/stores/useServiceStore";
-import {toast} from "sonner";
-import {formSchema} from "@/app/(dashboard)/dashboard/service/schema/formSchema";
-import {Service} from "@/app/(dashboard)/dashboard/service/interface/Service";
+import { toast } from "sonner";
+import { User } from "@/app/(dashboard)/dashboard/user/type/user";
+import { useUserStore } from "@/stores/useUserStore";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
-type formSchemaType = z.infer<typeof formSchema>;
+// --- 1. Zod Schema ---
+// Keep it strict. If the form always has a value (via defaultValues),
+// don't mark it .optional() in Zod, as it creates type mismatches.
+// --- 1. Updated Zod Schema ---
+export const userFormSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email"),
+    username: z.string().min(1, "Username is required"),
+    phone: z.string().min(1, "Phone is required"),
+    status: z.boolean(),
+    // Password fields
+    password: z.string().optional(),
+    password_confirmation: z.string().optional(),
 
-const mapServiceToForm = (service: Service) => ({
-    title: service.title ?? "",
-    description: service.description ?? "",
-    sub_title: service.sub_title ?? "",
-    status: service.status ?? false,
-    project_link: service.project_link ?? "",
-    created_at: service.created_at ?? "",
-    media: null,
-})
+    role: z.number().nullable().optional(),
+    bio: z.string().nullable().optional(),
+    location: z.string().nullable().optional(),
+    website: z.string().nullable().optional(),
+    image: z.any().nullable().optional(),
+    socials: z.array(z.string()).optional(),
+}).refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords do not match",
+    path: ["password_confirmation"],
+});
+
+type formSchemaType = z.infer<typeof userFormSchema>;
+
+// --- 2. Updated Mapping Function ---
+const mapUserToForm = (user: User): formSchemaType => ({
+    ...user, // Spread existing fields
+    name: user.name ?? "",
+    email: user.email ?? "",
+    username: user.username ?? "",
+    phone: user.phone ?? "",
+    status: user.status ?? true,
+    socials: user.socials ?? [],
+    role: user.role ?? 3,
+    bio: "",
+    website: "",
+    location: "",
+    // Always reset passwords to empty when opening the form
+    password: "",
+    password_confirmation: "",
+    image: null,
+});
 
 const AddNewUser = () => {
+    const { mode, createUser, selectedUser, updateUser } = useUserStore();
+
     const form = useForm<formSchemaType>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(userFormSchema),
         defaultValues: {
-            title: "",
-            description: "",
-            sub_title: "",
-            status: false,
-            project_link: "",
-            media: "",
-            created_at: ""
+            name: "",
+            email: "",
+            username: "",
+            phone: "",
+            status: true,
+            password: "",
+            password_confirmation: "",
+            role: 3,
+            bio: "",
+            location: "",
+            website: "",
+            socials: [],
+            image: null,
         },
     });
 
-    const {
-        mode,
-        createService,
-        selectedService,
-        updateService
-    } = useServiceStore();
-
     const onSubmit = async (values: formSchemaType) => {
+        alert('call')
+        // Validation check for Create mode
+        if (mode === "create" && !values.password) {
+            form.setError("password", { message: "Password is required for new users" });
+            return;
+        }
+
         const fd = new FormData();
         Object.entries(values).forEach(([k, v]) => {
             if (v === null || v === undefined) return;
 
-            if (typeof v === "boolean") {
-                fd.append(k, v ? "1" : "0"); // or "true"/"false" based on backend
+            // Skip password fields in Edit mode if they are empty
+            if (mode === "edit" && (k === "password" || k === "password_confirmation") && !v) {
+                return;
+            }
+
+            if (k === "image" && v instanceof File) {
+                fd.append("image", v);
+            } else if (k === "socials") {
+                fd.append(k, JSON.stringify(v));
+            } else if (typeof v === "boolean") {
+                fd.append(k, v ? "1" : "0");
             } else {
-                fd.append(k, v);
+                fd.append(k, v as string);
             }
         });
 
         try {
-            if(mode === 'create'){
-                await createService(fd);
-                toast.success("Service is created");
-            }else {
-                await updateService(selectedService!.id, fd);
-                toast.success("Service is updated");
+            if (mode === "create") {
+                await createUser(fd);
+                toast.success("User created successfully");
+            } else {
+                await updateUser(selectedUser!.id, fd);
+                toast.success("User updated successfully");
             }
-        }catch (err: unknown){
-            toast.error("Something went wrong");
+        } catch (err: any) {
+            // If API returns validation errors, map them to the form
+            toast.error("Validation Error: Please check the fields");
         }
     };
 
     useEffect(() => {
-        if(mode === 'edit' && selectedService){
-            form.reset(mapServiceToForm(selectedService));
+        if (mode === "edit" && selectedUser) {
+            form.reset(mapUserToForm(selectedUser));
         }
-    }, [mode, selectedService]);
-
+    }, [mode, selectedUser, form]);
 
     return (
-        <div>
+        <div className="p-4 border rounded-lg bg-card">
             <Form {...form}>
-                <form
-                    id="user-form"
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-6"
-                >
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Full Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Enter name" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Enter email" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="username" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Phone</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Phone number" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
 
-                    {/* Title */}
+                    {/* Password */}
                     <FormField
                         control={form.control}
-                        name="title"
+                        name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Title</FormLabel>
+                                <FormLabel>Password {mode === 'edit' && "(Leave blank to keep current)"}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="title" {...field} />
+                                    <Input type="password" placeholder="••••••••" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Sub Title */}
+                    {/* Password Confirmation */}
                     <FormField
                         control={form.control}
-                        name="sub_title"
+                        name="password_confirmation"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Sub Title</FormLabel>
+                                <FormLabel>Confirm Password</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="sub title" {...field} />
+                                    <Input type="password" placeholder="••••••••" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Project Link */}
+                    {/* Role Dropdown */}
                     <FormField
                         control={form.control}
-                        name="project_link"
+                        name="role"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Project Link</FormLabel>
+                                <FormLabel>User Role</FormLabel>
+                                <Select
+                                    onValueChange={(value) => field.onChange(parseInt(value))}
+                                    defaultValue={field.value?.toString()}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a role" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="1">Super Admin</SelectItem>
+                                        <SelectItem value="2">Admin</SelectItem>
+                                        <SelectItem value="3">User</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="bio"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Bio</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="project link" {...field} />
+                                    <Textarea placeholder="Short bio..." {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Description */}
                     <FormField
                         control={form.control}
-                        name="description"
-                        render={({ field }) => (
+                        name="image"
+                        render={({ field: { value, onChange, ...fieldProps } }) => (
                             <FormItem>
-                                <FormLabel>Description</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="description" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-
-                    {/* Image Upload (Optional) */}
-                    <FormField
-                        control={form.control}
-                        name="media"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Image</FormLabel>
+                                <FormLabel>Profile Image</FormLabel>
                                 <FormControl>
                                     <Input
                                         type="file"
                                         accept="image/*"
-                                        onChange={(e) =>
-                                            field.onChange(e.target.files?.[0] ?? null)
-                                        }
+                                        onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+                                        {...fieldProps}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -176,28 +285,8 @@ const AddNewUser = () => {
                         )}
                     />
 
-                    {/* Status */}
-                    {/* <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={field.value === true} // Convert number to boolean for UI
-                    onCheckedChange={(checked) =>
-                      field.onChange(checked ? true : false)
-                    }
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          /> */}
-
-                    {/* Submit */}
                     <Button type="submit" variant="outline" className="w-full">
-                        {mode === "create" ? "Create" : "Update"}
+                        {mode === "create" ? "Create User" : "Update User"}
                     </Button>
                 </form>
             </Form>
@@ -206,5 +295,3 @@ const AddNewUser = () => {
 };
 
 export default AddNewUser;
-
-// ToDo: service all the finish.

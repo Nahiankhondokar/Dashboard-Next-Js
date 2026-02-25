@@ -13,8 +13,10 @@ import {
 import {Separator} from "@/components/ui/separator";
 import Pagination from "@/type/pagination/Pagination";
 import {useUserStore} from "@/stores/useUserStore";
-import {Pencil} from "lucide-react";
+import {Pencil, Trash} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ConfirmationAlert from "@/components/common/ConfirmationAlert";
+import {toast} from "sonner";
 
 export default function UserTable() {
     const {
@@ -22,12 +24,13 @@ export default function UserTable() {
         pagination,
         fetchUsers,
         loading,
-        openEditModal
+        openEditModal,
+        deleteUser
     } = useUserStore();
 
     useEffect(() => {
         fetchUsers();
-    }, []);
+    }, [openEditModal]);
 
     return (
         <>
@@ -79,24 +82,24 @@ export default function UserTable() {
                                         </Button>
 
                                         {/*Delete*/}
-                                        {/*<ConfirmationAlert*/}
-                                        {/*    title="Delete Profile?"*/}
-                                        {/*    description="This expertise will be permanently removed."*/}
-                                        {/*    confirmText="Delete"*/}
-                                        {/*    onConfirm={async () => {*/}
-                                        {/*        try {*/}
-                                        {/*            await deleteExpertise(expertise.id);*/}
-                                        {/*            toast.success("Profile deleted");*/}
-                                        {/*        } catch {*/}
-                                        {/*            toast.error("Delete failed");*/}
-                                        {/*        }*/}
-                                        {/*    }}*/}
-                                        {/*    trigger={*/}
-                                        {/*        <Button size="icon" variant="destructive">*/}
-                                        {/*            <Trash size={16} />*/}
-                                        {/*        </Button>*/}
-                                        {/*    }*/}
-                                        {/*/>*/}
+                                        <ConfirmationAlert
+                                            title="Delete Profile?"
+                                            description="This expertise will be permanently removed."
+                                            confirmText="Delete"
+                                            onConfirm={async () => {
+                                                try {
+                                                    await deleteUser(user.id);
+                                                    toast.success("Profile deleted");
+                                                } catch {
+                                                    toast.error("Delete failed");
+                                                }
+                                            }}
+                                            trigger={
+                                                <Button size="icon" variant="destructive">
+                                                    <Trash size={16} />
+                                                </Button>
+                                            }
+                                        />
                                     </div>
                                 </TableCell>
                             </TableRow>

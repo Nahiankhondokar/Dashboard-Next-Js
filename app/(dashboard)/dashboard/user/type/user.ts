@@ -12,7 +12,11 @@ export type User = {
   email: string;
   username: string;
   phone: string;
-  role?: string;
+  role?: number;
+  bio?: string;
+  location?: string;
+  website?: string;
+  status?: boolean;
   image?: string;
-  social?: string[];
+  socials?: string[];
 };
