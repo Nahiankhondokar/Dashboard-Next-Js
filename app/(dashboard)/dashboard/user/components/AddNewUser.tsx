@@ -49,7 +49,6 @@ type formSchemaType = z.infer<typeof userFormSchema>;
 
 // --- 2. Updated Mapping Function ---
 const mapUserToForm = (user: User): formSchemaType => ({
-    // ...user, // Spread existing fields
     name: user.name ?? "",
     email: user.email ?? "",
     username: user.username ?? "",
@@ -262,7 +261,14 @@ const AddNewUser = () => {
                             <FormItem>
                                 <FormLabel>Bio</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder="Short bio..." {...field} />
+                                    {/* Fix: Use 'field.value ?? ""' to convert null to an empty string
+                                      so the HTML textarea component remains happy.
+                                    */}
+                                    <Textarea
+                                        placeholder="Short bio..."
+                                        {...field}
+                                        value={field.value ?? ""}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
