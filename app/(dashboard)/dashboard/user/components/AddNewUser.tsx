@@ -49,7 +49,7 @@ type formSchemaType = z.infer<typeof userFormSchema>;
 
 // --- 2. Updated Mapping Function ---
 const mapUserToForm = (user: User): formSchemaType => ({
-    ...user, // Spread existing fields
+    // ...user, // Spread existing fields
     name: user.name ?? "",
     email: user.email ?? "",
     username: user.username ?? "",
@@ -89,13 +89,12 @@ const AddNewUser = () => {
     });
 
     const onSubmit = async (values: formSchemaType) => {
-        alert('call')
         // Validation check for Create mode
         if (mode === "create" && !values.password) {
             form.setError("password", { message: "Password is required for new users" });
             return;
         }
-
+        console.log(values)
         const fd = new FormData();
         Object.entries(values).forEach(([k, v]) => {
             if (v === null || v === undefined) return;
@@ -107,8 +106,6 @@ const AddNewUser = () => {
 
             if (k === "image" && v instanceof File) {
                 fd.append("image", v);
-            } else if (k === "socials") {
-                fd.append(k, JSON.stringify(v));
             } else if (typeof v === "boolean") {
                 fd.append(k, v ? "1" : "0");
             } else {
@@ -124,7 +121,7 @@ const AddNewUser = () => {
                 await updateUser(selectedUser!.id, fd);
                 toast.success("User updated successfully");
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             // If API returns validation errors, map them to the form
             toast.error("Validation Error: Please check the fields");
         }
@@ -139,7 +136,13 @@ const AddNewUser = () => {
     return (
         <div className="p-4 border rounded-lg bg-card">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <form  onSubmit={form.handleSubmit(
+                    onSubmit,
+                    (errors) => {
+                        console.log("❌ FORM ERRORS:", errors);
+                    }
+                )}
+                      className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormField
                             control={form.control}
