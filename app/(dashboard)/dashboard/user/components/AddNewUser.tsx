@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { User } from "@/app/(dashboard)/dashboard/user/type/user";
 import { useUserStore } from "@/stores/useUserStore";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import ImageUpload from "@/components/common/ImageUpload";
 
 // --- 1. Zod Schema ---
 // Keep it strict. If the form always has a value (via defaultValues),
@@ -33,7 +34,6 @@ export const userFormSchema = z.object({
     // Password fields
     password: z.string().optional(),
     password_confirmation: z.string().optional(),
-
     role: z.number().nullable().optional(),
     bio: z.string().nullable().optional(),
     location: z.string().nullable().optional(),
@@ -275,18 +275,18 @@ const AddNewUser = () => {
                         )}
                     />
 
+                    {/*Image upload*/}
                     <FormField
                         control={form.control}
                         name="image"
-                        render={({ field: { value, onChange, ...fieldProps } }) => (
+                        render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Profile Image</FormLabel>
+                                <FormLabel className="text-base font-semibold text-foreground/80">Profile Image</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => onChange(e.target.files?.[0] ?? null)}
-                                        {...fieldProps}
+                                    <ImageUpload
+                                        value={field.value}
+                                        onChange={(file) => field.onChange(file)}
+                                        onRemove={() => field.onChange(null)}
                                     />
                                 </FormControl>
                                 <FormMessage />
