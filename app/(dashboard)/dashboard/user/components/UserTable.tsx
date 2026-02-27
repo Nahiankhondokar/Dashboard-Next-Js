@@ -17,6 +17,9 @@ import {Pencil, Trash} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ConfirmationAlert from "@/components/common/ConfirmationAlert";
 import {toast} from "sonner";
+import NoImage from "@/public/assets/img/placeholder.webp";
+import Image from "next/image";
+import MediaPreview from "@/components/common/MediaPreview";
 
 export default function UserTable() {
     const {
@@ -47,6 +50,7 @@ export default function UserTable() {
                         <TableHead>Email</TableHead>
                         <TableHead>Phone</TableHead>
                         <TableHead>Role</TableHead>
+                        <TableHead>Image</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -74,6 +78,13 @@ export default function UserTable() {
                                 <TableCell>{user.email ?? "-"}</TableCell>
                                 <TableCell>{user.phone ?? "-"}</TableCell>
                                 <TableCell>{user.role ?? "-"}</TableCell>
+                                <TableCell>
+                                    <MediaPreview
+                                        src={user.image}
+                                        alt={user.name}
+                                        className="h-12 w-12 shadow-sm"
+                                    />
+                                </TableCell>
 
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
