@@ -18,6 +18,7 @@ import ConfirmationAlert from "@/components/common/ConfirmationAlert";
 import {toast} from "sonner";
 import Pagination from "@/type/pagination/Pagination";
 import {useBlogStore} from "@/stores/useBlogStore";
+import MediaPreview from "@/components/common/MediaPreview";
 
 export default function BlogTable() {
     const {
@@ -77,7 +78,13 @@ export default function BlogTable() {
                                 <TableCell>{blog.subtitle ?? "-"}</TableCell>
                                 <TableCell>{blog.description ?? "-"}</TableCell>
                                 <TableCell className="">{blog.status == true ? "Active" : "InActive"}</TableCell>
-                                <TableCell>{blog.image ?? "-"}</TableCell>
+                                <TableCell>
+                                    <MediaPreview
+                                        src={blog.image}
+                                        alt={blog.title}
+                                        className="h-12 w-12 shadow-sm"
+                                    />
+                                </TableCell>
                                 <TableCell>{blog.created_at ?? "-"}</TableCell>
 
                                 <TableCell className="text-right">

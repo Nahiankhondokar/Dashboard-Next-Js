@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
     Form,
     FormControl,
@@ -19,6 +19,7 @@ import {toast} from "sonner";
 import {formSchema} from "@/app/(dashboard)/dashboard/blog/schema/formSchema";
 import {Blog} from "@/app/(dashboard)/dashboard/blog/interface/Blog";
 import {useBlogStore} from "@/stores/useBlogStore";
+import ImageUpload from "@/components/common/ImageUpload";
 
 type formSchemaType = z.infer<typeof formSchema>;
 
@@ -27,7 +28,7 @@ const mapBlogToForm = (blog: Blog): formSchemaType => ({
     subtitle: blog.subtitle ?? "",
     status: blog.status ?? true,
     description: blog.description ?? "",
-    image: null, // file can't be prefilled
+    image: blog.image ?? ""
 });
 
 const AddNewBlog = () => {
@@ -60,10 +61,12 @@ const AddNewBlog = () => {
         Object.entries(values).forEach(([k, v]) => {
             if (v === null || v === undefined) return;
 
-            if (typeof v === "boolean") {
-                fd.append(k, v ? "1" : "0"); // or "true"/"false" based on backend
+            if (k === "image" && v instanceof File) {
+                fd.append("image", v);
+            } else if (typeof v === "boolean") {
+                fd.append(k, v ? "1" : "0");
             } else {
-                fd.append(k, v);
+                fd.append(k, v as string);
             }
         });
 
@@ -150,21 +153,18 @@ const AddNewBlog = () => {
                         )}
                     />
 
-
-                    {/* Image Upload (Optional) */}
+                    {/*Image upload*/}
                     <FormField
                         control={form.control}
                         name="image"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Image</FormLabel>
+                                <FormLabel className="text-base font-semibold text-foreground/80">Profile Image</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) =>
-                                            field.onChange(e.target.files?.[0] ?? null)
-                                        }
+                                    <ImageUpload
+                                        value={field.value}
+                                        onChange={(file) => field.onChange(file)}
+                                        onRemove={() => field.onChange(null)}
                                     />
                                 </FormControl>
                                 <FormMessage />
