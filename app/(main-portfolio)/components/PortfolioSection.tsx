@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Portfolio } from "@/app/(portfolio)/type/type";
+import { Portfolio } from "@/app/(main-portfolio)/type/type";
 
 type Props = {
     data: Portfolio[]; // array of portfolio items

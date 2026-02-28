@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import HomeSection from "@/app/(portfolio)/components/HomeSection";
-import AboutSection from "@/app/(portfolio)/components/AboutSection";
-import PortfolioSection from "@/app/(portfolio)/components/PortfolioSection";
-import ContactSection from "@/app/(portfolio)/components/ContactSection";
-import HeaderSection from "@/app/(portfolio)/components/HeaderSection";
+import HomeSection from "@/app/(main-portfolio)/components/HomeSection";
+import AboutSection from "@/app/(main-portfolio)/components/AboutSection";
+import PortfolioSection from "@/app/(main-portfolio)/components/PortfolioSection";
+import ContactSection from "@/app/(main-portfolio)/components/ContactSection";
+import HeaderSection from "@/app/(main-portfolio)/components/HeaderSection";
 import { motion, AnimatePresence } from "framer-motion";
-import {About, Contact, Home, Portfolio, Section} from "@/app/(portfolio)/type/type";
+import {About, Contact, Home, Portfolio, Section} from "@/app/(main-portfolio)/type/type";
 
 export default function PortfolioClient({ home, about, portfolio, contact }: {
     home: Home,

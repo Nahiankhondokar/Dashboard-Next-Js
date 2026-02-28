@@ -1,5 +1,5 @@
 
-export interface Service {
+export interface Portfolio {
   id: number;
   title: string;
   sub_title: string;

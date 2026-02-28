@@ -25,6 +25,7 @@ import {
   NewspaperIcon,
   User2,
   User2Icon,
+  BookOpenCheck
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -49,7 +50,7 @@ const items = [
   { title: "Projects", url: "/dashboard/project", icon: AppWindowIcon },
   { title: "Experience", url: "/dashboard/experience", icon: LayersIcon },
   { title: "Expertise", url: "/dashboard/expertise", icon: LibraryBig },
-  // { title: "Settings", url: "#", icon: Settings },
+  { title: "Portfolio", url: "/dashboard/portfolio", icon: BookOpenCheck },
 ];
 
 const SideBar = () => {

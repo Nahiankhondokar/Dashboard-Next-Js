@@ -1,8 +1,8 @@
 
 import React  from "react";
 import Me from "@/public/assets/me/me.jpg";
-import PortfolioClient from "@/app/(portfolio)/PortfolioClient";
-import {About, Contact, Home, Portfolio} from "@/app/(portfolio)/type/type";
+import PortfolioClient from "@/app/(main-portfolio)/PortfolioClient";
+import {About, Contact, Home, Portfolio} from "@/app/(main-portfolio)/type/type";
 
 // ---- APIs calls ----
 async function getHome(): Promise<Home> {

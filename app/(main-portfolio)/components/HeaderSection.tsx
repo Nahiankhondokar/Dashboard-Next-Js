@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
-import MobileHeader from "@/app/(portfolio)/components/MobileHeader";
+import MobileHeader from "@/app/(main-portfolio)/components/MobileHeader";
 
 // --- Type ---
 type Section = "home" | "about" | "portfolio" | "contact";

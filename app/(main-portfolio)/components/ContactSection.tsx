@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Contact } from "@/app/(portfolio)/type/type";
+import { Contact } from "@/app/(main-portfolio)/type/type";
 import {
     Form,
     FormControl,

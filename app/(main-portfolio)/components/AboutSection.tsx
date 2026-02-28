@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Download, GraduationCapIcon, Info } from "lucide-react";
-import { About, Metrics } from "@/app/(portfolio)/type/type";
+import { About, Metrics } from "@/app/(main-portfolio)/type/type";
 
 // --- Sub-component: Empty State Wrapper ---
 const EmptyState = ({ message }: { message: string }) => (

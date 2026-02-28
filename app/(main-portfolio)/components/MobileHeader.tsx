@@ -1,7 +1,7 @@
 "use client"
 
 import React, { Dispatch, SetStateAction } from "react";
-import { Section } from "@/app/(portfolio)/type/type";
+import { Section } from "@/app/(main-portfolio)/type/type";
 import Link from "next/link"; // FIX: Import from next/link, not lucide
 
 type propsType = {

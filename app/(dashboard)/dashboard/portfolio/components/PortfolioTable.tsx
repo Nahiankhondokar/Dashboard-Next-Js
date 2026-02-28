@@ -15,22 +15,23 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import Pagination from "@/type/pagination/Pagination";
-import {useServiceStore} from "@/stores/useServiceStore";
 import ConfirmationAlert from "@/components/common/ConfirmationAlert";
 import {toast} from "sonner";
+import {usePortfolioStore} from "@/stores/usePortfolioStore";
+import {Portfolio} from "@/app/(dashboard)/dashboard/portfolio/interface/Portfolio";
 
-export default function ServiceTable() {
+export default function PortfolioTable() {
     const {
-        services,
+        portfolios,
         pagination,
-        fetchService,
+        fetchPortfolio,
         loading,
         openEditModal,
-        deleteService
-    } = useServiceStore();
+        deletePortfolio
+    } = usePortfolioStore();
 
     useEffect(() => {
-        fetchService();
+        fetchPortfolio();
     }, []);
 
     return (
@@ -38,7 +39,7 @@ export default function ServiceTable() {
             <Table>
                 <TableCaption>
                     <Separator/>
-                    A list of <b>Service</b>
+                    A list of <b>Portfolio</b>
                 </TableCaption>
 
                 <TableHeader>
@@ -61,40 +62,40 @@ export default function ServiceTable() {
                                 Loading...
                             </TableCell>
                         </TableRow>
-                    ) : services.length === 0 ? (
+                    ) : portfolios.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={7} className="text-center">
                                 No data found
                             </TableCell>
                         </TableRow>
                     ) : (
-                        services.map((service, index) => (
+                        portfolios.map((portfolio: Portfolio, index) => (
                             <TableRow key={index}>
                                 <TableCell>{index+1}</TableCell>
                                 <TableCell className="font-medium">
-                                    {service.title}
+                                    {portfolio.title}
                                 </TableCell>
-                                <TableCell>{service.sub_title ?? "-"}</TableCell>
-                                <TableCell>{service.project_link ?? "-"}</TableCell>
-                                <TableCell>{service.description ?? "-"}</TableCell>
-                                <TableCell>{service.media ?? "-"}</TableCell>
-                                <TableCell>{service.created_at ?? "-"}</TableCell>
+                                <TableCell>{portfolio.sub_title ?? "-"}</TableCell>
+                                <TableCell>{portfolio.project_link ?? "-"}</TableCell>
+                                <TableCell>{portfolio.description ?? "-"}</TableCell>
+                                <TableCell>{portfolio.media ?? "-"}</TableCell>
+                                <TableCell>{portfolio.created_at ?? "-"}</TableCell>
 
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <Button size="icon" variant="outline" onClick={() => openEditModal(service)}>
+                                        <Button size="icon" variant="outline" onClick={() => openEditModal(portfolio)}>
                                             <Pencil size={16} />
                                         </Button>
 
                                         {/*Delete*/}
                                         <ConfirmationAlert
-                                            title="Delete experience?"
-                                            description="This experience will be permanently removed."
+                                            title="Delete portfolio?"
+                                            description="This portfolio will be permanently removed."
                                             confirmText="Delete"
                                             onConfirm={async () => {
                                                 try {
-                                                    await deleteService(service.id);
-                                                    toast.success("Service deleted");
+                                                    await deletePortfolio(portfolio.id);
+                                                    toast.success("Portfolio deleted");
                                                 } catch {
                                                     toast.error("Delete failed");
                                                 }
@@ -117,7 +118,7 @@ export default function ServiceTable() {
             {pagination && (
                 <Pagination
                     meta={pagination}
-                    onPageChange={(page) => fetchService(page)}
+                    onPageChange={(page) => fetchPortfolio(page)}
                 />
             )}
         </>

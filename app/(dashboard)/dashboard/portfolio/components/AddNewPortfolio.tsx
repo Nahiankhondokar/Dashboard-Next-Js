@@ -15,21 +15,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea";
-import {useServiceStore} from "@/stores/useServiceStore";
 import {toast} from "sonner";
-import {formSchema} from "@/app/(dashboard)/dashboard/service/schema/formSchema";
-import {Service} from "@/app/(dashboard)/dashboard/service/interface/Service";
+import {formSchema} from "@/app/(dashboard)/dashboard/portfolio/schema/formSchema";
+import {Portfolio} from "@/app/(dashboard)/dashboard/portfolio/interface/Portfolio";
+import {usePortfolioStore} from "@/stores/usePortfolioStore";
 
 type formSchemaType = z.infer<typeof formSchema>;
 
-const mapServiceToForm = (service: Service) => ({
-    title: service.title ?? "",
-    description: service.description ?? "",
-    sub_title: service.sub_title ?? "",
-    status: service.status ?? false,
-    project_link: service.project_link ?? "",
-    created_at: service.created_at ?? "",
-    media: null,
+const mapPortfolioToForm = (portfolio: Portfolio) => ({
+    title: portfolio.title ?? "",
+    description: portfolio.description ?? "",
+    sub_title: portfolio.sub_title ?? "",
+    status: portfolio.status ?? 0,
+    project_link: portfolio.project_link ?? "",
+    created_at: portfolio.created_at ?? "",
+    media: portfolio.media ?? "",
 })
 
 const AddNewPortfolio = () => {
@@ -39,7 +39,7 @@ const AddNewPortfolio = () => {
         title: "",
         description: "",
         sub_title: "",
-        status: false,
+        status: 0,
         project_link: "",
         media: "",
         created_at: ""
@@ -48,10 +48,10 @@ const AddNewPortfolio = () => {
 
   const {
       mode,
-      createService,
-      selectedService,
-      updateService
-  } = useServiceStore();
+      createPortfolio,
+      selectedPortfolio,
+      updatePortfolio
+  } = usePortfolioStore();
 
   const onSubmit = async (values: formSchemaType) => {
       const fd = new FormData();
@@ -67,10 +67,10 @@ const AddNewPortfolio = () => {
 
       try {
           if(mode === 'create'){
-              await createService(fd);
+              await createPortfolio(fd);
               toast.success("Portfolio is created");
           }else {
-              await updateService(selectedService!.id, fd);
+              await updatePortfolio(selectedPortfolio!.id, fd);
               toast.success("Portfolio is updated");
           }
       }catch (err: unknown){
@@ -79,10 +79,10 @@ const AddNewPortfolio = () => {
   };
 
     useEffect(() => {
-        if(mode === 'edit' && selectedService){
-            form.reset(mapServiceToForm(selectedService));
+        if(mode === 'edit' && selectedPortfolio){
+            form.reset(mapPortfolioToForm(selectedPortfolio));
         }
-    }, [mode, selectedService]);
+    }, [mode, selectedPortfolio]);
 
 
   return (
@@ -90,7 +90,9 @@ const AddNewPortfolio = () => {
       <Form {...form}>
         <form
           id="user-form"
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit, (errors) => {
+              console.log("❌ FORM ERRORS:", errors);
+          })}
           className="space-y-6"
         >
 
@@ -206,3 +208,5 @@ const AddNewPortfolio = () => {
 };
 
 export default AddNewPortfolio;
+
+// ToDo: service all the finish.
