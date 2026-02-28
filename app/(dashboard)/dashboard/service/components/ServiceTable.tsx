@@ -18,6 +18,7 @@ import Pagination from "@/type/pagination/Pagination";
 import {useServiceStore} from "@/stores/useServiceStore";
 import ConfirmationAlert from "@/components/common/ConfirmationAlert";
 import {toast} from "sonner";
+import MediaPreview from "@/components/common/MediaPreview";
 
 export default function ServiceTable() {
     const {
@@ -77,7 +78,13 @@ export default function ServiceTable() {
                                 <TableCell>{service.sub_title ?? "-"}</TableCell>
                                 <TableCell>{service.project_link ?? "-"}</TableCell>
                                 <TableCell>{service.description ?? "-"}</TableCell>
-                                <TableCell>{service.media ?? "-"}</TableCell>
+                                <TableCell>
+                                    <MediaPreview
+                                        src={service.media}
+                                        alt={service.title}
+                                        className="h-12 w-12 shadow-sm"
+                                    />
+                                </TableCell>
                                 <TableCell>{service.created_at ?? "-"}</TableCell>
 
                                 <TableCell className="text-right">
