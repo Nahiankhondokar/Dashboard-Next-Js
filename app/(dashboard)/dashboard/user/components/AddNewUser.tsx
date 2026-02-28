@@ -56,13 +56,13 @@ const mapUserToForm = (user: User): formSchemaType => ({
     status: user.status ?? true,
     socials: user.socials ?? [],
     role: user.role ?? 3,
-    bio: "",
-    website: "",
-    location: "",
+    bio: user.bio ?? "",
+    website: user.website ?? "",
+    location: user.location ?? "",
     // Always reset passwords to empty when opening the form
     password: "",
     password_confirmation: "",
-    image: null,
+    image: user.image ?? null,
 });
 
 const AddNewUser = () => {
