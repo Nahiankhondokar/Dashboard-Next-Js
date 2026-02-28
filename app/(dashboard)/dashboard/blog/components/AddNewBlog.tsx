@@ -63,7 +63,9 @@ const AddNewBlog = () => {
 
             if (k === "image" && v instanceof File) {
                 fd.append("image", v);
-            } else if (typeof v === "boolean") {
+            }else if(k === "image" && v as string){
+                fd.append("image", "");
+            }else if (typeof v === "boolean") {
                 fd.append(k, v ? "1" : "0");
             } else {
                 fd.append(k, v as string);

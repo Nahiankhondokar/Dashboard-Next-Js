@@ -93,7 +93,7 @@ const AddNewUser = () => {
             form.setError("password", { message: "Password is required for new users" });
             return;
         }
-        console.log(values)
+
         const fd = new FormData();
         Object.entries(values).forEach(([k, v]) => {
             if (v === null || v === undefined) return;
@@ -105,7 +105,9 @@ const AddNewUser = () => {
 
             if (k === "image" && v instanceof File) {
                 fd.append("image", v);
-            } else if (typeof v === "boolean") {
+            }else if(k === "image" && v as string){
+                fd.append("image", "");
+            }else if (typeof v === "boolean") {
                 fd.append(k, v ? "1" : "0");
             } else {
                 fd.append(k, v as string);

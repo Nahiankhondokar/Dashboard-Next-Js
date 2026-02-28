@@ -19,6 +19,7 @@ import ConfirmationAlert from "@/components/common/ConfirmationAlert";
 import {toast} from "sonner";
 import {usePortfolioStore} from "@/stores/usePortfolioStore";
 import {Portfolio} from "@/app/(dashboard)/dashboard/portfolio/interface/Portfolio";
+import MediaPreview from "@/components/common/MediaPreview";
 
 export default function PortfolioTable() {
     const {
@@ -78,7 +79,13 @@ export default function PortfolioTable() {
                                 <TableCell>{portfolio.sub_title ?? "-"}</TableCell>
                                 <TableCell>{portfolio.project_link ?? "-"}</TableCell>
                                 <TableCell>{portfolio.description ?? "-"}</TableCell>
-                                <TableCell>{portfolio.media ?? "-"}</TableCell>
+                                <TableCell>
+                                    <MediaPreview
+                                        src={portfolio.media}
+                                        alt={portfolio.title}
+                                        className="h-12 w-12 shadow-sm"
+                                    />
+                                </TableCell>
                                 <TableCell>{portfolio.created_at ?? "-"}</TableCell>
 
                                 <TableCell className="text-right">

@@ -19,6 +19,7 @@ import {toast} from "sonner";
 import {formSchema} from "@/app/(dashboard)/dashboard/portfolio/schema/formSchema";
 import {Portfolio} from "@/app/(dashboard)/dashboard/portfolio/interface/Portfolio";
 import {usePortfolioStore} from "@/stores/usePortfolioStore";
+import ImageUpload from "@/components/common/ImageUpload";
 
 type formSchemaType = z.infer<typeof formSchema>;
 
@@ -26,7 +27,7 @@ const mapPortfolioToForm = (portfolio: Portfolio) => ({
     title: portfolio.title ?? "",
     description: portfolio.description ?? "",
     sub_title: portfolio.sub_title ?? "",
-    status: portfolio.status ?? 0,
+    status: portfolio.status ?? false,
     project_link: portfolio.project_link ?? "",
     created_at: portfolio.created_at ?? "",
     media: portfolio.media ?? "",
@@ -39,7 +40,7 @@ const AddNewPortfolio = () => {
         title: "",
         description: "",
         sub_title: "",
-        status: 0,
+        status: true,
         project_link: "",
         media: "",
         created_at: ""
@@ -58,7 +59,11 @@ const AddNewPortfolio = () => {
       Object.entries(values).forEach(([k, v]) => {
           if (v === null || v === undefined) return;
 
-          if (typeof v === "boolean") {
+          if (k === "media" && v instanceof File) {
+              fd.append("media", v);
+          }else if(k === "media" && v as string){
+              fd.append("media", "");
+          }else if (typeof v === "boolean") {
               fd.append(k, v ? "1" : "0"); // or "true"/"false" based on backend
           } else {
               fd.append(k, v);
@@ -157,26 +162,24 @@ const AddNewPortfolio = () => {
           />
 
 
-          {/* Image Upload (Optional) */}
-          <FormField
-            control={form.control}
-            name="media"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      field.onChange(e.target.files?.[0] ?? null)
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/*Image upload*/}
+            <FormField
+                control={form.control}
+                name="media"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className="text-base font-semibold text-foreground/80">Image</FormLabel>
+                        <FormControl>
+                            <ImageUpload
+                                value={field.value}
+                                onChange={(file) => field.onChange(file)}
+                                onRemove={() => field.onChange(null)}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
 
           {/* Status */}
           {/* <FormField
