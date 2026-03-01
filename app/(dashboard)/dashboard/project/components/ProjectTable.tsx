@@ -19,6 +19,7 @@ import ConfirmationAlert from "@/components/common/ConfirmationAlert";
 import {toast} from "sonner";
 import {useProjectStore} from "@/stores/useProjectStore";
 import {Project} from "@/app/(dashboard)/dashboard/project/interface/Project";
+import MediaPreview from "@/components/common/MediaPreview";
 
 export default function ProjectTable() {
     const {
@@ -76,7 +77,13 @@ export default function ProjectTable() {
                                 </TableCell>
                                 <TableCell>{project.project_link ?? "-"}</TableCell>
                                 <TableCell>{project.description ?? "-"}</TableCell>
-                                <TableCell>{project.media ?? "-"}</TableCell>
+                                <TableCell>
+                                    <MediaPreview
+                                        src={project.media}
+                                        alt={project.title}
+                                        className="h-12 w-12 shadow-sm"
+                                    />
+                                </TableCell>
                                 <TableCell>{project.created_at ?? "-"}</TableCell>
 
                                 <TableCell className="text-right">

@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {useProjectStore} from "@/stores/useProjectStore";
 import {toast} from "sonner";
 import {Project} from "@/app/(dashboard)/dashboard/project/interface/Project";
+import ImageUpload from "@/components/common/ImageUpload";
 
 const formSchema = z.object({
     title: z.string(),
@@ -142,27 +143,24 @@ const AddNewProject = () => {
             )}
           />
 
-
-          {/* Image Upload (Optional) */}
-          <FormField
+        {/*Image upload*/}
+        <FormField
             control={form.control}
             name="media"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      field.onChange(e.target.files?.[0] ?? null)
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                <FormItem>
+                    <FormLabel className="text-base font-semibold text-foreground/80">Image</FormLabel>
+                    <FormControl>
+                        <ImageUpload
+                            value={field.value}
+                            onChange={(file) => field.onChange(file)}
+                            onRemove={() => field.onChange(null)}
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
             )}
-          />
+        />
 
           {/* Status */}
           {/* <FormField
