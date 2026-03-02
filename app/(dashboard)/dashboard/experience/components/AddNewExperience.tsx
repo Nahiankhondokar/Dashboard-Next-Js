@@ -20,18 +20,17 @@ import {useExperienceStore} from "@/stores/useExperienceStore";
 import {toast} from "sonner";
 import {formSchema} from "@/app/(dashboard)/dashboard/experience/schema/formSchema";
 import {Experience} from "@/app/(dashboard)/dashboard/experience/interface/Experience";
+import {DatePicker} from "@/components/common/DatePicker";
 
 type formSchemaType = z.infer<typeof formSchema>;
 
 const mapExperienceToForm = (exp: Experience): formSchemaType => ({
     title: exp.title ?? "",
     company: exp.company ?? "",
-    duration: exp.duration ?? "",
     position: exp.position ?? "",
     start_date: exp.start_date ?? "",
     end_date: exp.end_date ?? "",
-    description: exp.description ?? "",
-    image: null, // file can't be prefilled
+    description: exp.description ?? ""
 });
 
 const AddNewExperience = () => {
@@ -52,12 +51,10 @@ const AddNewExperience = () => {
     defaultValues: {
         title: "",
         company: "",
-        duration: "",
         position: "",
         start_date: "",
         end_date: "",
-        description: "",
-        image: null,
+        description: ""
     },
   });
 
@@ -145,21 +142,6 @@ const AddNewExperience = () => {
                 )}
             />
 
-            {/* Duration */}
-            <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Duration</FormLabel>
-                        <FormControl>
-                            <Input placeholder="duration" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-
           {/* Description */}
           <FormField
             control={form.control}
@@ -175,46 +157,45 @@ const AddNewExperience = () => {
             )}
           />
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Start date */}
+                <FormField
+                    control={form.control}
+                    name="start_date"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel>Start Date</FormLabel>
+                            <FormControl>
+                                <DatePicker
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="Select start date"
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-          {/* Image Upload (Optional) */}
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Profile Image</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      field.onChange(e.target.files?.[0] ?? null)
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Status */}
-          {/* <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={field.value === true} // Convert number to boolean for UI
-                    onCheckedChange={(checked) =>
-                      field.onChange(checked ? true : false)
-                    }
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          /> */}
+                {/* End date */}
+                <FormField
+                    control={form.control}
+                    name="end_date"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel>End Date</FormLabel>
+                            <FormControl>
+                                <DatePicker
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="Select end date"
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
 
           {/* Submit */}
             <Button type="submit" disabled={loading} className="w-full">
