@@ -18,7 +18,7 @@ const Dashboard = () => {
     const products: any[] = [];
 
     return (
-        <>
+        <div className="mb-5">
             {/* ================= Overview ================= */}
             <div className="my-8">
                 <h1 className="text-lg font-medium mb-6">Overview</h1>
@@ -128,7 +128,7 @@ const Dashboard = () => {
                     </CardContent>
                 </Card>
             </div>
-        </>
+        </div>
     );
 };
 

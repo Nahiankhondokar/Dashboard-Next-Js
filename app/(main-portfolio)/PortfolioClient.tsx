@@ -29,7 +29,7 @@ export default function PortfolioClient({ home, about, portfolio, contact }: {
 }) {
     const [activeSection, setActiveSection] = useState<Section>("home");
 
-    // --- Chatbot States ---
+    // --- chatbot States ---
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [totalUnread, setTotalUnread] = useState(0);
     const [guestId, setGuestId] = useState<string>("");
@@ -59,7 +59,7 @@ export default function PortfolioClient({ home, about, portfolio, contact }: {
 
     return (
         <>
-        <div className="bg-[#0f172a] text-white min-h-screen font-sans selection:bg-yellow-500 selection:text-black relative">
+        <div className=" bg-[#0f172a] text-white min-h-screen font-sans selection:bg-yellow-500 selection:text-black relative">
             {/* Headers */}
             <HeaderSection activeSection={activeSection} setActiveSection={setActiveSection} />
 
@@ -72,7 +72,7 @@ export default function PortfolioClient({ home, about, portfolio, contact }: {
                 </AnimatePresence>
             </main>
 
-            {/* --- Chatbot System --- */}
+            {/* --- chatbot System --- */}
             <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end">
                 {/* Chat Window */}
                 <AnimatePresence>
@@ -83,6 +83,7 @@ export default function PortfolioClient({ home, about, portfolio, contact }: {
                             exit={{ opacity: 0, y: 20, scale: 0.9 }}
                             className="mb-4 w-80 sm:w-96 h-[500px] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
                         >
+                            {/* Chart Widget*/}
                             <ChatWidget guestId={guestId} />
                         </motion.div>
                     )}

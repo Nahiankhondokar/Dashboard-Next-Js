@@ -93,11 +93,13 @@ export default async function page  () {
 
     return (
         // pass server-fetched data as props to the client
-        <PortfolioClient
-            home={home}
-            about={about}
-            portfolio={portfolio}
-            contact={contact}
-        />
+       <div className="mt-5 bg-red-800">
+           <PortfolioClient
+               home={home}
+               about={about}
+               portfolio={portfolio}
+               contact={contact}
+           />
+       </div>
     );
 }

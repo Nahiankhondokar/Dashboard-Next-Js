@@ -5,6 +5,8 @@ import { Send, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {toast} from "sonner";
+import {apiFetch} from "@/lib/api";
 
 interface Message {
     id: number;
@@ -64,7 +66,21 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
             setInput("");
 
             // API Call to Laravel
-            // await axios.post('/api/chat/send', newMessage);
+            const res = await fetch('http://localhost:8000/api/v1/public/send-message', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // CRITICAL: Tell Laravel you're sending JSON
+                    "Accept": "application/json",       // Helps Laravel return validation errors in JSON
+                },
+                body: JSON.stringify(newMessage)
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to send message");
+            }
+
+            const data = await res.json();
+            console.log("Success:", data);
 
         } catch (error) {
             console.error("Failed to send", error);

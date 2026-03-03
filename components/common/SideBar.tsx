@@ -25,7 +25,7 @@ import {
   NewspaperIcon,
   User2,
   User2Icon,
-  BookOpenCheck
+  BookOpenCheck, MessageCircle
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -51,6 +51,7 @@ const items = [
   { title: "Experience", url: "/dashboard/experience", icon: LayersIcon },
   { title: "Expertise", url: "/dashboard/expertise", icon: LibraryBig },
   { title: "Portfolio", url: "/dashboard/portfolio", icon: BookOpenCheck },
+  { title: "chatbot", url: "/dashboard/chatbot", icon: MessageCircle },
 ];
 
 const SideBar = () => {
