@@ -8,6 +8,7 @@ interface Conversation {
     last_message_at: string;
     created_at: string;
     updated_at: string;
+    messages: Message[]
 }
 
 interface Message {
@@ -71,10 +72,10 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
 
     sendReply: async (conversationId, body) => {
         try {
-            const newMessage = await apiFetch(`/admin/conversations/${conversationId}/reply`, {
-                method: 'POST',
-                body: { body }
-            });
+            // const newMessage = await apiFetch(`/admin/conversations/${conversationId}/reply`, {
+            //     method: 'POST',
+            //     body: { body }
+            // });
             // Append the new admin message to the thread
             // set((state) => ({ messages: [...state.messages, newMessage] }));
         } catch (error) {

@@ -81,9 +81,10 @@ export default function Chatbot() {
                 <ScrollArea className="flex-1">
                     {/* Map through conversations here */}
                     {
-                        conversations.map((conversation) => (
-                           <>
+                        conversations.map((conversation, index) => (
+
                                <div
+                                   key={index}
                                    onClick={() => selectConversation(conversation)}
                                    className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors border-b ${selectedChat?.id === 1 ? 'bg-muted' : ''}`}
                                >
@@ -94,7 +95,7 @@ export default function Chatbot() {
                                    <p className="text-xs text-muted-foreground truncate italic">"Hello! I wanted to ask..."</p>
                                    <Badge className="mt-2 bg-yellow-500 text-black hover:bg-yellow-500">2 New</Badge>
                                </div>
-                           </>
+
                         ))
                     }
 
