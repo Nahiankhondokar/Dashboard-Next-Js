@@ -5,66 +5,39 @@ import { Search, Send, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import {useChatBotStore} from "@/stores/useChatBotStore";
-
-// Types based on our planned schema
-interface Conversation {
-    id: number;
-    guest_id: string;
-    guest_name: string;
-    last_message: string;
-    updated_at: string;
-    unread_count: number;
-}
-
-interface Message {
-    id: number;
-    sender: "guest" | "admin";
-    body: string;
-    created_at: string;
-}
+import { useChatBotStore } from "@/stores/useChatBotStore";
+import { formatDistanceToNow } from "date-fns";
 
 export default function Chatbot() {
-    const [selectedChat, setSelectedChat] = useState<Conversation | null>(null);
-    const [messages, setMessages] = useState<Message[]>([]);
     const [reply, setReply] = useState("");
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const {
         fetchConversations,
         conversations,
-        selectConversation,
+        selectedConversation, // The Data
+        selectConversation,   // The Action
+        messages,             // The Message Thread
+        sendReply,
     } = useChatBotStore();
 
-    console.log(conversations);
-
-    // Auto-scroll to bottom of messages
     useEffect(() => {
         fetchConversations();
+    }, [fetchConversations]);
+
+    // Scroll to bottom whenever messages change
+    useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
     const handleSendReply = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!reply.trim() || !selectedChat) return;
+        if (!reply.trim() || !selectedConversation) return;
 
-        const adminMsg: Message = {
-            id: Date.now(),
-            sender: "admin",
-            body: reply,
-            created_at: new Date().toISOString()
-        };
-
-        setMessages((prev) => [...prev, adminMsg]);
+        // Use the store action to send reply
+        await sendReply(selectedConversation.id, reply);
         setReply("");
-
-        try {
-            // API Call: await axios.post(`/api/admin/chat/${selectedChat.id}/reply`, { message: reply });
-        } catch (error) {
-            console.error("Failed to send reply");
-        }
     };
 
     return (
@@ -79,48 +52,50 @@ export default function Chatbot() {
                     </div>
                 </div>
                 <ScrollArea className="flex-1">
-                    {/* Map through conversations here */}
-                    {
-                        conversations.map((conversation, index) => (
-
-                               <div
-                                   key={index}
-                                   onClick={() => selectConversation(conversation)}
-                                   className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors border-b ${selectedChat?.id === 1 ? 'bg-muted' : ''}`}
-                               >
-                                   <div className="flex justify-between items-start mb-1">
-                                       <span className="font-semibold text-sm">{conversation.guest_id || "Guest #120"}</span>
-                                       <span className="text-[10px] text-muted-foreground">2m ago</span>
-                                   </div>
-                                   <p className="text-xs text-muted-foreground truncate italic">"Hello! I wanted to ask..."</p>
-                                   <Badge className="mt-2 bg-yellow-500 text-black hover:bg-yellow-500">2 New</Badge>
-                               </div>
-
-                        ))
-                    }
-
-
+                    {conversations.map((conversation) => (
+                        <div
+                            key={conversation.id}
+                            onClick={() => selectConversation(conversation)}
+                            className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors border-b ${
+                                selectedConversation?.id === conversation.id ? 'bg-muted' : ''
+                            }`}
+                        >
+                            <div className="flex justify-between items-start mb-1">
+                                <span className="font-semibold text-sm truncate max-w-[120px]">
+                                    {conversation.guest_name || `Guest #${conversation.id}`}
+                                </span>
+                                <span className="text-[10px] text-muted-foreground">
+                                    {conversation.updated_at} ago
+                                </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground truncate italic">
+                                Last active: {conversation.guest_id.slice(0, 8)}...
+                            </p>
+                        </div>
+                    ))}
                 </ScrollArea>
             </div>
 
             {/* --- RIGHT SIDE: Message Thread --- */}
             <div className="flex-1 flex flex-col bg-background">
-                {selectedChat ? (
+                {selectedConversation ? (
                     <>
-                        {/* Thread Header */}
-                        <div className="p-4 border-b flex items-center justify-between">
+                        <div className="p-4 border-b flex items-center justify-between bg-muted/5">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-primary/10 rounded-full text-primary">
                                     <User size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="font-medium text-sm">{selectedChat.guest_name}</h3>
-                                    <p className="text-[10px] text-muted-foreground">ID: {selectedChat.guest_id}</p>
+                                    <h3 className="font-medium text-sm">
+                                        {selectedConversation.guest_name || "Anonymous Guest"}
+                                    </h3>
+                                    <p className="text-[10px] text-muted-foreground">
+                                        UUID: {selectedConversation.guest_id}
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Messages Area */}
                         <ScrollArea className="flex-1 p-6">
                             <div className="space-y-4">
                                 {messages.map((m) => (
@@ -141,12 +116,11 @@ export default function Chatbot() {
                             </div>
                         </ScrollArea>
 
-                        {/* Reply Form */}
                         <form onSubmit={handleSendReply} className="p-4 border-t bg-muted/5 flex gap-2">
                             <Input
                                 value={reply}
                                 onChange={(e) => setReply(e.target.value)}
-                                placeholder="Write a reply..."
+                                placeholder="Type your message..."
                                 className="flex-1"
                             />
                             <Button type="submit" disabled={!reply.trim()}>

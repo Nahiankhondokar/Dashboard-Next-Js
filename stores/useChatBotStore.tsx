@@ -22,12 +22,15 @@ interface Message {
 interface ChatState {
     conversations: Conversation[];
     messages: Message[];
+    setMessages: (message: Message) => void;
     loading: boolean;
     selectedConversation: Conversation | null;
+
 
     // Actions
     fetchConversations: () => Promise<void>;
     fetchMessages: (conversationId: number) => Promise<void>;
+    fetchMessagesByGuestId: (guestId: string) => Promise<void>;
     selectConversation: (conv: Conversation) => void;
     sendReply: (conversationId: number, body: string) => Promise<void>;
     addMessage: (message: Message) => void; // For real-time updates
@@ -38,13 +41,24 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
     messages: [],
     loading: false,
     selectedConversation: null,
+    setMessages: (message:Message) => {
+        set((state) => ({
+            messages: [message, ...state.messages]
+        }));
+
+        console.log(get().messages)
+    },
 
     fetchConversations: async () => {
         set({ loading: true });
         try {
-            // Cast the response to the expected type
             const data = await apiFetch('chatbot/conversations') as Conversation[];
             set({ conversations: data });
+
+            // Automatically select the first conversation if it exists
+            if (data.length > 0) {
+                get().selectConversation(data[0]);
+            }
         } catch (error) {
             console.error("Failed to fetch conversations", error);
         } finally {
@@ -53,31 +67,41 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
     },
 
     fetchMessages: async (conversationId: number) => {
-        set({ loading: true });
+        // No need to set global loading here if you want smooth transitions
         try {
-            // Cast the response to the Message interface array
-            const data = await apiFetch(`/chatbot/conversations/${conversationId}/messages`) as Message[];
+            const data = await apiFetch(`chatbot/conversations/${conversationId}/messages`) as Message[];
             set({ messages: data });
         } catch (error) {
             console.error("Failed to fetch messages", error);
-        } finally {
-            set({ loading: false });
+        }
+    },
+
+    fetchMessagesByGuestId: async (guestId: string) => {
+        // No need to set global loading here if you want smooth transitions
+        try {
+            const data = await apiFetch(`v1/public/chatbot/conversations/${guestId}/messages`) as Message[];
+            set({ messages: data });
+            console.log(get().messages)
+        } catch (error) {
+            console.error("Failed to fetch messages", error);
         }
     },
 
     selectConversation: (conv) => {
         set({ selectedConversation: conv });
-        // get().fetchMessages(conv.id);
+        // Fetch the messages for this specific conversation
+        get().fetchMessages(conv.id);
     },
 
-    sendReply: async (conversationId, body) => {
+    sendReply: async (conversationId, body: string) => {
         try {
-            // const newMessage = await apiFetch(`/admin/conversations/${conversationId}/reply`, {
-            //     method: 'POST',
-            //     body: { body }
-            // });
+            const newMessage = await apiFetch(`chatbot/conversations/${conversationId}/reply`, {
+                method: 'POST',
+                body: JSON.stringify({body})
+            }) as Message;
+
             // Append the new admin message to the thread
-            // set((state) => ({ messages: [...state.messages, newMessage] }));
+            set((state) => ({ messages: [...state.messages, newMessage] }));
         } catch (error) {
             console.error("Reply failed", error);
         }

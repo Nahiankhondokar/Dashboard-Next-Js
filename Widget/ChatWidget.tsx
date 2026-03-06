@@ -7,23 +7,33 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {toast} from "sonner";
 import {apiFetch} from "@/lib/api";
+import {useChatBotStore} from "@/stores/useChatBotStore";
 
 interface Message {
     id: number;
+    conversation_id: number;
     sender: "guest" | "admin";
     body: string;
     created_at: string;
 }
 
 export default function ChatWidget({ guestId }: { guestId: string }) {
-    const [messages, setMessages] = useState<Message[]>([]);
+    // const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    const {
+        fetchMessagesByGuestId,
+        messages,
+        addMessage
+    } = useChatBotStore();
 
     // 1. Initial Load & Real-time Listener (Laravel Echo)
     useEffect(() => {
         // Fetch existing messages from your API
-        // fetchMessages();
+        if(guestId) {
+            fetchMessagesByGuestId(guestId);
+        }
 
         // Example Echo Listener (if using Reverb/Pusher)
         /*
@@ -43,7 +53,7 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
         if (scrollRef.current) {
             scrollRef.current.scrollIntoView({ behavior: "smooth" });
         }
-    }, [messages]);
+    }, [messages, addMessage]);
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -58,11 +68,12 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
             // Optimistic Update (Show message immediately)
             const tempMsg: Message = {
                 id: Date.now(),
+                conversation_id: 1,
                 sender: "guest",
                 body: input,
                 created_at: new Date().toISOString()
             };
-            setMessages([...messages, tempMsg]);
+            addMessage(tempMsg);
             setInput("");
 
             // API Call to Laravel
