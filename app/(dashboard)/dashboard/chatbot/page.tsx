@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { useChatBotStore } from "@/stores/useChatBotStore";
 import { formatDistanceToNow } from "date-fns";
+import {echo} from "@/lib/echo";
 
 export default function Chatbot() {
     const [reply, setReply] = useState("");
@@ -20,16 +21,47 @@ export default function Chatbot() {
         selectConversation,   // The Action
         messages,             // The Message Thread
         sendReply,
+        addMessage
     } = useChatBotStore();
 
+    const guestId = selectedConversation?.guest_id;
+
+    // 1. Setup Listener ONCE on mount
     useEffect(() => {
         fetchConversations();
-    }, [fetchConversations]);
 
-    // Scroll to bottom whenever messages change
+
+        console.log(guestId);
+        echo?.channel(`chat.${guestId}`)
+            .listen('ChatBotEvent', (e: any) => {
+                const incomingMsg = e.message;
+
+                // Update the sidebar list no matter what
+                // fetchConversations();
+
+                // ONLY push to current chat window if it matches
+                // We use a functional update check or a ref to avoid stale closures
+                useChatBotStore.setState((state) => {
+                    if (state.selectedConversation?.id === incomingMsg.conversation_id) {
+                        // Prevent duplicate if admin is the one who sent it
+                        const exists = state.messages.some(m => m.id === incomingMsg.id);
+                        if (!exists) {
+                            return { messages: [...state.messages, incomingMsg] };
+                        }
+                    }
+                    return state;
+                });
+            });
+
+        return () => echo?.leaveChannel(`chat.${guestId}`);
+    }, []);
+
+
+    // 2. Separate Scroll Logic
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
+    // Scroll to bottom whenever messages change
 
     const handleSendReply = async (e: React.FormEvent) => {
         e.preventDefault();

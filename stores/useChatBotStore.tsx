@@ -107,7 +107,14 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
         }
     },
 
-    addMessage: (message) => {
-        set((state) => ({ messages: [...state.messages, message] }));
-    }
+    addMessage: (message) =>
+        set((state) => {
+            const exists = state.messages.some(m => m.id === message.id);
+
+            if (exists) return state;
+
+            return {
+                messages: [...state.messages, message]
+            };
+        }),
 }));

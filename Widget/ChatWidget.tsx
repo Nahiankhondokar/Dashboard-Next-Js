@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {toast} from "sonner";
 import {apiFetch} from "@/lib/api";
 import {useChatBotStore} from "@/stores/useChatBotStore";
+import {echo} from "@/lib/echo";
 
 interface Message {
     id: number;
@@ -30,30 +31,29 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
 
     // 1. Initial Load & Real-time Listener (Laravel Echo)
     useEffect(() => {
-        // Fetch existing messages from your API
-        if(guestId) {
-            fetchMessagesByGuestId(guestId);
-        }
+        if (!guestId || !echo) return;
 
-        // Example Echo Listener (if using Reverb/Pusher)
-        /*
-        window.Echo.private(`chat.${guestId}`)
-          .listen('MessageSent', (e: { message: Message }) => {
-            setMessages((prev) => [...prev, e.message]);
-          });
-        */
+        fetchMessagesByGuestId(guestId);
+
+        const channel = echo.channel(`chat.${guestId}`);
+
+        channel.listen('ChatBotEvent', (e: any) => {
+            console.log('reverb -', e);
+
+            if (e.message.sender === 'admin') {
+                addMessage(e.message);
+            }
+        });
 
         return () => {
-            // window.Echo.leave(`chat.${guestId}`);
+            echo.leaveChannel(`chat.${guestId}`);
         };
     }, [guestId]);
 
     // 2. Auto-scroll to bottom
     useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [messages, addMessage]);
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
