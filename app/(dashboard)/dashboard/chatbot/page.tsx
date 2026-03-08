@@ -21,23 +21,15 @@ export default function Chatbot() {
         selectConversation,   // The Action
         messages,             // The Message Thread
         sendReply,
-        addMessage
     } = useChatBotStore();
-
-    const guestId = selectedConversation?.guest_id;
 
     // 1. Setup Listener ONCE on mount
     useEffect(() => {
         fetchConversations();
 
-
-        console.log(guestId);
-        echo?.channel(`chat.${guestId}`)
+        echo?.private('admin.inbox')
             .listen('ChatBotEvent', (e: any) => {
                 const incomingMsg = e.message;
-
-                // Update the sidebar list no matter what
-                // fetchConversations();
 
                 // ONLY push to current chat window if it matches
                 // We use a functional update check or a ref to avoid stale closures
@@ -53,7 +45,7 @@ export default function Chatbot() {
                 });
             });
 
-        return () => echo?.leaveChannel(`chat.${guestId}`);
+        return () => echo?.leaveChannel('admin.inbox');
     }, []);
 
 

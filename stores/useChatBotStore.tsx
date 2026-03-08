@@ -100,8 +100,11 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
                 body: JSON.stringify({body})
             }) as Message;
 
+            console.log('old-msg-',get().messages);
+            console.log('new-msg-',newMessage);
+
             // Append the new admin message to the thread
-            set((state) => ({ messages: [...state.messages, newMessage] }));
+            // set((state) => ({ messages: [...state.messages, newMessage] }));
         } catch (error) {
             console.error("Reply failed", error);
         }

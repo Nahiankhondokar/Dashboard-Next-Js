@@ -36,17 +36,16 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
         fetchMessagesByGuestId(guestId);
 
         const channel = echo.channel(`chat.${guestId}`);
-
         channel.listen('ChatBotEvent', (e: any) => {
-            console.log('reverb -', e);
+            console.log('guest reverb -', e);
 
-            if (e.message.sender === 'admin') {
+            if (e.message.sender == 'admin') {
                 addMessage(e.message);
             }
         });
 
         return () => {
-            echo.leaveChannel(`chat.${guestId}`);
+            echo?.leaveChannel(`chat.${guestId}`);
         };
     }, [guestId]);
 
