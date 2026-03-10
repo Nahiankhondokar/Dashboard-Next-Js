@@ -1,8 +1,11 @@
+
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
 import {AuthProvider} from "@/components/providers/AuthProvider";
 import {Toaster} from "sonner";
+import {GoogleOAuthProvider} from "@react-oauth/google";
+import GoogleOauthProvider from "@/components/providers/GoogleOauthProvider";
 
 export const metadata: Metadata = {
   title: "Nahian - Portfolio",
@@ -21,12 +24,13 @@ export default function RootLayout({children}: {
           enableSystem
           disableTransitionOnChange
       >
-          <AuthProvider>
+
+          <GoogleOauthProvider>
               {children}
 
               {/* ✅ REQUIRED for toast */}
               <Toaster position="top-right" richColors />
-          </AuthProvider>
+          </GoogleOauthProvider>
       </ThemeProvider>
       </body>
       </html>

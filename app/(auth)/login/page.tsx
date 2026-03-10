@@ -21,6 +21,7 @@ import {User} from "@/type/user";
 import {LogInIcon, StepBackIcon} from "lucide-react";
 import {StepBack} from "lucide";
 import Link from "next/link";
+import GoogleLoginBtn from "@/app/(auth)/login/components/GoogleLoginBtn";
 
 
 
@@ -118,6 +119,12 @@ export default function LoginPage() {
                             <LogInIcon size="16" />
                             {loading ? "Logging in..." : "Login"}
                         </Button>
+
+                        <div className="flex items-center justify-center mt-2">
+                            <span className="mr-2">or</span>
+                            <GoogleLoginBtn />
+                        </div>
+
                         <Link href="/" className="flex justify-center items-center gap-2 text-yellow-500">
                             <StepBackIcon size="16" />
                             Home Page

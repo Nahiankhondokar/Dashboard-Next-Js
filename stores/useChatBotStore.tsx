@@ -84,13 +84,15 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
             console.log(get().messages)
         } catch (error) {
             console.error("Failed to fetch messages", error);
+        } finally {
+            console.error("Failed to fetch messages");
         }
     },
 
-    selectConversation: (conv) => {
+    selectConversation: async (conv) => {
         set({ selectedConversation: conv });
         // Fetch the messages for this specific conversation
-        get().fetchMessages(conv.id);
+        await get().fetchMessages(conv.id);
     },
 
     sendReply: async (conversationId, body: string) => {
@@ -100,8 +102,9 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
                 body: JSON.stringify({body})
             }) as Message;
 
-            console.log('old-msg-',get().messages);
-            console.log('new-msg-',newMessage);
+            await get().fetchConversations();
+            // console.log('old-msg-',get().messages);
+            // console.log('new-msg-',newMessage);
 
             // Append the new admin message to the thread
             // set((state) => ({ messages: [...state.messages, newMessage] }));

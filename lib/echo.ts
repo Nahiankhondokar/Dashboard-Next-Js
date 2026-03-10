@@ -15,7 +15,7 @@ export const echo = typeof window !== 'undefined'
         forceTLS: process.env.NEXT_PUBLIC_REVERB_SCHEME === 'https',
         enabledTransports: ['ws', 'wss'],
         // 🔴 VERY IMPORTANT (fixes your original issue)
-        authEndpoint: "http://127.0.0.1:8000/broadcasting/auth",
+        authEndpoint: `http://127.0.0.1:8000/broadcasting/auth`,
         auth: {
             headers: {
                 // Pull your token from where you store it (localStorage/Cookie)
