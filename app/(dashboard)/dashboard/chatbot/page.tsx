@@ -20,7 +20,7 @@ export default function Chatbot() {
         selectedConversation, // The Data
         selectConversation,   // The Action
         messages,             // The Message Thread
-        sendReply,
+        sendReply
     } = useChatBotStore();
 
     // 1. Setup Listener ONCE on mount
@@ -46,6 +46,7 @@ export default function Chatbot() {
             });
 
         return () => echo?.leaveChannel('admin.inbox');
+
     }, []);
 
 

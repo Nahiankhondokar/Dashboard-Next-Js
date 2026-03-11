@@ -84,8 +84,6 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
             console.log(get().messages)
         } catch (error) {
             console.error("Failed to fetch messages", error);
-        } finally {
-            console.error("Failed to fetch messages");
         }
     },
 

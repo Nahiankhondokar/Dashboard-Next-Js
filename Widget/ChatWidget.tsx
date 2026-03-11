@@ -30,11 +30,12 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
     } = useChatBotStore();
 
     // 1. Initial Load & Real-time Listener (Laravel Echo)
-    useEffect(() => {
+    useEffect( () => {
         if (!guestId || !echo) return;
 
         fetchMessagesByGuestId(guestId);
 
+        // When mount the component
         const channel = echo.channel(`chat.${guestId}`);
         channel.listen('ChatBotEvent', (e: any) => {
             console.log('guest reverb -', e);
@@ -44,6 +45,7 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
             }
         });
 
+        // When unmount the component
         return () => {
             echo?.leaveChannel(`chat.${guestId}`);
         };
