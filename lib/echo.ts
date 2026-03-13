@@ -7,13 +7,16 @@ if (typeof window !== 'undefined') {
 
 export const echo = typeof window !== 'undefined'
     ? new Echo({
-        broadcaster: 'reverb',
+        broadcaster: 'pusher',
         // Do NOT pass client: Pusher here
-        key: process.env.NEXT_PUBLIC_REVERB_APP_KEY,
-        wsHost: process.env.NEXT_PUBLIC_REVERB_HOST || 'localhost',
-        wsPort: Number(process.env.NEXT_PUBLIC_REVERB_PORT) || 8080,
-        forceTLS: process.env.NEXT_PUBLIC_REVERB_SCHEME === 'https',
-        enabledTransports: ['ws', 'wss'],
+        key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
+        // wsHost: process.env.NEXT_PUBLIC_PUSHER_HOST || 'localhost',
+        // wsPort: Number(process.env.NEXT_PUBLIC_PUSHER_PORT) || 8080,
+        // forceTLS: process.env.NEXT_PUBLIC_PUSHER_SCHEME === 'https',
+        forceTLS: true,
+        // enabledTransports: ['ws', 'wss'],
+        cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
+
         // 🔴 VERY IMPORTANT (fixes your original issue)
         authEndpoint: `http://127.0.0.1:8000/broadcasting/auth`,
         auth: {

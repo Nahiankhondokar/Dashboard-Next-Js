@@ -84,9 +84,9 @@ const AboutSection = ({ data }: { data: About }) => {
                            onClick={() => resume_url && handleDownload(resume_url, `${name}_Resume.pdf`)}
                            className="group mt-6 flex items-center gap-4 border-2 border-yellow-500 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all">
                            Download CV
-                           <span className="bg-yellow-500 group-hover:bg-black p-2 rounded-full transition-colors">
-                            <Download size={16} className="text-white" />
-                        </span>
+                            <span className="bg-yellow-500 group-hover:bg-black p-2 rounded-full transition-colors">
+                                <Download size={16} className="text-white" />
+                            </span>
                        </button>
                        <button
                            onClick={() => resume_url && window.open(resume_url, "_blank")}
