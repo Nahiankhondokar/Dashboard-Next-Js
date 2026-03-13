@@ -79,6 +79,7 @@ async function getAbout(): Promise<About> {
         educations: data.data.educations ?? [],
         email: data.data.email ?? "",
         phone: data.data.phone ?? "",
+        resume_url: data.data.resume_url ?? null,
         metrics: data.data.metrics ?? []
     };
 }

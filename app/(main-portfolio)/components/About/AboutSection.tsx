@@ -2,39 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Briefcase, Download, GraduationCapIcon, Info } from "lucide-react";
+import {Briefcase, Download, Eye, GraduationCapIcon, Info} from "lucide-react";
 import { About, Metrics } from "@/app/(main-portfolio)/type/type";
-
-// --- Sub-component: Empty State Wrapper ---
-const EmptyState = ({ message }: { message: string }) => (
-    <div className="flex flex-col items-center justify-center py-10 px-4 border border-dashed border-[#333] rounded-xl opacity-50">
-        <Info size={24} className="mb-2 text-yellow-500" />
-        <p className="text-sm uppercase tracking-widest">{message}</p>
-    </div>
-);
-
-// --- Sub-component: Timeline Item ---
-const TimelineItem = ({ data, icon }: { data: any; icon: React.ReactNode }) => (
-    <li className="relative pl-16 mb-12 last:mb-0 before:content-[''] before:absolute before:left-[19px] before:top-0 before:bottom-0 before:w-[1px] before:bg-[#333]">
-        <div className="absolute left-0 top-0 w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white z-10 shadow-[0_0_20px_rgba(255,180,0,0.2)]">
-            {icon}
-        </div>
-        <span className="inline-block px-3 py-1 mb-3 text-[12px] font-semibold uppercase tracking-wide bg-[#252525] text-gray-300 rounded-full">
-      {data.year || "Year N/A"}
-    </span>
-        <h5 className="text-lg font-bold uppercase text-white mt-2">
-            {data.title || "Untitled Role"}
-            <span className="block text-sm font-medium text-gray-400 mt-1 opacity-80 before:content-['—'] before:mr-2">
-        {data.institute || data.company || "Institution N/A"}
-      </span>
-        </h5>
-        {data.description && (
-            <p className="mt-3 text-gray-400 text-sm leading-relaxed">
-                {data.description}
-            </p>
-        )}
-    </li>
-);
+import ExAndEduSection from "@/app/(main-portfolio)/components/About/ExAndEduSection";
+import EmptyStateSection from "@/app/(main-portfolio)/components/About/EmptyStateSection";
 
 const AboutSection = ({ data }: { data: About }) => {
     // Destructure with fallbacks to avoid crashes
@@ -49,7 +20,34 @@ const AboutSection = ({ data }: { data: About }) => {
         email = "N/A",
         job_type = "N/A",
         nationality = "N/A",
+        resume_url = null,
     } = data || {};
+
+    console.log(resume_url)
+
+    const handleDownload = async (url: string, filename: string) => {
+        if (!url) return;
+
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error("Download failed", error);
+            // Fallback: just try opening it
+            window.open(url, "_blank");
+        }
+    };
 
     return (
         <motion.section
@@ -81,12 +79,24 @@ const AboutSection = ({ data }: { data: About }) => {
                         <p><span className="opacity-60 font-medium">Freelance:</span> {job_type}</p>
                         <p><span className="opacity-60 font-medium">Nationality:</span> {nationality}</p>
                     </div>
-                    <button className="group mt-6 flex items-center gap-4 border-2 border-yellow-500 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all">
-                        Download CV
-                        <span className="bg-yellow-500 group-hover:bg-black p-2 rounded-full transition-colors">
-              <Download size={16} className="text-white" />
-            </span>
-                    </button>
+                   <div className="flex gap-2">
+                       <button
+                           onClick={() => resume_url && handleDownload(resume_url, `${name}_Resume.pdf`)}
+                           className="group mt-6 flex items-center gap-4 border-2 border-yellow-500 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all">
+                           Download CV
+                           <span className="bg-yellow-500 group-hover:bg-black p-2 rounded-full transition-colors">
+                            <Download size={16} className="text-white" />
+                        </span>
+                       </button>
+                       <button
+                           onClick={() => resume_url && window.open(resume_url, "_blank")}
+                           className="group mt-6 flex items-center gap-4 border-2 border-yellow-500 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all">
+                           Preview CV
+                           <span className="bg-yellow-500 group-hover:bg-black p-2 rounded-full transition-colors">
+                            <Eye size={16} className="text-white" />
+                        </span>
+                       </button>
+                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -98,7 +108,7 @@ const AboutSection = ({ data }: { data: About }) => {
                             </div>
                         ))
                     ) : (
-                        <div className="col-span-2"><EmptyState message="No metrics available" /></div>
+                        <div className="col-span-2"><EmptyStateSection message="No metrics available" /></div>
                     )}
                 </div>
             </div>
@@ -129,48 +139,14 @@ const AboutSection = ({ data }: { data: About }) => {
                         ))}
                     </div>
                 ) : (
-                    <EmptyState message="No expertise data found" />
+                    <EmptyStateSection message="No expertise data found" />
                 )}
             </div>
 
             <hr className="border-[#252525] mb-20 max-w-2xl mx-auto" />
 
             {/* Experience & Education Section */}
-            <div className="max-w-6xl mx-auto pb-10">
-                <h3 className="text-center text-3xl font-bold uppercase mb-16">
-                    Experience <span className="text-yellow-500">&</span> Education
-                </h3>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16">
-                    {/* Experience Column */}
-                    <div>
-                        <h4 className="text-xl font-bold mb-8 uppercase text-gray-400">Experience</h4>
-                        {experiences.length > 0 ? (
-                            <ul className="list-none p-0">
-                                {experiences.map((item, idx) => (
-                                    <TimelineItem key={idx} data={item} icon={<Briefcase size={18} />} />
-                                ))}
-                            </ul>
-                        ) : (
-                            <EmptyState message="No professional history" />
-                        )}
-                    </div>
-
-                    {/* Education Column */}
-                    <div className="mt-12 lg:mt-0">
-                        <h4 className="text-xl font-bold mb-8 uppercase text-gray-400">Education</h4>
-                        {educations.length > 0 ? (
-                            <ul className="list-none p-0">
-                                {educations.map((item, idx) => (
-                                    <TimelineItem key={idx} data={item} icon={<GraduationCapIcon size={18} />} />
-                                ))}
-                            </ul>
-                        ) : (
-                            <EmptyState message="No educational records" />
-                        )}
-                    </div>
-                </div>
-            </div>
+            <ExAndEduSection experiences={experiences} educations={educations} />
         </motion.section>
     );
 };

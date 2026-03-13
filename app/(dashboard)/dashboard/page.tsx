@@ -1,3 +1,5 @@
+"use client"
+
 import AppChartArea from '@/components/common/AppChartArea'
 import AppChartBar from '@/components/common/AppChartBar'
 import {
@@ -9,13 +11,24 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-
+import {useDashboardStore} from "@/stores/useDashboardStore";
+import {useEffect} from "react";
 
 const Dashboard = () => {
+
+    const {
+        overview,
+        fetchOverview
+    } = useDashboardStore();
+
     // empty arrays (no dummy data)
     const invoices: any[] = [];
     const products: any[] = [];
+
+
+    useEffect(() => {
+        fetchOverview();
+    }, []);
 
     return (
         <div className="mb-5">
@@ -24,23 +37,21 @@ const Dashboard = () => {
                 <h1 className="text-lg font-medium mb-6">Overview</h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
-                    {["Total Sales", "Total Orders", "Customers", "Revenue"].map(
-                        (title, index) => (
-                            <Card key={index}>
-                                <CardHeader>
-                                    <CardTitle className="text-sm text-muted-foreground">
-                                        {title}
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-2xl font-bold">—</p>
-                                    <p className="text-xs text-muted-foreground">
-                                        No data available
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        )
-                    )}
+                    {overview && Object.entries(overview).map(([key, value]) => (
+                        <Card key={key}>
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-sm font-medium text-muted-foreground capitalize">
+                                    {key}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-bold">{ value || "0" }</p>
+                                <p className="text-xs text-muted-foreground">
+                                    Total {key} published
+                                </p>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </div>
             </div>
 

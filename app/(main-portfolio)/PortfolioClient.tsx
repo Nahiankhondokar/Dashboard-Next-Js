@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 import HomeSection from "@/app/(main-portfolio)/components/HomeSection";
-import AboutSection from "@/app/(main-portfolio)/components/AboutSection";
+import AboutSection from "@/app/(main-portfolio)/components/About/AboutSection";
 import PortfolioSection from "@/app/(main-portfolio)/components/PortfolioSection";
 import ContactSection from "@/app/(main-portfolio)/components/ContactSection";
 import HeaderSection from "@/app/(main-portfolio)/components/HeaderSection";

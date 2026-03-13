@@ -4,7 +4,7 @@ export type Home = Pick<UserInfo, "name" | "subtitle" | "image" | "bio">
 export type About = Pick<UserInfo,
     "name" | "location" | "nationality" | "bio" |
     "phone" | "job_type" | "metrics" |
-    "expertise" | "experiences" | "educations" | "email"
+    "expertise" | "experiences" | "educations" | "email" | "resume_url"
 >
 
 export type Contact = Pick<UserInfo, "name" | "address" | "email">
@@ -24,11 +24,12 @@ export interface UserInfo {
     subtitle: string | null;
     address: string | null;
     job_type: string | null;
+    resume_url: string | null;
     metrics: Metrics[];
-    expertise: Expertise[];
-    experiences: Experience[];
-    educations: Education[];
-    portfolios: Portfolio[];
+    expertise: Expertise[] | [];
+    experiences: Experience[] | [];
+    educations: Education[] | [];
+    portfolios: Portfolio[] | [];
 }
 
 export interface Metrics {
