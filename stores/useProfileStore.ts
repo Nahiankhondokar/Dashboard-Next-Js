@@ -15,6 +15,7 @@ interface ProfileState {
     fetchProfile: () => Promise<void>;
     updateProfile: (data: FormData) => Promise<void>;
     updatePassword: (data: FormData) => Promise<void>;
+    uploadResume: (file: FormData) => Promise<void>;
 }
 
 export const useProfileStore = create<ProfileState>((set, get) => ({
@@ -84,5 +85,13 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
             }
             throw err;
         }
+    },
+    uploadResume: async (formData: FormData) => {
+        const res = await apiFetch<ApiResponse<any>>('/resume/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
+        // Refresh your overview data here
     }
 }));

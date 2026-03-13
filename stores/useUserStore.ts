@@ -19,7 +19,6 @@ interface UserState {
   createUser: (data: FormData) => Promise<User>;
   updateUser: (id: number, data: FormData) => Promise<void>;
   deleteUser: (id: number) => Promise<void>;
-  handleUpload: (file: File) => Promise<void>
   // detailsUser: (id: number) => Promise<User | undefined>;
 
   // actions
@@ -143,16 +142,5 @@ export const useUserStore = create<UserState>((set, get) => ({
       });
       throw err;
     }
-  },
-  handleUpload: async (file: File) => {
-    const formData = new FormData();
-    formData.append('resume', file);
-
-    const res = await apiFetch<ApiResponse<any>>('/resume/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    // Refresh your overview data here
   }
 }));
