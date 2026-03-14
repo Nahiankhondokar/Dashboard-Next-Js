@@ -1,13 +1,18 @@
 "use client";
 
-import React from "react";
+import React, {useState} from "react";
 import { motion } from "framer-motion";
 import {Briefcase, Download, Eye, GraduationCapIcon, Info} from "lucide-react";
 import { About, Metrics } from "@/app/(main-portfolio)/type/type";
 import ExAndEduSection from "@/app/(main-portfolio)/components/About/ExAndEduSection";
 import EmptyStateSection from "@/app/(main-portfolio)/components/About/EmptyStateSection";
+import SkillSection from "@/app/(main-portfolio)/components/About/SkillSection";
 
 const AboutSection = ({ data }: { data: About }) => {
+
+    // Resume review
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
     // Destructure with fallbacks to avoid crashes
     const {
         expertise: skills = [],
@@ -29,26 +34,37 @@ const AboutSection = ({ data }: { data: About }) => {
         if (!url) return;
 
         try {
+            // 1. Fetch the data into the browser's memory (RAM)
+            // This is the "hidden" download part
             const response = await fetch(url);
             const blob = await response.blob();
+
+            // 2. Create a "Virtual Link" to that data in memory
             const blobUrl = window.URL.createObjectURL(blob);
 
+            // 3. Create a hidden <a> element in the background
             const link = document.createElement('a');
             link.href = blobUrl;
+
+            // 4. THE KEY: The 'download' attribute forces the save dialog
+            // instead of opening a new tab
             link.download = filename;
+
+            // 5. Programmatically click the hidden link
             document.body.appendChild(link);
             link.click();
 
-            // Cleanup
+            // 6. Cleanup: Remove the link and free up memory
             document.body.removeChild(link);
             window.URL.revokeObjectURL(blobUrl);
+
         } catch (error) {
             console.error("Download failed", error);
-            // Fallback: just try opening it
+            // Fallback: If fetch is blocked by CORS, we have to use the new tab
             window.open(url, "_blank");
         }
     };
-
+    
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -79,24 +95,58 @@ const AboutSection = ({ data }: { data: About }) => {
                         <p><span className="opacity-60 font-medium">Freelance:</span> {job_type}</p>
                         <p><span className="opacity-60 font-medium">Nationality:</span> {nationality}</p>
                     </div>
-                   <div className="flex gap-2">
-                       <button
-                           onClick={() => resume_url && handleDownload(resume_url, `${name}_Resume.pdf`)}
-                           className="group mt-6 flex items-center gap-4 border-2 border-yellow-500 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all">
-                           Download CV
+
+                    <div className="flex flex-wrap gap-4">
+                        {/* Download Button */}
+                        <button
+                            onClick={() => resume_url && handleDownload(resume_url, `${name}_CV`)}
+                            className="group mt-6 flex items-center gap-4 border-2 border-yellow-500 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all"
+                        >
+                            Download CV
                             <span className="bg-yellow-500 group-hover:bg-black p-2 rounded-full transition-colors">
                                 <Download size={16} className="text-white" />
                             </span>
-                       </button>
-                       <button
-                           onClick={() => resume_url && window.open(resume_url, "_blank")}
-                           className="group mt-6 flex items-center gap-4 border-2 border-yellow-500 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all">
-                           Preview CV
-                           <span className="bg-yellow-500 group-hover:bg-black p-2 rounded-full transition-colors">
-                            <Eye size={16} className="text-white" />
-                        </span>
-                       </button>
-                   </div>
+                        </button>
+
+                        {/* Improved Preview Button */}
+                        <button
+                            onClick={() => setIsPreviewOpen(true)}
+                            className="group mt-6 flex items-center gap-4 border-2 border-white/20 rounded-full px-8 py-3 font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-all"
+                        >
+                            Preview CV
+                            <span className="bg-white/10 group-hover:bg-black p-2 rounded-full transition-colors">
+                                <Eye size={16} className="text-white" />
+                            </span>
+                        </button>
+                    </div>
+
+                    {/* --- PREVIEW MODAL --- */}
+                    {isPreviewOpen && (
+                        <div className="fixed h-auto inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 md:p-10">
+                            <div className="relative w-full max-w-5xl h-full bg-[#111] rounded-xl overflow-hidden flex flex-col border border-white/10">
+                                {/* Modal Header */}
+                                <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#181818]">
+                                    <h3 className="text-white font-bold uppercase tracking-widest text-sm">Curriculum Vitae</h3>
+                                    <button
+                                        onClick={() => setIsPreviewOpen(false)}
+                                        className="text-white/60 hover:text-yellow-500 transition-colors p-2"
+                                    >
+                                        <span className="text-xs mr-2 font-bold uppercase">Close</span>
+                                        ✕
+                                    </button>
+                                </div>
+
+                                {/* PDF Viewer */}
+                                <div className="flex-grow bg-white">
+                                    <iframe
+                                        src={`${resume_url}#toolbar=0`}
+                                        className="w-full h-full"
+                                        title="CV Preview"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -116,32 +166,7 @@ const AboutSection = ({ data }: { data: About }) => {
             <hr className="border-[#252525] mb-20 max-w-2xl mx-auto" />
 
             {/* Skills Section */}
-            <div className="mb-24">
-                <h3 className="text-center text-3xl font-bold uppercase mb-12 tracking-tight">My Skills</h3>
-                {skills.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-                        {skills.map((skill) => (
-                            <div key={skill.name} className="flex flex-col items-center">
-                                <div
-                                    className="relative w-28 h-28 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg"
-                                    style={{
-                                        background: `conic-gradient(#eab308 ${skill.progress}%, #252525 0)`,
-                                    }}
-                                >
-                                    <div className="absolute inset-[6px] bg-[#111] rounded-full flex items-center justify-center">
-                                        <span className="text-white">{skill.progress}%</span>
-                                    </div>
-                                </div>
-                                <p className="mt-6 uppercase font-bold tracking-widest text-sm text-gray-300">
-                                    {skill.name}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <EmptyStateSection message="No expertise data found" />
-                )}
-            </div>
+            <SkillSection skills={skills} />
 
             <hr className="border-[#252525] mb-20 max-w-2xl mx-auto" />
 

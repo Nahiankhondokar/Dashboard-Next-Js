@@ -20,11 +20,11 @@ const resumeSchema = z.object({
     media: z
         .any()
         .refine((file) => file instanceof File, "Resume file is required")
-        .refine((file) => file?.size <= 5 * 1024 * 1024, "Max file size is 5MB")
-        .refine(
-            (file) => ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(file?.type),
-            "Only .pdf, .doc, and .docx formats are supported"
-        ),
+        .refine((file) => file?.size <= 5 * 1024 * 1024, "Max file size is 5MB"),
+        // .refine(
+        //     (file) => ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(file?.type),
+        //     "Only .pdf, .doc, and .docx formats are supported"
+        // ),
 });
 
 type ResumeFormValues = z.infer<typeof resumeSchema>;
@@ -41,7 +41,7 @@ const UploadResumeForm = () => {
         try {
             // Use FormData for file uploads
             const formData = new FormData();
-            formData.append("resume", values.media); // 'resume' matches the Laravel key
+            formData.append("media", values.media); // 'resume' matches the Laravel key
 
             await uploadResume(formData);
 
@@ -60,7 +60,7 @@ const UploadResumeForm = () => {
                     <CardTitle>Update Resume</CardTitle>
                 </div>
                 <CardDescription>
-                    Upload your latest CV (PDF, DOC, or DOCX)
+                    Upload your latest CV
                 </CardDescription>
             </CardHeader>
 
@@ -91,7 +91,6 @@ const UploadResumeForm = () => {
                                                 <Input
                                                     type="file"
                                                     className="hidden"
-                                                    accept=".pdf,.doc,.docx"
                                                     onChange={(event) => {
                                                         const file = event.target.files?.[0];
                                                         onChange(file);
