@@ -19,6 +19,7 @@ import {toast} from "sonner";
 import Pagination from "@/type/pagination/Pagination";
 import {useBlogStore} from "@/stores/useBlogStore";
 import MediaPreview from "@/components/common/MediaPreview";
+import StatusUpdateToggle from "@/components/common/StatusUpdateToggle";
 
 export default function BlogTable() {
     const {
@@ -27,7 +28,8 @@ export default function BlogTable() {
         fetchBlog,
         loading,
         openEditModal,
-        deleteBlog
+        deleteBlog,
+        toggleStatus
     } = useBlogStore();
 
     useEffect(() => {
@@ -77,7 +79,13 @@ export default function BlogTable() {
                                 </TableCell>
                                 <TableCell>{blog.subtitle ?? "-"}</TableCell>
                                 <TableCell>{blog.description ?? "-"}</TableCell>
-                                <TableCell className="">{blog.status == true ? "Active" : "InActive"}</TableCell>
+                                <TableCell>
+                                    <StatusUpdateToggle
+                                        id={blog.id}
+                                        status={blog?.status}
+                                        updateFn={toggleStatus}
+                                    />
+                                </TableCell>
                                 <TableCell>
                                     <MediaPreview
                                         src={blog.image}

@@ -28,7 +28,8 @@ interface BlogState {
   fetchBlog: (page?: number, limit?: number) => Promise<void>;
   createBlog: (data: FormData) => Promise<Blog>
   updateBlog: (id: number, data: FormData) => Promise<void>
-  deleteBlog: (id: number) => Promise<void>
+  deleteBlog: (id: number) => Promise<void>;
+  toggleStatus: (id: number, status: boolean) => Promise<void>;
 }
 
 export const useBlogStore = create<BlogState>((set, get) => ({
@@ -147,6 +148,24 @@ export const useBlogStore = create<BlogState>((set, get) => ({
         loading: false,
         error: err.message ?? "Delete failed",
       });
+      throw err;
+    }
+  },
+  // Inside useBlogStore
+  toggleStatus: async (id: number, status: boolean) => {
+    try {
+      await apiFetch(`blogs/${id}/status-update`, {
+        method: "PATCH",
+        body: JSON.stringify({ status })
+      });
+
+      // Update local state so the UI reflects the change immediately
+      set((state) => ({
+        blogs: state.blogs.map((b) =>
+            b.id === id ? { ...b, status: status } : b
+        )
+      }));
+    } catch (err) {
       throw err;
     }
   }
