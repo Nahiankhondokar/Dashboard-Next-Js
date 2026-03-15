@@ -39,7 +39,10 @@ export const useDashboardStore = create<BlogState>((set, get) => ({
             });
         }catch (err: unknown){
             if (err instanceof Error) {
-                set({ loading: false, error: err.message ?? "Fetching failed" });
+                set({
+                    loading: false,
+                    error: err.message ?? "Fetching failed"
+                });
             } else {
                 set({ loading: false, error: "An unknown error occurred" });
             }

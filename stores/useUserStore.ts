@@ -135,10 +135,10 @@ export const useUserStore = create<UserState>((set, get) => ({
         users: state.users.filter((users) => users.id !== id),
         loading: false,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         loading: false,
-        error: err.message ?? "Delete failed",
+        error: "Delete failed",
       });
       throw err;
     }

@@ -142,10 +142,10 @@ export const useServiceStore = create<serviceState>((set, get) => ({
         services: state.services.filter((service) => service.id !== id),
         loading: false,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         loading: false,
-        error: err.message ?? "Delete failed",
+        error: "Delete failed",
       });
       throw err;
     }

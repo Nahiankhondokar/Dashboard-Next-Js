@@ -141,10 +141,10 @@ export const useProjectStore = create<projectState>((set, get) => ({
         projects: state.projects.filter((project) => project.id !== id),
         loading: false,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         loading: false,
-        error: err.message ?? "Delete failed",
+        error: "Delete failed",
       });
       throw err;
     }

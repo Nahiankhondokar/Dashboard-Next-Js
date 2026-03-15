@@ -87,7 +87,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         }
     },
     uploadResume: async (formData: FormData) => {
-        const res = await apiFetch<ApiResponse<any>>('resume/upload', {
+        const res = await apiFetch<ApiResponse<unknown>>('resume/upload', {
             method: 'POST',
             body: formData,
         });

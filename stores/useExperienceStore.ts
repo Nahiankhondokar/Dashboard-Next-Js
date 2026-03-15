@@ -118,10 +118,10 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
             body: data,
           }
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         loading: false,
-        error: err.message ?? "Update failed",
+        error: "Update failed",
       });
       throw err;
     }
@@ -146,10 +146,10 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
         experiences: state.experiences.filter((exp) => exp.id !== id),
         loading: false,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         loading: false,
-        error: err.message ?? "Delete failed",
+        error: "Delete failed",
       });
       throw err;
     }

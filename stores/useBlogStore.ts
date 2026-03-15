@@ -143,10 +143,10 @@ export const useBlogStore = create<BlogState>((set, get) => ({
         blogs: state.blogs.filter((blog) => blog.id !== id),
         loading: false,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         loading: false,
-        error: err.message ?? "Delete failed",
+        error: "Delete failed",
       });
       throw err;
     }

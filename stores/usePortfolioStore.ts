@@ -140,10 +140,10 @@ export const usePortfolioStore = create<portfolioState>((set, get) => ({
         portfolios: state.portfolios.filter((portfolio) => portfolio.id !== id),
         loading: false,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         loading: false,
-        error: err.message ?? "Delete failed",
+        error:  "Delete failed",
       });
 
       throw err;
