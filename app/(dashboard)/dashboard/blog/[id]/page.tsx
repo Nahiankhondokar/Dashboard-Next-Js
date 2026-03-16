@@ -2,14 +2,10 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
 import { CalendarDays, Clock, User } from "lucide-react";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { useState } from "react";
 import { Blog } from "../interface/Blog";
 import fallbackImage from "../../../../../public/assets/img/fallbackimage.png";
@@ -32,7 +28,7 @@ export default function BlogDetailPage({ params }: { params: { id: string } }) {
         {/* Blog Image */}
         <div className="relative aspect-image border bg-muted">
           {blog && <Image
-            src={blog.image || fallbackImage}
+            src={ fallbackImage}
             alt="blog"
             width={400}
             height={200}
@@ -98,38 +94,38 @@ export default function BlogDetailPage({ params }: { params: { id: string } }) {
 }
 
 // Loading skeleton
-export function BlogDetailSkeleton() {
-  return (
-    <div className="container mx-auto py-8 px-4 max-w-4xl">
-      <Card className="overflow-hidden">
-        <Skeleton className="aspect-video" />
-        <CardContent className="p-6 md:p-8">
-          <Skeleton className="h-10 w-3/4 mb-4" />
-          <Skeleton className="h-6 w-full mb-6" />
-          <div className="flex flex-wrap gap-4 mb-8">
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-4 w-4" />
-              <Skeleton className="h-4 w-24" />
-            </div>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-4 w-4" />
-              <Skeleton className="h-4 w-20" />
-            </div>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <Skeleton className="h-4 w-24" />
-            </div>
-          </div>
-          <div className="space-y-3">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-            <Skeleton className="h-4 w-4/6" />
-          </div>
-          <div className="mt-8 pt-6 border-t">
-            <Skeleton className="h-10 w-32" />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+// export function BlogDetailSkeleton() {
+//   return (
+//     <div className="container mx-auto py-8 px-4 max-w-4xl">
+//       <Card className="overflow-hidden">
+//         <Skeleton className="aspect-video" />
+//         <CardContent className="p-6 md:p-8">
+//           <Skeleton className="h-10 w-3/4 mb-4" />
+//           <Skeleton className="h-6 w-full mb-6" />
+//           <div className="flex flex-wrap gap-4 mb-8">
+//             <div className="flex items-center gap-2">
+//               <Skeleton className="h-4 w-4" />
+//               <Skeleton className="h-4 w-24" />
+//             </div>
+//             <div className="flex items-center gap-2">
+//               <Skeleton className="h-4 w-4" />
+//               <Skeleton className="h-4 w-20" />
+//             </div>
+//             <div className="flex items-center gap-2">
+//               <Skeleton className="h-8 w-8 rounded-full" />
+//               <Skeleton className="h-4 w-24" />
+//             </div>
+//           </div>
+//           <div className="space-y-3">
+//             <Skeleton className="h-4 w-full" />
+//             <Skeleton className="h-4 w-5/6" />
+//             <Skeleton className="h-4 w-4/6" />
+//           </div>
+//           <div className="mt-8 pt-6 border-t">
+//             <Skeleton className="h-10 w-32" />
+//           </div>
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }

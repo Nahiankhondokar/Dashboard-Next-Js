@@ -2,19 +2,16 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
 import { CalendarDays, Clock, User } from "lucide-react";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { useState } from "react";
-import { Skill } from "../interface/Expertise";
 import fallbackImage from "../../../../../public/assets/img/fallbackimage.png";
 
- 
+
+class Skill {
+}
 
 export default function BlogDetailPage({ params }: { params: { id: string } }) {
 
@@ -32,7 +29,7 @@ export default function BlogDetailPage({ params }: { params: { id: string } }) {
         {/* Blog Image */}
         <div className="relative aspect-image border bg-muted">
           {blog && <Image
-            src={blog.image || fallbackImage}
+            src={ fallbackImage}
             alt="blog"
             width={400}
             height={200}
