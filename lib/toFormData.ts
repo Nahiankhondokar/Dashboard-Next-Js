@@ -1,5 +1,5 @@
 // utils/toFormData.ts
-export function toFormData(values: Record<string, any>, opts?: { arrayFormat?: "brackets" | "json", booleanFormat?: "1/0" | "true/false" }) {
+export function toFormData(values: Record<string, unknown>, opts?: { arrayFormat?: "brackets" | "json", booleanFormat?: "1/0" | "true/false" }) {
     const fd = new FormData();
     const { arrayFormat = "brackets", booleanFormat = "1/0" } = opts ?? {};
 

@@ -1,8 +1,16 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
+// This tells TypeScript that the 'window' object
+// officially has a 'Pusher' property
+declare global {
+    interface Window {
+        Pusher: typeof Pusher;
+    }
+}
+
 if (typeof window !== 'undefined') {
-    (window as any).Pusher = Pusher; // Force the global assignment
+    window.Pusher = Pusher; // No more 'any' error!
 }
 
 export const echo = typeof window !== 'undefined'
