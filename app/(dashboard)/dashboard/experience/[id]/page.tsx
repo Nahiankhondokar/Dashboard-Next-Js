@@ -13,26 +13,22 @@ import { notFound } from "next/navigation";
 import { useState } from "react";
 import { Experience } from "../interface/Experience";
 import fallbackImage from "../../../../../public/assets/img/fallbackimage.png";
+import {useBlogStore} from "@/stores/useBlogStore";
 
  
 
-export default function ExperienceDetailPage({ params }: { params: { id: string } }) {
+export default function SingleBlog() {
 
-  const [blog, setBlog] = useState<Experience | null>(null);
-
-  const fetchBlog = async () => {
-    const res = await fetch(`/api/experience/${params.id}`);
-    const data = await res.json();
-    setBlog(data);
-  };
+  // const [blog, setBlog] = useState<Experience | null>(null);
+  const {selectedBlog} = useBlogStore();
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <Card className="overflow-hidden">
         {/* Blog Image */}
         <div className="relative aspect-image border bg-muted">
-          {blog && <Image
-            src={blog.image || fallbackImage}
+          {selectedBlog && <Image
+            src={selectedBlog.image || fallbackImage}
             alt="blog"
             width={400}
             height={200}

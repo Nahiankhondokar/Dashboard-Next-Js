@@ -22,6 +22,7 @@ import {LogInIcon, StepBackIcon} from "lucide-react";
 import {StepBack} from "lucide";
 import Link from "next/link";
 import GoogleLoginBtn from "@/app/(auth)/login/components/GoogleLoginBtn";
+import errorMessage from "@/lib/errorMessage";
 
 
 
@@ -54,9 +55,9 @@ export default function LoginPage() {
 
 
             router.push("/dashboard");
-        } catch (error: any) {
+        } catch (error: unknown) {
             form.setError("root", {
-                message: error.message,
+                message: errorMessage(error),
             });
         } finally {
             setLoading(false);

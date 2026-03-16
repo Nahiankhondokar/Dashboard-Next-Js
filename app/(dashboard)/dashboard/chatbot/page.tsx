@@ -5,10 +5,9 @@ import { Search, Send, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import { useChatBotStore } from "@/stores/useChatBotStore";
-import { formatDistanceToNow } from "date-fns";
 import {echo} from "@/lib/echo";
+import {ChatBotEvent} from "@/type/chatbot/type";
 
 export default function Chatbot() {
     const [reply, setReply] = useState("");
@@ -28,8 +27,10 @@ export default function Chatbot() {
         fetchConversations();
 
         echo?.private('admin.inbox')
-            .listen('ChatBotEvent', (e: any) => {
+            .listen('ChatBotEvent', (e: ChatBotEvent) => {
                 const incomingMsg = e.message;
+
+                // const incomingMsg = errorMessage(e);
 
                 // ONLY push to current chat window if it matches
                 // We use a functional update check or a ref to avoid stale closures

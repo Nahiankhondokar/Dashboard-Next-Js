@@ -5,18 +5,9 @@ import { Send, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {toast} from "sonner";
-import {apiFetch} from "@/lib/api";
 import {useChatBotStore} from "@/stores/useChatBotStore";
 import {echo} from "@/lib/echo";
-
-interface Message {
-    id: number;
-    conversation_id: number;
-    sender: "guest" | "admin";
-    body: string;
-    created_at: string;
-}
+import {ChatBotEvent, Message} from "@/type/chatbot/type";
 
 export default function ChatWidget({ guestId }: { guestId: string }) {
     // const [messages, setMessages] = useState<Message[]>([]);
@@ -37,10 +28,10 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
 
         // When mount the component
         const channel = echo.channel(`chat.${guestId}`);
-        channel.listen('ChatBotEvent', (e: any) => {
+        channel.listen('ChatBotEvent', (e: ChatBotEvent) => {
             console.log('guest reverb -', e);
 
-            if (e.message.sender == 'admin') {
+            if (e?.message.sender == 'admin') {
                 addMessage(e.message);
             }
         });
@@ -78,7 +69,7 @@ export default function ChatWidget({ guestId }: { guestId: string }) {
             setInput("");
 
             // API Call to Laravel
-            const res = await fetch('http://localhost:8000/api/v1/public/send-message', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/public/send-message`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json", // CRITICAL: Tell Laravel you're sending JSON
