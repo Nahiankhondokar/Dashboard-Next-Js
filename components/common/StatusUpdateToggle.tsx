@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { badgeVariants } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 interface StatusToggleProps {
     status: boolean | number | string | undefined;
-    id: number | string;
-    updateFn: (id: any, status: boolean) => Promise<void>;
+    id: number;
+    updateFn: (id: number, status: boolean) => Promise<void>;
 }
 
 export default function StatusUpdateToggle({ status, id, updateFn }: StatusToggleProps) {
