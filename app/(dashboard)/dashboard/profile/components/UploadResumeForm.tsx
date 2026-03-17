@@ -10,6 +10,7 @@ import {toast} from "sonner";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useProfileStore} from "@/stores/useProfileStore";
+import errorMessage from "@/lib/errorMessage";
 
 /* ===============================
    ZOD SCHEMA
@@ -47,8 +48,9 @@ const UploadResumeForm = () => {
 
             toast.success("Resume uploaded successfully");
             form.reset();
-        } catch (err: any) {
-            toast.error(err.message || "Failed to upload resume");
+        } catch (err: unknown) {
+            const msg = errorMessage(err);
+            toast.error(msg);
         }
     };
 

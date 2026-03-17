@@ -24,7 +24,7 @@ const ExAndEduSection = ({experiences, educations}: {experiences: Experience[], 
                         <h4 className="text-xl font-bold mb-8 uppercase text-gray-400">Experience</h4>
                         {experiences.length > 0 ? (
                             <ul className="list-none p-0">
-                                {experiences.map((item, idx) => (
+                                {experiences.map((item: Experience, idx) => (
                                     <TimeLineItemSection key={idx} data={item} icon={<Briefcase size={18} />} />
                                 ))}
                             </ul>

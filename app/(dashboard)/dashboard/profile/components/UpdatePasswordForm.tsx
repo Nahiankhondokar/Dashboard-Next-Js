@@ -12,6 +12,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useProfileStore} from "@/stores/useProfileStore";
 import {toFormData} from "@/lib/toFormData";
+import errorMessage from "@/lib/errorMessage";
 
 
 /* ===============================
@@ -54,8 +55,9 @@ const UpdatePasswordForm = () => {
 
             toast.success("Password updated successfully")
             passwordForm.reset()
-        }catch (err: any){
-            toast.error(err.message);
+        }catch (err: unknown){
+            const msg = errorMessage(err);
+            toast.error(msg);
         }
 
 

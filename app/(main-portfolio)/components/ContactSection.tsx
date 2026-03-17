@@ -80,7 +80,7 @@ const ContactSection = ({ data }: { data: Contact }) => {
             <div className="grid lg:grid-cols-3 gap-10">
                 {/* Info Column */}
                 <div className="lg:col-span-1 space-y-8">
-                    <h3 className="text-2xl font-bold uppercase tracking-tight">Don't be shy!</h3>
+                    <h3 className="text-2xl font-bold uppercase tracking-tight">Do not be shy!</h3>
                     <p className="text-gray-400 leading-relaxed">
                         Feel free to get in touch with me. I am always open to discussing
                         new projects, creative ideas, or opportunities to be part of your visions.

@@ -1,6 +1,5 @@
 "use client"
 
-import {useEffect, useState} from "react"
 import { usePathname } from "next/navigation"
 import BreadcrumbComponent from "@/components/common/Breadcrumb"
 import {

@@ -1,9 +1,9 @@
 "use client"
 
-
 import React from "react";
+import {Experience} from "@/app/(main-portfolio)/type/type";
 
-const TimeLineItemSection = ({ data, icon }: { data: any; icon: React.ReactNode }) => {
+const TimeLineItemSection = ({ data, icon }: { data: Experience; icon: React.ReactNode }) => {
 
     return (
         <>
@@ -12,13 +12,13 @@ const TimeLineItemSection = ({ data, icon }: { data: any; icon: React.ReactNode 
                     {icon}
                 </div>
                 <span className="inline-block px-3 py-1 mb-3 text-[12px] font-semibold uppercase tracking-wide bg-[#252525] text-gray-300 rounded-full">
-      {data.year || "Year N/A"}
-    </span>
+                  {data.year || "Year N/A"}
+                </span>
                 <h5 className="text-lg font-bold uppercase text-white mt-2">
                     {data.title || "Untitled Role"}
                     <span className="block text-sm font-medium text-gray-400 mt-1 opacity-80 before:content-['—'] before:mr-2">
-        {data.institute || data.company || "Institution N/A"}
-      </span>
+                        {data.institute || "N/A"}
+                      </span>
                 </h5>
                 {data.description && (
                     <p className="mt-3 text-gray-400 text-sm leading-relaxed">

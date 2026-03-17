@@ -22,8 +22,8 @@ const Dashboard = () => {
     } = useDashboardStore();
 
     // empty arrays (no dummy data)
-    const invoices: any[] = [];
-    const products: any[] = [];
+    const invoices= [];
+    const products= [];
 
 
     useEffect(() => {

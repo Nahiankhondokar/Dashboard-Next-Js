@@ -12,15 +12,15 @@ import fallbackImage from "../../../../../public/assets/img/fallbackimage.png";
 
  
 
-export default function BlogDetailPage({ params }: { params: { id: string } }) {
+export default function BlogDetailPage() {
 
   const [blog, setBlog] = useState<Blog | null>(null);
 
-  const fetchBlog = async () => {
-    const res = await fetch(`/api/blog/${params.id}`);
-    const data = await res.json();
-    setBlog(data);
-  };
+  // const fetchBlog = async () => {
+  //   const res = await fetch(`/api/blog/${params.id}`);
+  //   const data = await res.json();
+  //   setBlog(data);
+  // };
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">

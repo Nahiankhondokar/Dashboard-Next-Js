@@ -12,6 +12,7 @@ import {useProfileStore} from "@/stores/useProfileStore";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Separator} from "@radix-ui/react-separator";
 import {Profile} from "@/app/(dashboard)/dashboard/profile/interface/Profile";
+import errorMessage from "@/lib/errorMessage";
 
 /* ===============================
    ZOD SCHEMAS
@@ -88,8 +89,9 @@ const UpdateProfileForm = () => {
         try {
             await updateProfile(fd)
             toast.success("Profile updated successfully");
-        } catch (e: any) {
-            toast.error(e.message);
+        } catch (e: unknown) {
+            const msg = errorMessage(e);
+            toast.error(msg);
         }
     };
 
