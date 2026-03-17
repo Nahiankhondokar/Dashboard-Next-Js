@@ -12,34 +12,44 @@ export async function apiFetch<T>(
 
     const isFormData = options.body instanceof FormData;
 
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${url}`,
-        {
-            ...options,
-            headers: {
-                Accept: "application/json",
-                ...(isFormData ? {} : { "Content-Type": "application/json" }),
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                ...options.headers,
-            },
-        }
-    );
+    const headers: HeadersInit = {
+        Accept: "application/json",
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...((options && options.headers) || ({} as HeadersInit)),
+    };
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+        ...options,
+        headers,
+    });
 
     if (res.status === 401 || res.status === 403) {
-        localStorage.removeItem("auth_token");
+        // clear auth locally
         if (typeof window !== "undefined") {
+            localStorage.removeItem("auth_token");
+            // redirect only on client
             window.location.href = "/login";
         }
         throw new ApiError(res.status, "Unauthorized");
     }
 
     if (!res.ok) {
-        // FIX 1: Cast the error response so it isn't "any"
-        const errorData = (await res.json().catch(() => ({}))) as { message?: string };
-        console.log(errorData.message);
-        throw new ApiError(res.status, errorData.message || "Request failed");
+        // parse error safely without using `any`
+        let errorMessageObj: { message?: string } = {};
+        try {
+            const parsed = await res.json();
+            if (parsed && typeof parsed === "object" && "message" in parsed) {
+                errorMessageObj = parsed as { message?: string };
+            }
+        } catch {
+            // JSON parse failed -> keep empty object
+        }
+
+        throw new ApiError(res.status, errorMessageObj.message ?? "Request failed");
     }
 
-    // FIX 2: Explicitly cast the return to T
-    return (await res.json()) as T;
+    // parse response as T
+    const json = (await res.json()) as T;
+    return json;
 }

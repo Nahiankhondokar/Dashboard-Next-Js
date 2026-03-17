@@ -1,8 +1,12 @@
-
-
-const errorMessage = (error: unknown) => {
-    return error instanceof Error ? error.message : "An unexpected error occurred";
-
+// lib/errorMessage.ts
+export default function errorMessage(err: unknown): string {
+    if (!err) return "Unknown error";
+    if (err instanceof Error) return err.message;
+    if (typeof err === "string") return err;
+    try {
+        // fallback: try to stringify
+        return JSON.stringify(err);
+    } catch {
+        return "Unknown error";
+    }
 }
-
-export default errorMessage;
