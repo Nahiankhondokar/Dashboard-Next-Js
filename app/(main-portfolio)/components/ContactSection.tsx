@@ -62,7 +62,7 @@ const ContactSection = ({ data }: { data: Contact }) => {
             form.reset();
 
         } catch (error) {
-            console.error("ubmission Error:", error);
+            // console.error("Submission Error:", error);
             toast.error("Something went wrong. Please try again later.");
         }
     };

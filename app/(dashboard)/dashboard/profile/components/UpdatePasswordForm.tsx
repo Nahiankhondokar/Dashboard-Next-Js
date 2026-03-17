@@ -47,7 +47,6 @@ const UpdatePasswordForm = () => {
     })
 
     const handlePasswordSubmit = async (values: PasswordFormValues) => {
-        console.log(values)
 
         try {
             const fd = toFormData(values);
@@ -59,8 +58,6 @@ const UpdatePasswordForm = () => {
             const msg = errorMessage(err);
             toast.error(msg);
         }
-
-
     }
 
     return (

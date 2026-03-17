@@ -19,11 +19,9 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import {User} from "@/type/user";
 import {LogInIcon, StepBackIcon} from "lucide-react";
-import {StepBack} from "lucide";
 import Link from "next/link";
 import GoogleLoginBtn from "@/app/(auth)/login/components/GoogleLoginBtn";
 import errorMessage from "@/lib/errorMessage";
-
 
 
 export interface LoginResponse {
