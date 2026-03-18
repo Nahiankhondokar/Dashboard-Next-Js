@@ -9,7 +9,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {useServiceStore} from "@/stores/useServiceStore";
 import {useEffect} from "react";
 import AddNewPortfolio from "./components/AddNewPortfolio";
 import PortfolioTable from "@/app/(dashboard)/dashboard/portfolio/components/PortfolioTable";
@@ -19,8 +18,6 @@ const Service = () => {
   const pathname = usePathname();
   const {
       fetchPortfolio,
-      loading,
-      error,
       openCreateModal,
       modalOpen,
       closeModal,
@@ -29,7 +26,7 @@ const Service = () => {
 
   useEffect(() => {
     fetchPortfolio();
-  }, [mode]);
+  }, [mode, fetchPortfolio]);
 
   return (
     <div>

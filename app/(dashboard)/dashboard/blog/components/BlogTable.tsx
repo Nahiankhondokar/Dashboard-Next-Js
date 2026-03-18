@@ -34,7 +34,7 @@ export default function BlogTable() {
 
     useEffect(() => {
         fetchBlog();
-    }, []);
+    }, [fetchBlog]);
 
     return (
         <>

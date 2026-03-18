@@ -114,7 +114,7 @@ const UpdateProfileForm = () => {
 
     useEffect(()=> {
         handleFetchProfile();
-    }, []);
+    }, [handleFetchProfile]);
 
     return (
         <>

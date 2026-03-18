@@ -38,8 +38,7 @@ const AddNewBlog = () => {
         selectedBlog,
         createBlog,
         updateBlog,
-        modalOpen,
-        loading,
+        modalOpen
     } = useBlogStore();
 
     const fileRef = useRef<HTMLInputElement | null>(null);
@@ -94,7 +93,7 @@ const AddNewBlog = () => {
             form.reset();
             if (fileRef.current) fileRef.current.value = "";
         }
-    }, [mode, selectedBlog, modalOpen]);
+    }, [form, mode, selectedBlog, modalOpen]);
 
     return (
         <div>

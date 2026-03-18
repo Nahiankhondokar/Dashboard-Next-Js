@@ -20,6 +20,7 @@ import {formSchema} from "@/app/(dashboard)/dashboard/portfolio/schema/formSchem
 import {Portfolio} from "@/app/(dashboard)/dashboard/portfolio/interface/Portfolio";
 import {usePortfolioStore} from "@/stores/usePortfolioStore";
 import ImageUpload from "@/components/common/ImageUpload";
+import errorMessage from "@/lib/errorMessage";
 
 type formSchemaType = z.infer<typeof formSchema>;
 
@@ -79,6 +80,8 @@ const AddNewPortfolio = () => {
               toast.success("Portfolio is updated");
           }
       }catch (err: unknown){
+          const msg = errorMessage(err)
+          console.log(msg);
           toast.error("Something went wrong");
       }
   };
@@ -87,7 +90,7 @@ const AddNewPortfolio = () => {
         if(mode === 'edit' && selectedPortfolio){
             form.reset(mapPortfolioToForm(selectedPortfolio));
         }
-    }, [mode, selectedPortfolio]);
+    }, [mode, selectedPortfolio, form]);
 
 
   return (

@@ -33,7 +33,7 @@ export default function ExperienceTable() {
 
     useEffect(() => {
         fetchExperiences();
-    }, []);
+    }, [fetchExperiences]);
 
     return (
         <>

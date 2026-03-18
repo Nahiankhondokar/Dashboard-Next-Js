@@ -48,7 +48,7 @@ export default function Chatbot() {
 
         return () => echo?.leaveChannel('admin.inbox');
 
-    }, []);
+    }, [fetchConversations]);
 
 
     // 2. Separate Scroll Logic

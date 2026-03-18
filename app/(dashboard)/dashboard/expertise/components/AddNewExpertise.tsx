@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {toast} from "sonner";
 import {useExpertiseStore} from "@/stores/useExpertiseStore";
 import {Expertise} from "@/app/(dashboard)/dashboard/expertise/interface/Expertise";
+import errorMessage from "@/lib/errorMessage";
 
 const formSchema = z.object({
     name: z.string(),
@@ -75,7 +76,8 @@ const AddNewExpertise = () => {
               toast.success("Profile is updated");
           }
       }catch (err: unknown){
-          toast.error("Something went wrong");
+          const msg = errorMessage(err);
+          toast.error("Something went wrong - " + msg);
       }
   };
 
@@ -83,7 +85,7 @@ const AddNewExpertise = () => {
         if(mode === 'edit' && selectedExpertise){
             form.reset(mapExpertiseToForm(selectedExpertise));
         }
-    }, [mode, selectedExpertise]);
+    }, [mode, selectedExpertise, form]);
 
   return (
     <div>

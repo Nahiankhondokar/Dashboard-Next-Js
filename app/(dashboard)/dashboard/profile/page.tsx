@@ -9,14 +9,12 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import UpdateProfileForm from "@/app/(dashboard)/dashboard/profile/components/UpdateProfileForm";
-import {useProfileStore} from "@/stores/useProfileStore";
 import UpdatePasswordForm from "@/app/(dashboard)/dashboard/profile/components/UpdatePasswordForm";
 import UploadResumeForm from "@/app/(dashboard)/dashboard/profile/components/UploadResumeForm";
 
 
 const Profile = () => {
     const pathname = usePathname()
-    const {fetchProfile} = useProfileStore();
 
 
     // const handleFetchProfile = async () => {

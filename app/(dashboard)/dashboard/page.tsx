@@ -28,7 +28,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         fetchOverview();
-    }, []);
+    }, [fetchOverview]);
 
     return (
         <div className="mb-5">

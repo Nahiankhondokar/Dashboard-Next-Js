@@ -14,7 +14,6 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {useExperienceStore} from "@/stores/useExperienceStore";
 import {toast} from "sonner";
@@ -86,7 +85,7 @@ const AddNewExperience = () => {
             form.reset();
             if (fileRef.current) fileRef.current.value = "";
         }
-    }, [mode, selectedExperience, modalOpen]);
+    }, [form, mode, selectedExperience, modalOpen]);
 
   return (
     <div>

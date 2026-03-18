@@ -33,7 +33,7 @@ export default function PortfolioTable() {
 
     useEffect(() => {
         fetchPortfolio();
-    }, []);
+    }, [fetchPortfolio]);
 
     return (
         <>
