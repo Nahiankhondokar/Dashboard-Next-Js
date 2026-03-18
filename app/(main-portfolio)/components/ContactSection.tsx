@@ -40,7 +40,7 @@ const ContactSection = ({ data }: { data: Contact }) => {
     const onSubmit = async (values: formSchemaType) => {
         try {
             const url = "v1/public/contact/submit";
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL; // Double check name in .env
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL; // Double check name in .env.local
 
             const res = await fetch(`${baseUrl}${url}`, {
                 method: "POST",

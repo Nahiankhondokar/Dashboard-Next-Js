@@ -24,22 +24,25 @@ interface ChatState {
     messages: Message[];
     setMessages: (message: Message) => void;
     loading: boolean;
+    error: boolean;
     selectedConversation: Conversation | null;
-
 
     // Actions
     fetchConversations: () => Promise<void>;
     fetchMessages: (conversationId: number) => Promise<void>;
     fetchMessagesByGuestId: (guestId: string) => Promise<void>;
-    selectConversation: (conv: Conversation) => void;
+    // ✅ FIX 1: Allow null in the interface
+    selectConversation: (conv: Conversation | null) => void;
     sendReply: (conversationId: number, body: string) => Promise<void>;
-    addMessage: (message: Message) => void; // For real-time updates
+    addMessage: (message: Message) => void;
+    deleteConversation: (id: number) => Promise<void>;
 }
 
 export const useChatBotStore = create<ChatState>((set, get) => ({
     conversations: [],
     messages: [],
     loading: false,
+    error: false,
     selectedConversation: null,
     setMessages: (message:Message) => {
         set((state) => ({
@@ -87,12 +90,6 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
         }
     },
 
-    selectConversation: async (conv) => {
-        set({ selectedConversation: conv });
-        // Fetch the messages for this specific conversation
-        await get().fetchMessages(conv.id);
-    },
-
     sendReply: async (conversationId, body: string) => {
         try {
             const newMessage = await apiFetch(`chatbot/conversations/${conversationId}/reply`, {
@@ -121,4 +118,41 @@ export const useChatBotStore = create<ChatState>((set, get) => ({
                 messages: [...state.messages, message]
             };
         }),
+    selectConversation: async (conv) => {
+        // ✅ FIX 2: Guard Clause
+        // If we pass null (e.g., after a delete), reset state and STOP.
+        if (!conv) {
+            set({ selectedConversation: null, messages: [] });
+            return;
+        }
+
+        set({ selectedConversation: conv });
+        // Only fetch if we actually have a conversation object
+        await get().fetchMessages(conv.id);
+    },
+
+    deleteConversation: async (id: number) => {
+        set({ loading: true, error: false });
+
+        try {
+            await apiFetch(`chatbot/conversations/${id}`, {
+                method: "DELETE",
+            });
+
+            // ✅ FIX 3: Automatic Cleanup
+            // Check if the conversation being deleted is the one currently viewed
+            const currentSelected = get().selectedConversation;
+
+            set((state) => ({
+                conversations: state.conversations.filter((c) => c.id !== id),
+                loading: false,
+                // If the IDs match, reset selectedConversation and messages instantly
+                ...(currentSelected?.id === id ? { selectedConversation: null, messages: [] } : {})
+            }));
+
+        } catch (err: unknown) {
+            set({ loading: false, error: true });
+            throw err;
+        }
+    },
 }));

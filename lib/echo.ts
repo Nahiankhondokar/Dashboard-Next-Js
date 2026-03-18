@@ -26,7 +26,7 @@ export const echo = typeof window !== 'undefined'
         cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
 
         // 🔴 VERY IMPORTANT (fixes your original issue)
-        authEndpoint: `http://127.0.0.1:8000/broadcasting/auth`,
+        authEndpoint: `${process.env.NEXT_PUBLIC_API_BASE_URL}broadcasting/auth`,
         auth: {
             headers: {
                 // Pull your token from where you store it (localStorage/Cookie)

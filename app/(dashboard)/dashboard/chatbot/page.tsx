@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Send, User } from "lucide-react";
+import { Search, Send, Trash, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChatBotStore } from "@/stores/useChatBotStore";
-import {echo} from "@/lib/echo";
-import {ChatBotEvent} from "@/type/chatbot/type";
+import { echo } from "@/lib/echo";
+import { ChatBotEvent } from "@/type/chatbot/type";
+import ConfirmationAlert from "@/components/common/ConfirmationAlert";
+import { toast } from "sonner";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Chatbot() {
     const [reply, setReply] = useState("");
@@ -16,28 +19,25 @@ export default function Chatbot() {
     const {
         fetchConversations,
         conversations,
-        selectedConversation, // The Data
-        selectConversation,   // The Action
-        messages,             // The Message Thread
-        sendReply
+        selectedConversation,
+        selectConversation,
+        messages,
+        sendReply,
+        deleteConversation,
     } = useChatBotStore();
 
-    // 1. Setup Listener ONCE on mount
     useEffect(() => {
         fetchConversations();
 
-        echo?.private('admin.inbox')
-            .listen('ChatBotEvent', (e: ChatBotEvent) => {
+        echo
+            ?.private("admin.inbox")
+            .listen("ChatBotEvent", (e: ChatBotEvent) => {
                 const incomingMsg = e.message;
+                fetchConversations();
 
-                // const incomingMsg = errorMessage(e);
-
-                // ONLY push to current chat window if it matches
-                // We use a functional update check or a ref to avoid stale closures
                 useChatBotStore.setState((state) => {
                     if (state.selectedConversation?.id === incomingMsg.conversation_id) {
-                        // Prevent duplicate if admin is the one who sent it
-                        const exists = state.messages.some(m => m.id === incomingMsg.id);
+                        const exists = state.messages.some((m) => m.id === incomingMsg.id);
                         if (!exists) {
                             return { messages: [...state.messages, incomingMsg] };
                         }
@@ -46,59 +46,117 @@ export default function Chatbot() {
                 });
             });
 
-        return () => echo?.leaveChannel('admin.inbox');
-
+        return () => echo?.leaveChannel("admin.inbox");
     }, [fetchConversations]);
 
-
-    // 2. Separate Scroll Logic
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
-    // Scroll to bottom whenever messages change
 
     const handleSendReply = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!reply.trim() || !selectedConversation) return;
 
-        // Use the store action to send reply
         await sendReply(selectedConversation.id, reply);
         setReply("");
     };
 
+    const getGuestInitials = (name?: string) => {
+        if (!name) return "G";
+        const initials = name
+            .split(" ")
+            .map((n) => n[0])
+            .join("");
+        return initials.toUpperCase().slice(0, 2);
+    };
+
     return (
-        <div className="flex h-[calc(100vh-120px)] border rounded-xl overflow-hidden bg-card">
+        <div className="flex h-[calc(100vh-120px)] border rounded-2xl overflow-hidden bg-card shadow-sm">
             {/* --- LEFT SIDE: Conversation List --- */}
             <div className="w-80 border-r flex flex-col bg-muted/10">
-                <div className="p-4 border-b">
-                    <h2 className="text-lg font-bold mb-4">Guest Messages</h2>
+                <div className="p-5 border-b space-y-3">
+                    <h2 className="text-xl font-semibold text-foreground tracking-tight">
+                        Guest Messages
+                    </h2>
                     <div className="relative">
-                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Search guests..." className="pl-8" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
+                        <Input
+                            placeholder="Search guests by name or ID..."
+                            className="pl-9 bg-background/50 h-10 rounded-full"
+                        />
                     </div>
                 </div>
                 <ScrollArea className="flex-1">
-                    {conversations.map((conversation) => (
-                        <div
-                            key={conversation.id}
-                            onClick={() => selectConversation(conversation)}
-                            className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors border-b ${
-                                selectedConversation?.id === conversation.id ? 'bg-muted' : ''
-                            }`}
-                        >
-                            <div className="flex justify-between items-start mb-1">
-                                <span className="font-semibold text-sm truncate max-w-[120px]">
-                                    {conversation.guest_name || `Guest #${conversation.id}`}
-                                </span>
-                                <span className="text-[10px] text-muted-foreground">
-                                    {conversation.updated_at} ago
-                                </span>
+                    <div className="divide-y divide-muted/30">
+                        {conversations.map((conversation) => (
+                            <div
+                                key={conversation.id}
+                                className={`p-5 cursor-pointer hover:bg-muted/30 transition-colors ${
+                                    selectedConversation?.id === conversation.id
+                                        ? "bg-muted/80"
+                                        : ""
+                                }`}
+                            >
+                                <div className="grid grid-cols-[1fr,auto] items-start gap-x-2 gap-y-1">
+                                    {/* Left Column: Text */}
+                                    <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="font-medium text-sm text-foreground truncate"
+
+                          onClick={() => selectConversation(conversation)}
+                    >
+                      {conversation.guest_name ||
+                          `Guest #${conversation.id}`}
+                    </span>
+                                        <span className="text-[11px] text-muted-foreground italic truncate">
+                                      ID: {conversation.guest_id.slice(0, 8)}...
+                                    </span>
+                                    </div>
+
+                                    {/* Right Column: Date & Trash */}
+                                    <div className="flex flex-col items-end gap-1.5 pt-0.5">
+                                    <span className="text-[10px] text-muted-foreground/70 whitespace-nowrap">
+                                      {conversation.updated_at} ago
+                                    </span>
+
+
+                                    </div>
+                                </div>
+
+                                <ConfirmationAlert
+                                    title="Delete Conversation?"
+                                    description="This action cannot be undone."
+                                    confirmText="Delete permanently"
+                                    onConfirm={async () => {
+                                        try {
+                                            // 1. Perform the delete
+                                            await deleteConversation(conversation.id);
+
+                                            // 2. If the deleted chat was the one we were looking at,
+                                            //    clear the selection so the "Welcome" screen shows up.
+                                            if (selectedConversation?.id === conversation.id) {
+                                                selectConversation(null); // Assuming your store action accepts null
+                                            }
+
+                                            toast.success("Conversation deleted");
+                                        } catch (error) {
+                                            toast.error("Delete failed");
+                                        }
+                                    }}
+                                    trigger={
+                                        <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="w-7 h-7 -mr-2 rounded-full text-muted-foreground/60 hover:text-red-600 hover:bg-red-50"
+                                        >
+                                            <Trash size={16} />
+                                        </Button>
+                                    }
+                                />
                             </div>
-                            <p className="text-xs text-muted-foreground truncate italic">
-                                Last active: {conversation.guest_id.slice(0, 8)}...
-                            </p>
-                        </div>
-                    ))}
+
+
+                        ))}
+                    </div>
                 </ScrollArea>
             </div>
 
@@ -106,34 +164,52 @@ export default function Chatbot() {
             <div className="flex-1 flex flex-col bg-background">
                 {selectedConversation ? (
                     <>
-                        <div className="p-4 border-b flex items-center justify-between bg-muted/5">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-primary/10 rounded-full text-primary">
-                                    <User size={20} />
-                                </div>
+                        <div className="p-5 border-b flex items-center justify-between bg-muted/5">
+                            <div className="flex items-center gap-4">
+                                <Avatar className="h-11 w-11 border">
+                                    <AvatarFallback className="bg-primary/5 text-primary text-sm font-semibold">
+                                        {selectedConversation?.guest_name}
+                                    </AvatarFallback>
+                                </Avatar>
                                 <div>
-                                    <h3 className="font-medium text-sm">
+                                    <h3 className="font-semibold text-base text-foreground">
                                         {selectedConversation.guest_name || "Anonymous Guest"}
                                     </h3>
-                                    <p className="text-[10px] text-muted-foreground">
-                                        UUID: {selectedConversation.guest_id}
+                                    <p className="text-[11px] text-muted-foreground italic font-mono">
+                                        {selectedConversation.guest_id}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <ScrollArea className="flex-1 p-6">
-                            <div className="space-y-4">
+                        <ScrollArea className="flex-1 px-6 py-8">
+                            <div className="space-y-6">
                                 {messages.map((m) => (
-                                    <div key={m.id} className={`flex ${m.sender === "admin" ? "justify-end" : "justify-start"}`}>
-                                        <div className={`max-w-[70%] p-3 rounded-2xl text-sm ${
-                                            m.sender === "admin"
-                                                ? "bg-primary text-primary-foreground rounded-tr-none"
-                                                : "bg-muted text-foreground rounded-tl-none border"
-                                        }`}>
+                                    <div
+                                        key={m.id}
+                                        className={`flex ${
+                                            m.sender === "admin" ? "justify-end" : "justify-start"
+                                        }`}
+                                    >
+                                        <div
+                                            className={`max-w-[75%] p-4 rounded-3xl text-sm leading-relaxed ${
+                                                m.sender === "admin"
+                                                    ? "bg-primary text-primary-foreground rounded-br-none"
+                                                    : "bg-muted text-foreground rounded-tl-none border border-muted/50"
+                                            }`}
+                                        >
                                             {m.body}
-                                            <p className="text-[9px] mt-1 opacity-70 text-right">
-                                                {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            <p
+                                                className={`text-[10px] mt-2 font-mono ${
+                                                    m.sender === "admin"
+                                                        ? "opacity-80"
+                                                        : "text-muted-foreground/80"
+                                                }`}
+                                            >
+                                                {new Date(m.created_at).toLocaleTimeString([], {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })}
                                             </p>
                                         </div>
                                     </div>
@@ -142,22 +218,40 @@ export default function Chatbot() {
                             </div>
                         </ScrollArea>
 
-                        <form onSubmit={handleSendReply} className="p-4 border-t bg-muted/5 flex gap-2">
+                        <form
+                            onSubmit={handleSendReply}
+                            className="p-4 border-t bg-muted/5 flex gap-3"
+                        >
                             <Input
                                 value={reply}
                                 onChange={(e) => setReply(e.target.value)}
                                 placeholder="Type your message..."
-                                className="flex-1"
+                                className="flex-1 rounded-full h-11 px-5 border-muted/40"
                             />
-                            <Button type="submit" disabled={!reply.trim()}>
-                                <Send size={18} className="mr-2" /> Reply
+                            <Button
+                                type="submit"
+                                size="icon"
+                                className="rounded-full h-11 w-11"
+                                disabled={!reply.trim()}
+                            >
+                                <Send size={18} />
                             </Button>
                         </form>
                     </>
                 ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
-                        <User size={48} className="mb-4 opacity-20" />
-                        <p>Select a conversation to start chatting</p>
+                    <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground/70 px-10 text-center gap-5">
+                        <div className="p-6 bg-muted rounded-full border border-muted/70">
+                            <User size={56} className="opacity-60" />
+                        </div>
+                        <div className="space-y-1.5">
+                            <h3 className="text-xl font-semibold tracking-tight text-foreground/80">
+                                Welcome to Inbox
+                            </h3>
+                            <p className="max-w-[280px]">
+                                Select a conversation from the left to start chatting with your
+                                guests.
+                            </p>
+                        </div>
                     </div>
                 )}
             </div>
