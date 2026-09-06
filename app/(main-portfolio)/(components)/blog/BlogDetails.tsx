@@ -96,7 +96,7 @@ const BlogDetailsContent = ({ blog }: { blog: Blog }) => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="relative h-[350px] md:h-[600px] w-full mb-20 rounded-[2.5rem] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.8)] border border-zinc-800"
+                        className="relative h-[350px] md:h-[500px] w-full mb-20 rounded-[2.5rem] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.8)] border border-zinc-800"
                     >
                         <Image
                             src={blog.image}
